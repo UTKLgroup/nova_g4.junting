@@ -27,15 +27,14 @@
 /// \brief Implementation of the LXeMainVolume class
 //
 //
+#include <G4SIunits.hh>
 #include "LXeMainVolume.hh"
-#include "globals.hh"
 #include "G4SDManager.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "LXePMTSD.hh"
 #include "LXeScintSD.hh"
 #include "G4SystemOfUnits.hh"
-#include "iomanip"
 
 LXeScintSD* LXeMainVolume::fScint_SD=NULL;
 LXePMTSD* LXeMainVolume::fPmt_SD=NULL;
