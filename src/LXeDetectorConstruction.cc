@@ -170,27 +170,27 @@ void LXeDetectorConstruction::DefineMaterials(){
     G4double variable;
     G4String filler;
 
-    std::vector < G4double > VacIndexE;
-    std::vector < G4double > VacIndex;
+    std::vector<G4double> VacIndexE;
+    std::vector<G4double> VacIndex;
 
-    std::vector < G4double > VacAbsE;
-    std::vector < G4double > VacAbs;
+    std::vector<G4double> VacAbsE;
+    std::vector<G4double> VacAbs;
 
-    std::vector < G4double> ScintRIndexE;
-    std::vector < G4double> ScintRIndex;
+    std::vector<G4double> ScintRIndexE;
+    std::vector<G4double> ScintRIndex;
 
-    std::vector < G4double> ScintAbsE;
-    std::vector < G4double> ScintAbs;
+    std::vector<G4double> ScintAbsE;
+    std::vector<G4double> ScintAbs;
 
-    std::vector < G4double> ScintEmitE;
-    std::vector < G4double> ScintEmitFast;
-    std::vector < G4double> ScintEmitSlow;
+    std::vector<G4double> ScintEmitE;
+    std::vector<G4double> ScintEmitFast;
+    std::vector<G4double> ScintEmitSlow;
 
-    std::vector < G4double> ScintWLSabsE;
-    std::vector < G4double> ScintWLSabs;
+    std::vector<G4double> ScintWLSabsE;
+    std::vector<G4double> ScintWLSabs;
 
-    std::vector < G4double> ScintWLSemitE;
-    std::vector < G4double> ScintWLSemit;
+    std::vector<G4double> ScintWLSemitE;
+    std::vector<G4double> ScintWLSemit;
 
     // scintillator emission (fast and slow)
     std::ifstream ReadScint;
