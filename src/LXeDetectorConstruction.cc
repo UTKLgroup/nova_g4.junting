@@ -216,6 +216,12 @@ void LXeDetectorConstruction::DefineMaterials(){
         G4cout << "Error opening file: "  << G4endl;
     ReadScint.close();
 
+    // vacuum
+    vacMPT = new G4MaterialPropertiesTable();
+    vacMPT->AddProperty("RINDEX", &VacIndexE[0], &VacIndex[0], (G4int) VacIndexE.size());
+    vacMPT->AddProperty("ABSLENGTH", &VacAbsE[0], &VacAbs[0], (G4int) VacAbsE.size());
+    fVacuum->SetMaterialPropertiesTable(vacMPT);
+
     // bulk absorption  
     std::ifstream Readabsorb;
     Readabsorb.open(InputDir + "PSTBulkAbsorb.cfg");
@@ -275,11 +281,6 @@ void LXeDetectorConstruction::DefineMaterials(){
     flscint->SetMaterialPropertiesTable(fScintMPT);
     flscint->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
 
-    // vacuum
-    vacMPT = new G4MaterialPropertiesTable();
-    vacMPT->AddProperty("RINDEX",    &VacIndexE[0], &VacIndex[0], VacIndexE.size());
-    vacMPT->AddProperty("ABSLENGTH", &VacAbsE[0],   &VacAbs[0],   VacAbsE.size());
-    fVacuum->SetMaterialPropertiesTable(vacMPT);
 
 
     // fiber
