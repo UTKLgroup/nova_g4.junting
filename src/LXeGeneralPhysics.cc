@@ -29,10 +29,6 @@
 //
 #include "LXeGeneralPhysics.hh"
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include <iomanip>
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 LXeGeneralPhysics::LXeGeneralPhysics(const G4String& name)
@@ -46,7 +42,6 @@ LXeGeneralPhysics::~LXeGeneralPhysics() {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
 // Bosons
 #include "G4ChargedGeantino.hh"
@@ -66,9 +61,9 @@ void LXeGeneralPhysics::ConstructProcess()
   fDecayProcess = new G4Decay();
 
   // Add Decay Process
-  theParticleIterator->reset();
-  while( (*theParticleIterator)() ){
-    G4ParticleDefinition* particle = theParticleIterator->value();
+  aParticleIterator->reset();
+  while( (*aParticleIterator)() ){
+    G4ParticleDefinition* particle = aParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
     if (fDecayProcess->IsApplicable(*particle)) {
       pmanager ->AddProcess(fDecayProcess);
