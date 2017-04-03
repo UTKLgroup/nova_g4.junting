@@ -89,27 +89,26 @@ LXeDetectorConstruction::~LXeDetectorConstruction() {}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeDetectorConstruction::DefineMaterials(){
-
-    G4double a;  // atomic mass
-    G4double z;  // atomic number
-    G4double density;
-
     //***Elements
 
-    fH = new G4Element("H", "H", z = 1., a = 1.01*g/mole);
-    fC = new G4Element("C", "C", z = 6., a = 12.01*g/mole);
-    fN = new G4Element("N", "N", z = 7., a = 14.01*g/mole);
-    fO = new G4Element("O", "O", z = 8., a = 16.00*g/mole);
-    fTi = new G4Element( "Ti", "Ti", z = 22., a = 47.87*g/mole);
+    fH = new G4Element("H", "H", 1., 1.01*g/mole);
+    fC = new G4Element("C", "C", 6., 12.01*g/mole);
+    fN = new G4Element("N", "N", 7., 14.01*g/mole);
+    fO = new G4Element("O", "O", 8., 16.00*g/mole);
+    fTi = new G4Element( "Ti", "Ti", 22., 47.87*g/mole);
 
     //***Materials
 
     //Aluminum
-    fAl = new G4Material("Al",z=13.,a=26.98*g/mole,density=2.7*g/cm3);
+    fAl = new G4Material("Al", 13., 26.98*g/mole, 2.7*g/cm3);
 
     //Vacuum
-    fVacuum = new G4Material("Vacuum",z=1.,a=1.01*g/mole,
-                             density=universe_mean_density,kStateGas,0.1*kelvin,
+    fVacuum = new G4Material("Vacuum",
+                             1.,
+                             1.01*g/mole,
+                             universe_mean_density,
+                             kStateGas,
+                             0.1*kelvin,
                              1.e-19*pascal);
 
     // TiO2
@@ -146,7 +145,7 @@ void LXeDetectorConstruction::DefineMaterials(){
     fPVC->AddMaterial(Polystyrene,.85);
 
     //Glass
-    fGlass = new G4Material("Glass", density=1.032*g/cm3,2);
+    fGlass = new G4Material("Glass", 1.032*g/cm3,2);
     fGlass->AddElement(fC,91.533*perCent);
     fGlass->AddElement(fH,8.467*perCent);
 
