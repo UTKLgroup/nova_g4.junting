@@ -118,47 +118,47 @@ void LXeDetectorConstruction::DefineMaterials(){
 
 
     // liquid scintillator
-    flscint = new G4Material("liquidscintillator",  1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+    flscint = new G4Material("liquid_scintillator",  1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
     flscint->AddElement(fH, 0.666);
     flscint->AddElement(fC, 0.334);
 
     // Polystyrene
-    Polystyrene = new G4Material("Polystyrene",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere );
-    Polystyrene->AddElement( fH, 0.498 );
-    Polystyrene->AddElement( fC, 0.502 );
+    Polystyrene = new G4Material("Polystyrene",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+    Polystyrene->AddElement(fH, 0.498);
+    Polystyrene->AddElement(fC, 0.502);
 
     // PMMA
-    PMMA = new G4Material("PMMA",  1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere );
-    PMMA->AddElement( fH, 0.532 );
-    PMMA->AddElement( fC, 0.336 );
-    PMMA->AddElement( fO, 0.132 );
+    PMMA = new G4Material("PMMA", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+    PMMA->AddElement(fH, 0.532);
+    PMMA->AddElement(fC, 0.336);
+    PMMA->AddElement(fO, 0.132);
 
     // Fluorinated Polymer
-    Fluorinated_Polymer = new G4Material("Fluorinated_Polymer",  1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere );
-    Fluorinated_Polymer->AddElement( fH, 0.532 );
-    Fluorinated_Polymer->AddElement( fC, 0.336 );
-    Fluorinated_Polymer->AddElement( fO, 0.132 );
+    Fluorinated_Polymer = new G4Material("Fluorinated_Polymer", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+    Fluorinated_Polymer->AddElement(fH, 0.532);
+    Fluorinated_Polymer->AddElement(fC, 0.336);
+    Fluorinated_Polymer->AddElement(fO, 0.132);
 
     // PVC
     fPVC = new G4Material("PVC", 1.4316*g/cm3, 2, kStateSolid);
-    fPVC->AddMaterial(fTiO2,.15);
-    fPVC->AddMaterial(Polystyrene,.85);
+    fPVC->AddMaterial(fTiO2, 0.15);
+    fPVC->AddMaterial(Polystyrene, 0.85);
 
     //Glass
-    fGlass = new G4Material("Glass", 1.032*g/cm3,2);
-    fGlass->AddElement(fC,91.533*perCent);
-    fGlass->AddElement(fH,8.467*perCent);
+    fGlass = new G4Material("Glass", 1.032*g/cm3, 2);
+    fGlass->AddElement(fC, 91.533*perCent);
+    fGlass->AddElement(fH, 8.467*perCent);
 
     //***Material properties tables
 
     // glass
     const G4int lxenum = 2;
-    G4double lxe_Energy[lxenum]      = { 1240. / 200. * eV , 1240. / 700. * eV};
-    G4double glass_RIND[lxenum]      = {1.49, 1.49};
+    G4double lxe_Energy[lxenum] = {1240. / 200. * eV, 1240. / 700. * eV};
+    G4double glass_RIND[lxenum] = {1.49, 1.49};
     G4double glass_AbsLength[lxenum] = {420.*cm, 420.*cm};
     G4MaterialPropertiesTable *glass_mt = new G4MaterialPropertiesTable();
-    glass_mt->AddProperty("ABSLENGTH",lxe_Energy,glass_AbsLength,lxenum);
-    glass_mt->AddProperty("RINDEX",lxe_Energy,glass_RIND,lxenum);
+    glass_mt->AddProperty("ABSLENGTH", lxe_Energy, glass_AbsLength, lxenum);
+    glass_mt->AddProperty("RINDEX", lxe_Energy, glass_RIND, lxenum);
     fGlass->SetMaterialPropertiesTable(glass_mt);
 
     // liquid scintillator
