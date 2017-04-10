@@ -110,7 +110,7 @@ void LXeMuonPhysics::ConstructProcess()
   fMuMinusBremsstrahlung = new G4MuBremsstrahlung();
   fMuMinusPairProduction = new G4MuPairProduction();
 
-  fMuMinusCaptureAtRest = new G4MuonMinusCaptureAtRest();
+  fMuMinusCaptureAtRest = new G4MuonMinusCapture();
 
   G4ProcessManager * pManager = 0;
 
