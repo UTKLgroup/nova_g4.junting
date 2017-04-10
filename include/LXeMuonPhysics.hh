@@ -40,7 +40,7 @@
 #include "G4MuIonisation.hh"
 #include "G4hIonisation.hh"
 
-#include "G4MuonMinusCaptureAtRest.hh"
+#include "G4MuonMinusCapture.hh"
 
 class LXeMuonPhysics : public G4VPhysicsConstructor
 {
@@ -71,7 +71,7 @@ class LXeMuonPhysics : public G4VPhysicsConstructor
    G4MuBremsstrahlung*     fMuMinusBremsstrahlung;
    G4MuPairProduction*     fMuMinusPairProduction;
 
-   G4MuonMinusCaptureAtRest* fMuMinusCaptureAtRest;
+    G4MuonMinusCapture* fMuMinusCaptureAtRest;
 
 };
 
