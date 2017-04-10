@@ -20,5 +20,8 @@ set(CRY_INCLUDE_DIRS /Users/juntinghuang/Desktop/nova/cry_v1.7/src)
 set(CRY_LIBRARIES /Users/juntinghuang/Desktop/nova/cry_v1.7/lib/libCRY.a)
 include_directories(${CRY_INCLUDE_DIRS})
 
+find_package(ROOT)
+include_directories(${ROOT_INCLUDE_DIRS})
+
 add_executable(LXe LXe.cc ${sources} ${headers})
 target_link_libraries(LXe ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CRY_LIBRARIES})
