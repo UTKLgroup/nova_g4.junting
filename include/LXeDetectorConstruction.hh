@@ -44,7 +44,6 @@ class G4Sphere;
 #include "G4RotationMatrix.hh"
 #include "G4VUserDetectorConstruction.hh"
 
-#include "TString.h"
 
 class LXeDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -167,7 +166,7 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
   G4double fFibTail;  
   bool UsePMT;
 
-  TString InputDir;
+  G4String InputDir;
 };
 
 #endif

@@ -289,9 +289,6 @@ void LXeDetectorConstruction::DefineMaterials(){
     G4double InCladRIndexConst = 1.49;
     G4double OutCladRIndexConst = 1.42;
 
-    G4double wavelength, variable;
-    G4String filler;
-
     std::vector < G4double > CoreWLSabsE;
     std::vector < G4double > CoreWLSabs;
 
@@ -310,7 +307,6 @@ void LXeDetectorConstruction::DefineMaterials(){
     std::vector < G4double > CladAbs;
 
     // WLS absorption
-    std::ifstream ReadWLSa;
     ReadWLSa.open(InputDir + "y11_abs_length.dat");
     if (ReadWLSa.is_open()){
         while(!ReadWLSa.eof()){
@@ -330,7 +326,6 @@ void LXeDetectorConstruction::DefineMaterials(){
     ReadWLSa.close();
 
     // WLS emission
-    std::ifstream ReadWLSe;
     ReadWLSe.open(InputDir + "WLSemit.cfg");
     if(ReadWLSe.is_open()){
         while(!ReadWLSe.eof()){
@@ -462,10 +457,9 @@ void LXeDetectorConstruction::SetDefaults(){
     fFibTail             = 10.*cm;
     UsePMT               = true;
     fMainVolume          = true;
-    InputDir             = "/Users/juntinghuang/Desktop/sim/light_transport/nova/input/";
+    InputDir             = "/Users/juntinghuang/Desktop/nova/input/";
 
-    G4UImanager::GetUIpointer()
-            ->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
+    G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
 
     fUpdated=true;
 }
