@@ -66,7 +66,7 @@ LXePrimaryGeneratorAction::LXePrimaryGeneratorAction(const char *inputfile)
       setupString.append(" ");
     }
 
-    CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/sim/cosmic_ray/cry_v1.7/data");
+    CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
 
     gen = new CRYGenerator(setup);
 
@@ -106,7 +106,7 @@ void LXePrimaryGeneratorAction::InputCRY()
 
 void LXePrimaryGeneratorAction::UpdateCRY(std::string* MessInput)
 {
-  CRYSetup *setup=new CRYSetup(*MessInput,"/Users/juntinghuang/Desktop/sim/cosmic_ray/cry_v1.7/data");
+  CRYSetup *setup=new CRYSetup(*MessInput,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
 
   gen = new CRYGenerator(setup);
 
@@ -137,7 +137,7 @@ void LXePrimaryGeneratorAction::CRYFromFile(G4String newValue)
       setupString.append(" ");
     }
 
-    CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/sim/cosmic_ray/cry_v1.7/data");
+    CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
 
     gen = new CRYGenerator(setup);
 
