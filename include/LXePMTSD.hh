@@ -56,7 +56,7 @@ class LXePMTSD : public G4VSensitiveDetector
     void DrawAll();
     void PrintAll();
  
-    //Initialize the arrays to store pmt possitions
+    //Initialize the arrays to store pmt positions
     inline void InitPMTs(G4int nPMTs){
       if(fPMTPositionsX)delete fPMTPositionsX;
       if(fPMTPositionsY)delete fPMTPositionsY;
