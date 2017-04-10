@@ -16,8 +16,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
-set(CRY_INCLUDE_DIRS /Users/juntinghuang/Desktop/nova/cry_v1.7/src)
-set(CRY_LIBRARIES /Users/juntinghuang/Desktop/nova/cry_v1.7/lib/libCRY.a)
+set(CRY_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/cry_v1.7/src)
+set(CRY_LIBRARIES ${PROJECT_SOURCE_DIR}/cry_v1.7/lib/libCRY.a)
 include_directories(${CRY_INCLUDE_DIRS})
 
 find_package(ROOT)
