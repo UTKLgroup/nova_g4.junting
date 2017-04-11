@@ -10,8 +10,6 @@ LXeScintSD* LXeMainVolume::fScint_SD=NULL;
 LXePMTSD* LXeMainVolume::fPmt_SD=NULL;
 G4LogicalVolume* LXeMainVolume::fHousing_log = NULL;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
                              const G4ThreeVector &tlate,
                              G4LogicalVolume *pMotherLogical,
@@ -38,14 +36,14 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
 			     fCellWidth / 2.  + 10.*cm,
 			     fCellHeight / 2. + 10.*cm,
 			     fCelltoPMTL      + 10.*cm);
-    fHousing_log = new G4LogicalVolume(fHousing_box, G4Material::GetMaterial("Vacuum"), "fHousing_log", 0, 0, 0);   
+    fHousing_log = new G4LogicalVolume(fHousing_box, G4Material::GetMaterial("Vacuum"), "fHousing_log", 0, 0, 0);
 
 
     //--------- PVC
 
     PVC_s = LXeMainVolume::MakePVC(fInner_Corner_Radius, fOuter_Corner_Radius);
     PVC_l = new G4LogicalVolume(PVC_s, G4Material::GetMaterial("PVC"), "PVC_l", 0, 0, 0);
-    new G4PVPlacement(0, G4ThreeVector(0, -fCellHeight / 2. + fPVCThickness / 2.), PVC_l, "PVC", fHousing_log, false, 0);   
+    new G4PVPlacement(0, G4ThreeVector(0, -fCellHeight / 2. + fPVCThickness / 2.), PVC_l, "PVC", fHousing_log, false, 0);
 
     //--------- scintillator
 
@@ -66,14 +64,14 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
 				    );
 
     scnt_l = new G4LogicalVolume(scnt_s, G4Material::GetMaterial("liquidscintillator"), "scnt_l", 0, 0, 0);
-    new G4PVPlacement(0, G4ThreeVector(), scnt_l, "scnt", fHousing_log, false, 0);    
+    new G4PVPlacement(0, G4ThreeVector(), scnt_l, "scnt", fHousing_log, false, 0);
 
     //--------- fiber
 
     FibMaker = new WLSfiber();
     fiber_l = FibMaker->BuildStraight(fFibRadius, fFibFullLength);
     new G4PVPlacement(0, G4ThreeVector(fFib1X, fFib1Y, fFibZ), fiber_l, "outer_clading", fHousing_log, false, 0);
-    new G4PVPlacement(0, G4ThreeVector(fFib2X, fFib2Y, fFibZ), fiber_l, "outer_clading", fHousing_log, false, 1);  
+    new G4PVPlacement(0, G4ThreeVector(fFib2X, fFib2Y, fFibZ), fiber_l, "outer_clading", fHousing_log, false, 1);
 
     //****************** Build PMTs
 
@@ -96,7 +94,7 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
 
     new G4PVPlacement(0,G4ThreeVector(0, 0, -height_pmt/2),
 		      fPhotocath_log, "photocath",
-		      fPmt_log, false, 0);   
+		      fPmt_log, false, 0);
 
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
     if(!fPmt_SD){
@@ -127,7 +125,6 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
   SetLogicalVolume(fHousing_log);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeMainVolume::CopyValues(){
   fUpdated= fConstructor->getUpdated();
@@ -156,7 +153,6 @@ void LXeMainVolume::CopyValues(){
   UsePMT = fConstructor->getUsePMT();
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeMainVolume::VisAttributes(){
 
@@ -165,16 +161,15 @@ void LXeMainVolume::VisAttributes(){
   G4VisAttributes* white = new G4VisAttributes(G4Color(1,1,1));
   G4VisAttributes* green = new G4VisAttributes(G4Colour(0,1,0));
   green->SetForceWireframe(true);
-  G4VisAttributes* blue = new G4VisAttributes( G4Colour(0/255. ,0/255. ,255/255. ));  
+  G4VisAttributes* blue = new G4VisAttributes( G4Colour(0/255. ,0/255. ,255/255. ));
 
   fHousing_log->SetVisAttributes(G4VisAttributes::Invisible);
   PVC_l->SetVisAttributes(white);
-  scnt_l->SetVisAttributes(blue);   
+  scnt_l->SetVisAttributes(blue);
   fiber_l->SetVisAttributes(green);
   fPhotocath_log->SetVisAttributes(blue);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeMainVolume::SurfaceProperties(){
 
@@ -214,7 +209,7 @@ void LXeMainVolume::SurfaceProperties(){
     opt_phodet->SetFinish(polished);
     opt_phodet->SetType(dielectric_metal);
     opt_phodet->SetMaterialPropertiesTable(phodetMPT);
-    new G4LogicalSkinSurface("skin_pmt", fPhotocath_log, opt_phodet);        
+    new G4LogicalSkinSurface("skin_pmt", fPhotocath_log, opt_phodet);
     phodetMPT->DumpTable();
   }
 
@@ -254,14 +249,13 @@ void LXeMainVolume::SurfaceProperties(){
     paintMPT->AddProperty("SPECULARSPIKECONSTANT", Ti02_energy, zero,         Ti02_entries);
     paintMPT->AddProperty("BACKSCATTERCONSTANT",   Ti02_energy, zero,         Ti02_entries);
     op_paint->SetMaterialPropertiesTable(paintMPT);
-    new G4LogicalSkinSurface("paint_b", PVC_l, op_paint);    
+    new G4LogicalSkinSurface("paint_b", PVC_l, op_paint);
     //paintMPT->DumpTable();
   }
 
 }
 
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4UnionSolid* LXeMainVolume::MakePVC(G4double innerradius, G4double outerradius){
 
@@ -341,7 +335,6 @@ G4UnionSolid* LXeMainVolume::MakePVC(G4double innerradius, G4double outerradius)
   return PVCassembly7;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4UnionSolid* LXeMainVolume::MakeCell(G4double radius){
 
