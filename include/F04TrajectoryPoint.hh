@@ -13,50 +13,34 @@ class G4Track;
 class G4Step;
 class G4VProcess;
 
-class F04TrajectoryPoint : public G4TrajectoryPoint {
-
-//--------
-  public: // without description
-//--------
-
-// Constructor/Destructor
-
+class F04TrajectoryPoint : public G4TrajectoryPoint
+{
+public:
     F04TrajectoryPoint();
     F04TrajectoryPoint(const G4Track* aTrack);
     F04TrajectoryPoint(const G4Step* aStep);
     F04TrajectoryPoint(const F04TrajectoryPoint &right);
     virtual ~F04TrajectoryPoint();
 
-// Operators
-
     inline void *operator new(size_t);
     inline void operator delete(void *aTrajectoryPoint);
     inline int operator==(const F04TrajectoryPoint& right) const
     { return (this==&right); };
-
-// Get/Set functions
 
     inline G4double GetTime() const { return fTime; };
     inline const G4ThreeVector GetMomentum() const { return fMomentum; };
     inline G4StepStatus GetStepStatus() const { return fStepStatus; };
     inline G4String GetVolumeName() const { return fVolumeName; };
 
-// Get method for HEPRep style attributes
+    virtual const std::map<G4String,G4AttDef>* GetAttDefs() const;
+    virtual std::vector<G4AttValue>* CreateAttValues() const;
 
-   virtual const std::map<G4String,G4AttDef>* GetAttDefs() const;
-   virtual std::vector<G4AttValue>* CreateAttValues() const;
 
-//---------
-  private:
-//---------
-
-// Member data
-
+private:
     G4double      fTime;
     G4ThreeVector fMomentum;
     G4StepStatus  fStepStatus;
     G4String      fVolumeName;
-
 };
 
 extern G4DLLEXPORT G4Allocator<F04TrajectoryPoint> aTrajPointAllocator;

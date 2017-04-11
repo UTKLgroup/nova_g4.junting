@@ -18,8 +18,7 @@ class G4Sphere;
 
 class LXeDetectorConstruction : public G4VUserDetectorConstruction
 {
-public:
-
+  public:
     LXeDetectorConstruction();
     virtual ~LXeDetectorConstruction();
 
@@ -70,7 +69,7 @@ public:
     G4double GetPMTZ(){return fCelltoPMTL + GetPMTHeight();}
     G4double GetFibZ(){return GetFibFullLength() / 2. - (fFibTail + fCellLength / 2.);}
 
-private:
+  private:
 
     void DefineMaterials();
     G4VPhysicalVolume* ConstructDetector();
