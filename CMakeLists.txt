@@ -16,12 +16,12 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
-set(CRY_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/cry_v1.7/src)
+file(GLOB cry_sources ${PROJECT_SOURCE_DIR}/cry_v1.7/src/*.cc)
 set(CRY_LIBRARIES ${PROJECT_SOURCE_DIR}/cry_v1.7/lib/libCRY.a)
-include_directories(${CRY_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/cry_v1.7/src)
 
 find_package(ROOT)
 include_directories(${ROOT_INCLUDE_DIRS})
 
-add_executable(LXe LXe.cc ${sources} ${headers})
+add_executable(LXe LXe.cc ${sources} ${headers} ${cry_sources})
 target_link_libraries(LXe ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CRY_LIBRARIES})
