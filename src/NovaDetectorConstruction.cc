@@ -19,15 +19,15 @@
 
 NovaDetectorConstruction::NovaDetectorConstruction()
 {
-  fScintMPT = NULL;
-  fExperimentalHall_box = NULL;
-  fExperimentalHall_log = NULL;
-  fExperimentalHall_phys = NULL;
-  fTiO2 = fPVC = flscint = NULL;
-  fO = fC = fH = fTi = NULL;
-  fUpdated = false;
+  liquidScintillatorMpt = NULL;
+  experimentalHallBox = NULL;
+  experimentalHallLog = NULL;
+  experimentalHallPhys = NULL;
+  tiO2 = pvc = liquidScintillator = NULL;
+  oxygen = carbon = hydrogen = titanium = NULL;
+  updated = false;
 
-  SetDefaults();
+  setDefaults();
 }
 
 NovaDetectorConstruction::~NovaDetectorConstruction()
@@ -35,12 +35,12 @@ NovaDetectorConstruction::~NovaDetectorConstruction()
 
 void NovaDetectorConstruction::DefineMaterials()
 {
-  fH = new G4Element("H", "H", 1., 1.01*g/mole);
-  fC = new G4Element("C", "C", 6., 12.01*g/mole);
-  fO = new G4Element("O", "O", 8., 16.00*g/mole);
-  fTi = new G4Element( "Ti", "Ti", 22., 47.87*g/mole);
+  hydrogen = new G4Element("H", "H", 1., 1.01*g/mole);
+  carbon = new G4Element("C", "C", 6., 12.01*g/mole);
+  oxygen = new G4Element("O", "O", 8., 16.00*g/mole);
+  titanium = new G4Element( "Ti", "Ti", 22., 47.87*g/mole);
 
-  fVacuum = new G4Material("Vacuum",
+  vacuum = new G4Material("Vacuum",
                            1.,
                            1.01*g/mole,
                            universe_mean_density,
@@ -48,39 +48,39 @@ void NovaDetectorConstruction::DefineMaterials()
                            0.1*kelvin,
                            1.e-19*pascal);
 
-  fTiO2 = new G4Material("TiO2", 4.23*g/cm3, 2, kStateSolid);
-  fTiO2->AddElement(fO, 2);
-  fTiO2->AddElement(fTi, 1);
+  tiO2 = new G4Material("TiO2", 4.23*g/cm3, 2, kStateSolid);
+  tiO2->AddElement(oxygen, 2);
+  tiO2->AddElement(titanium, 1);
 
 
-  flscint = new G4Material("liquid_scintillator",  1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  flscint->AddElement(fH, 0.666);
-  flscint->AddElement(fC, 0.334);
+  liquidScintillator = new G4Material("liquid_scintillator",  1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  liquidScintillator->AddElement(hydrogen, 0.666);
+  liquidScintillator->AddElement(carbon, 0.334);
 
-  Polystyrene = new G4Material("Polystyrene",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  Polystyrene->AddElement(fH, 0.498);
-  Polystyrene->AddElement(fC, 0.502);
+  polystyrene = new G4Material("polystyrene",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  polystyrene->AddElement(hydrogen, 0.498);
+  polystyrene->AddElement(carbon, 0.502);
 
-  PMMA = new G4Material("PMMA", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  PMMA->AddElement(fH, 0.532);
-  PMMA->AddElement(fC, 0.336);
-  PMMA->AddElement(fO, 0.132);
+  pmma = new G4Material("pmma", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  pmma->AddElement(hydrogen, 0.532);
+  pmma->AddElement(carbon, 0.336);
+  pmma->AddElement(oxygen, 0.132);
 
 
-  Fluorinated_Polymer = new G4Material("Fluorinated_Polymer", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  Fluorinated_Polymer->AddElement(fH, 0.532);
-  Fluorinated_Polymer->AddElement(fC, 0.336);
-  Fluorinated_Polymer->AddElement(fO, 0.132);
+  fluorinatedPolymer = new G4Material("fluorinatedPolymer", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  fluorinatedPolymer->AddElement(hydrogen, 0.532);
+  fluorinatedPolymer->AddElement(carbon, 0.336);
+  fluorinatedPolymer->AddElement(oxygen, 0.132);
 
   // PVC
-  fPVC = new G4Material("PVC", 1.4316*g/cm3, 2, kStateSolid);
-  fPVC->AddMaterial(fTiO2, 0.15);
-  fPVC->AddMaterial(Polystyrene, 0.85);
+  pvc = new G4Material("PVC", 1.4316*g/cm3, 2, kStateSolid);
+  pvc->AddMaterial(tiO2, 0.15);
+  pvc->AddMaterial(polystyrene, 0.85);
 
   //Glass
-  fGlass = new G4Material("Glass", 1.032*g/cm3, 2);
-  fGlass->AddElement(fC, 91.533*perCent);
-  fGlass->AddElement(fH, 8.467*perCent);
+  glass = new G4Material("Glass", 1.032*g/cm3, 2);
+  glass->AddElement(carbon, 91.533*perCent);
+  glass->AddElement(hydrogen, 8.467*perCent);
 
   //***Material properties tables
 
@@ -92,10 +92,10 @@ void NovaDetectorConstruction::DefineMaterials()
   G4MaterialPropertiesTable *glass_mt = new G4MaterialPropertiesTable();
   glass_mt->AddProperty("ABSLENGTH", lxe_Energy, glass_AbsLength, lxenum);
   glass_mt->AddProperty("RINDEX", lxe_Energy, glass_RIND, lxenum);
-  fGlass->SetMaterialPropertiesTable(glass_mt);
+  glass->SetMaterialPropertiesTable(glass_mt);
 
   // liquid scintillator
-  fScintMPT = new G4MaterialPropertiesTable();
+  liquidScintillatorMpt = new G4MaterialPropertiesTable();
   G4double ScintRIndexConst = 1.47;
   G4double VacAbsConst = 100.*m;
   G4double wavelength;
@@ -126,7 +126,7 @@ void NovaDetectorConstruction::DefineMaterials()
 
   // scintillator emission (fast and slow)
   std::ifstream ReadScint;
-  ReadScint.open(InputDir + "ppo_emission.txt");
+  ReadScint.open(inputDir + "ppo_emission.txt");
   if(ReadScint.is_open()){
     while(!ReadScint.eof()){
       ReadScint >> wavelength >> filler >> variable;
@@ -149,14 +149,14 @@ void NovaDetectorConstruction::DefineMaterials()
   ReadScint.close();
 
   // vacuum
-  vacMPT = new G4MaterialPropertiesTable();
-  vacMPT->AddProperty("RINDEX", &VacIndexE[0], &VacIndex[0], (G4int) VacIndexE.size());
-  vacMPT->AddProperty("ABSLENGTH", &VacAbsE[0], &VacAbs[0], (G4int) VacAbsE.size());
-  fVacuum->SetMaterialPropertiesTable(vacMPT);
+  vacuumMpt = new G4MaterialPropertiesTable();
+  vacuumMpt->AddProperty("RINDEX", &VacIndexE[0], &VacIndex[0], (G4int) VacIndexE.size());
+  vacuumMpt->AddProperty("ABSLENGTH", &VacAbsE[0], &VacAbs[0], (G4int) VacAbsE.size());
+  vacuum->SetMaterialPropertiesTable(vacuumMpt);
 
   // bulk absorption
   std::ifstream Readabsorb;
-  Readabsorb.open(InputDir + "PSTBulkAbsorb.cfg");
+  Readabsorb.open(inputDir + "PSTBulkAbsorb.cfg");
   if(Readabsorb.is_open()){
     while(!Readabsorb.eof()){
       Readabsorb >> wavelength >> filler >> variable;
@@ -170,7 +170,7 @@ void NovaDetectorConstruction::DefineMaterials()
 
   // WLS absorption
   std::ifstream ReadWLSa;
-  ReadWLSa.open(InputDir + "UPS923.cfg");
+  ReadWLSa.open(inputDir + "UPS923.cfg");
   if (ReadWLSa.is_open()){
     while (!ReadWLSa.eof()){
       ReadWLSa >> wavelength >> filler >> variable;
@@ -184,7 +184,7 @@ void NovaDetectorConstruction::DefineMaterials()
 
   // WLS emission
   std::ifstream ReadWLSe;
-  ReadWLSe.open(InputDir + "bisMSB_emission.txt");
+  ReadWLSe.open(inputDir + "bisMSB_emission.txt");
   if(ReadWLSe.is_open()){
     while (!ReadWLSe.eof()){
       ReadWLSe >> wavelength >> filler >> variable;
@@ -196,21 +196,21 @@ void NovaDetectorConstruction::DefineMaterials()
     G4cout << "Error opening file: " << G4endl;
   ReadWLSe.close();
 
-  fScintMPT->AddProperty(     "RINDEX",        &ScintRIndexE[0],  &ScintRIndex[0],   ScintRIndexE.size());
-  fScintMPT->AddProperty(     "ABSLENGTH",     &ScintAbsE[0],     &ScintAbs[0],      ScintAbsE.size());
-  fScintMPT->AddProperty(     "FASTCOMPONENT", &ScintEmitE[0],    &ScintEmitFast[0], ScintEmitE.size());
-  fScintMPT->AddProperty(     "SLOWCOMPONENT", &ScintEmitE[0],    &ScintEmitSlow[0], ScintEmitE.size());
-  fScintMPT->AddProperty(     "WLSABSLENGTH",  &ScintWLSabsE[0],  &ScintWLSabs[0],   ScintWLSabsE.size());
-  fScintMPT->AddProperty(     "WLSCOMPONENT",  &ScintWLSemitE[0], &ScintWLSemit[0],  ScintWLSemitE.size());
-  fScintMPT->AddConstProperty("SCINTILLATIONYIELD",   fScintLightYield / MeV);
-  fScintMPT->AddConstProperty("CONSTANTQUANTUMYIELD", 0.9);
-  fScintMPT->AddConstProperty("RESOLUTIONSCALE",      1.);
-  fScintMPT->AddConstProperty("FASTTIMECONSTANT",     2.1*ns);
-  fScintMPT->AddConstProperty("SLOWTIMECONSTANT",     10.*ns);
-  fScintMPT->AddConstProperty("WLSTIMECONSTANT",      1.*ns);
-  fScintMPT->AddConstProperty("YIELDRATIO",           1.);
-  flscint->SetMaterialPropertiesTable(fScintMPT);
-  flscint->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
+  liquidScintillatorMpt->AddProperty(     "RINDEX",        &ScintRIndexE[0],  &ScintRIndex[0],   ScintRIndexE.size());
+  liquidScintillatorMpt->AddProperty(     "ABSLENGTH",     &ScintAbsE[0],     &ScintAbs[0],      ScintAbsE.size());
+  liquidScintillatorMpt->AddProperty(     "FASTCOMPONENT", &ScintEmitE[0],    &ScintEmitFast[0], ScintEmitE.size());
+  liquidScintillatorMpt->AddProperty(     "SLOWCOMPONENT", &ScintEmitE[0],    &ScintEmitSlow[0], ScintEmitE.size());
+  liquidScintillatorMpt->AddProperty(     "WLSABSLENGTH",  &ScintWLSabsE[0],  &ScintWLSabs[0],   ScintWLSabsE.size());
+  liquidScintillatorMpt->AddProperty(     "WLSCOMPONENT",  &ScintWLSemitE[0], &ScintWLSemit[0],  ScintWLSemitE.size());
+  liquidScintillatorMpt->AddConstProperty("SCINTILLATIONYIELD",   scintillatorLightYield / MeV);
+  liquidScintillatorMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.9);
+  liquidScintillatorMpt->AddConstProperty("RESOLUTIONSCALE",      1.);
+  liquidScintillatorMpt->AddConstProperty("FASTTIMECONSTANT",     2.1*ns);
+  liquidScintillatorMpt->AddConstProperty("SLOWTIMECONSTANT",     10.*ns);
+  liquidScintillatorMpt->AddConstProperty("WLSTIMECONSTANT",      1.*ns);
+  liquidScintillatorMpt->AddConstProperty("YIELDRATIO",           1.);
+  liquidScintillator->SetMaterialPropertiesTable(liquidScintillatorMpt);
+  liquidScintillator->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
 
   G4double coreIndexconst = 1.59;
   G4double InCladRIndexConst = 1.49;
@@ -234,7 +234,7 @@ void NovaDetectorConstruction::DefineMaterials()
   std::vector < G4double > CladAbs;
 
   // WLS absorption
-  ReadWLSa.open(InputDir + "y11_abs_length.dat");
+  ReadWLSa.open(inputDir + "y11_abs_length.dat");
   if (ReadWLSa.is_open()){
     while(!ReadWLSa.eof()){
       ReadWLSa >> wavelength >> filler >> variable;
@@ -253,7 +253,7 @@ void NovaDetectorConstruction::DefineMaterials()
   ReadWLSa.close();
 
   // WLS emission
-  ReadWLSe.open(InputDir + "WLSemit.cfg");
+  ReadWLSe.open(inputDir + "WLSemit.cfg");
   if(ReadWLSe.is_open()){
     while(!ReadWLSe.eof()){
       ReadWLSe >> wavelength >> filler >> variable;
@@ -267,7 +267,7 @@ void NovaDetectorConstruction::DefineMaterials()
 
   // core bulk absorption
   std::ifstream ReadBulk;
-  ReadBulk.open(InputDir + "fiberPSTabsorb.dat");
+  ReadBulk.open(inputDir + "fiberPSTabsorb.dat");
   if(ReadBulk.is_open()){
     while(!ReadBulk.eof()){
       ReadBulk >> wavelength >> filler >> variable;
@@ -281,7 +281,7 @@ void NovaDetectorConstruction::DefineMaterials()
 
   // first cladding bulk absorption
   std::ifstream Read_pmma_Bulk;
-  Read_pmma_Bulk.open(InputDir + "PMMABulkAbsorb.dat");
+  Read_pmma_Bulk.open(inputDir + "PMMABulkAbsorb.dat");
   if(Read_pmma_Bulk.is_open()){
     while(!Read_pmma_Bulk.eof()){
       Read_pmma_Bulk >> wavelength >> filler >> variable;
@@ -294,25 +294,25 @@ void NovaDetectorConstruction::DefineMaterials()
   Read_pmma_Bulk.close();
 
   //---------- set MPT
-  wlsMPT = new G4MaterialPropertiesTable();
-  wlsMPT->AddProperty("RINDEX",       &RIndexE[0],      &CoreRIndex[0],  RIndexE.size());
-  wlsMPT->AddProperty("ABSLENGTH",    &CoreAbsE[0],     &CoreAbs[0],     CoreAbsE.size());
-  wlsMPT->AddProperty("WLSABSLENGTH", &CoreWLSabsE[0],  &CoreWLSabs[0],  CoreWLSabsE.size());
-  wlsMPT->AddProperty("WLSCOMPONENT", &CoreWLSemitE[0], &CoreWLSemit[0], CoreWLSemitE.size());
-  wlsMPT->AddConstProperty("WLSTIMECONSTANT",      11.8*ns);
-  wlsMPT->AddConstProperty("CONSTANTQUANTUMYIELD", 0.7);
-  Polystyrene->SetMaterialPropertiesTable(wlsMPT);
-  //wlsMPT->DumpTable();
+  polystyreneMpt = new G4MaterialPropertiesTable();
+  polystyreneMpt->AddProperty("RINDEX",       &RIndexE[0],      &CoreRIndex[0],  RIndexE.size());
+  polystyreneMpt->AddProperty("ABSLENGTH",    &CoreAbsE[0],     &CoreAbs[0],     CoreAbsE.size());
+  polystyreneMpt->AddProperty("WLSABSLENGTH", &CoreWLSabsE[0],  &CoreWLSabs[0],  CoreWLSabsE.size());
+  polystyreneMpt->AddProperty("WLSCOMPONENT", &CoreWLSemitE[0], &CoreWLSemit[0], CoreWLSemitE.size());
+  polystyreneMpt->AddConstProperty("WLSTIMECONSTANT",      11.8*ns);
+  polystyreneMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.7);
+  polystyrene->SetMaterialPropertiesTable(polystyreneMpt);
+  //polystyreneMpt->DumpTable();
 
-  innercladMPT = new G4MaterialPropertiesTable();
-  innercladMPT->AddProperty("RINDEX",    &RIndexE[0],  &InCladRIndex[0], RIndexE.size());
-  innercladMPT->AddProperty("ABSLENGTH", &CladAbsE[0], &CladAbs[0],      CladAbsE.size());
-  PMMA->SetMaterialPropertiesTable(innercladMPT);
+  innerCladdingMpt = new G4MaterialPropertiesTable();
+  innerCladdingMpt->AddProperty("RINDEX",    &RIndexE[0],  &InCladRIndex[0], RIndexE.size());
+  innerCladdingMpt->AddProperty("ABSLENGTH", &CladAbsE[0], &CladAbs[0],      CladAbsE.size());
+  pmma->SetMaterialPropertiesTable(innerCladdingMpt);
 
-  outercladMPT = new G4MaterialPropertiesTable();
-  outercladMPT->AddProperty("RINDEX",    &RIndexE[0],  &OutCladRIndex[0], RIndexE.size());
-  outercladMPT->AddProperty("ABSLENGTH", &CladAbsE[0], &CladAbs[0],       CladAbsE.size());
-  Fluorinated_Polymer->SetMaterialPropertiesTable(outercladMPT);
+  outerCladdingMpt = new G4MaterialPropertiesTable();
+  outerCladdingMpt->AddProperty("RINDEX",    &RIndexE[0],  &OutCladRIndex[0], RIndexE.size());
+  outerCladdingMpt->AddProperty("ABSLENGTH", &CladAbsE[0], &CladAbs[0],       CladAbsE.size());
+  fluorinatedPolymer->SetMaterialPropertiesTable(outerCladdingMpt);
 }
 
 G4VPhysicalVolume* NovaDetectorConstruction::Construct()
@@ -324,68 +324,68 @@ G4VPhysicalVolume* NovaDetectorConstruction::Construct()
 G4VPhysicalVolume* NovaDetectorConstruction::ConstructDetector()
 {
   //The experimental hall walls are all 1m away from housing walls
-  G4double expHall_x = GetCellWidth() / 2.  + 20.*cm;
-  G4double expHall_y = GetCellHeight() / 2.  + 20.*cm;
-  G4double expHall_z = GetCelltoPMTL() + 20.*cm;
+  G4double expHall_x = getCellWidth() / 2.  + 20.*cm;
+  G4double expHall_y = getCellHeight() / 2.  + 20.*cm;
+  G4double expHall_z = getCellToPmtDistance() + 20.*cm;
 
   //Create experimental hall
-  fExperimentalHall_box  = new G4Box("expHall_box", expHall_x, expHall_y, expHall_z);
-  fExperimentalHall_log  = new G4LogicalVolume(fExperimentalHall_box, fVacuum, "expHall_log", 0, 0, 0);
-  fExperimentalHall_phys = new G4PVPlacement(0, G4ThreeVector(), fExperimentalHall_log, "expHall", 0, false, 0);
-  fExperimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
+  experimentalHallBox  = new G4Box("expHall_box", expHall_x, expHall_y, expHall_z);
+  experimentalHallLog  = new G4LogicalVolume(experimentalHallBox, vacuum, "expHall_log", 0, 0, 0);
+  experimentalHallPhys = new G4PVPlacement(0, G4ThreeVector(), experimentalHallLog, "expHall", 0, false, 0);
+  experimentalHallLog->SetVisAttributes(G4VisAttributes::Invisible);
 
   //Place the main volume
-  if(fMainVolume){
-    new LXeMainVolume(0, G4ThreeVector(), fExperimentalHall_log,false,0,this);
+  if(mainVolume){
+    new LXeMainVolume(0, G4ThreeVector(), experimentalHallLog,false,0,this);
   }
 
-  return fExperimentalHall_phys;
+  return experimentalHallPhys;
 }
 
-void NovaDetectorConstruction::PrintSettings()
+void NovaDetectorConstruction::printSettings()
 {
-  G4cout << std::setw(25) << "fScintLightYield = "     << std::setw(10) << fScintMPT->GetConstProperty("SCINTILLATIONYIELD") << std::setw(10) << " MeV-1" << G4endl;
-  G4cout << std::setw(25) << "fCellLength = "          << std::setw(10) << fCellLength          / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "fRectWidth = "           << std::setw(10) << fRectWidth           / mm << std::setw(10) << " mm" << G4endl;
-  G4cout << std::setw(25) << "fRectHeight = "          << std::setw(10) << fRectHeight          / mm << std::setw(10) << " mm" << G4endl;
-  G4cout << std::setw(25) << "fInner_Corner_Radius = " << std::setw(10) << fInner_Corner_Radius / mm << std::setw(10) << " mm" << G4endl;
-  G4cout << std::setw(25) << "fPVCThickness = "        << std::setw(10) << fPVCThickness        / mm << std::setw(10) << " mm" << G4endl;
-  G4cout << std::setw(25) << "fFibRadius = "           << std::setw(10) << fFibRadius           / mm << std::setw(10) << " mm" << G4endl;
-  G4cout << std::setw(25) << "fFib1X = "               << std::setw(10) << fFib1X               / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "fFib1Y = "               << std::setw(10) << fFib1Y               / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "fFib2X = "               << std::setw(10) << fFib2X               / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "fFib2Y = "               << std::setw(10) << fFib2Y               / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "fCelltoPMTL = "          << std::setw(10) << fCelltoPMTL          / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "fFibTail = "             << std::setw(10) << fFibTail             / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "UsePMT = "               << std::setw(10) << UsePMT << G4endl;
+  G4cout << std::setw(25) << "scintillatorLightYield = "     << std::setw(10) << liquidScintillatorMpt->GetConstProperty("SCINTILLATIONYIELD") << std::setw(10) << " MeV-1" << G4endl;
+  G4cout << std::setw(25) << "cellLength = "          << std::setw(10) << cellLength          / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "rectangleWidth = "           << std::setw(10) << rectangleWidth           / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "rectangleHeight = "          << std::setw(10) << rectangleHeight          / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "innerCornerRadius = " << std::setw(10) << innerCornerRadius / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "pvcThickness = "        << std::setw(10) << pvcThickness        / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "fiberRadius = "           << std::setw(10) << fiberRadius           / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "fiber1X = "               << std::setw(10) << fiber1X               / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "fiber1Y = "               << std::setw(10) << fiber1Y               / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "fiber2X = "               << std::setw(10) << fiber2X               / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "fiber2Y = "               << std::setw(10) << fiber2Y               / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "cellToPmtDistance = "          << std::setw(10) << cellToPmtDistance          / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "fiberTailLength = "             << std::setw(10) << fiberTailLength             / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "usePMT = "               << std::setw(10) << usePMT << G4endl;
   G4cout << G4endl;
 }
 
-void NovaDetectorConstruction::SetDefaults()
+void NovaDetectorConstruction::setDefaults()
 {
-  fScintLightYield     = 100.;
-  fRectHeight          = 40.0*mm;
-  fRectWidth           = 17.7*mm;
-  fInner_Corner_Radius = 9.7*mm;
-  fPVCThickness        = 3.3*mm;
-  fFibRadius           = 0.35*mm;
-  fCellLength          = 120.*cm;
-  fFib1X               = 1*cm;
-  fFib1Y               = 0;
-  fFib2X               = -1*cm;
-  fFib2Y               = 0;
-  fCelltoPMTL          = 100.*cm;
-  fFibTail             = 10.*cm;
-  UsePMT               = true;
-  fMainVolume          = true;
-  InputDir             = "/Users/juntinghuang/Desktop/nova/input/";
+  scintillatorLightYield     = 100.;
+  rectangleHeight          = 40.0*mm;
+  rectangleWidth           = 17.7*mm;
+  innerCornerRadius = 9.7*mm;
+  pvcThickness        = 3.3*mm;
+  fiberRadius           = 0.35*mm;
+  cellLength          = 120.*cm;
+  fiber1X               = 1*cm;
+  fiber1Y               = 0;
+  fiber2X               = -1*cm;
+  fiber2Y               = 0;
+  cellToPmtDistance          = 100.*cm;
+  fiberTailLength             = 10.*cm;
+  usePMT               = true;
+  mainVolume          = true;
+  inputDir             = "/Users/juntinghuang/Desktop/nova/input/";
 
   G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
 
-  fUpdated = true;
+  updated = true;
 }
 
-void NovaDetectorConstruction::UpdateGeometry()
+void NovaDetectorConstruction::updateGeometry()
 {
   G4GeometryManager::GetInstance()->OpenGeometry();
   G4PhysicalVolumeStore::GetInstance()->Clean();
@@ -398,10 +398,10 @@ void NovaDetectorConstruction::UpdateGeometry()
   G4RunManager::GetRunManager()->DefineWorldVolume(ConstructDetector());
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 
-  fUpdated = false;
+  updated = false;
 }
 
-void NovaDetectorConstruction::SetMainScintYield(G4double y)
+void NovaDetectorConstruction::setMainScintYield(G4double y)
 {
-  fScintMPT->AddConstProperty("SCINTILLATIONYIELD", y/MeV);
+  liquidScintillatorMpt->AddConstProperty("SCINTILLATIONYIELD", y/MeV);
 }

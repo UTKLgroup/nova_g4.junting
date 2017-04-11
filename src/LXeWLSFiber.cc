@@ -29,7 +29,7 @@ LXeWLSFiber::LXeWLSFiber(G4RotationMatrix *pRot,
       new G4Tubs("Fiber",fFiber_rmin,fFiber_rmax,fFiber_z,fFiber_sphi,fFiber_ephi);
  
     G4LogicalVolume* fiber_log =
-      new G4LogicalVolume(fiber_tube,G4Material::GetMaterial("PMMA"),
+      new G4LogicalVolume(fiber_tube,G4Material::GetMaterial("pmma"),
                           "Fiber",0,0,0);
  
     // Cladding (first layer)
@@ -64,7 +64,7 @@ LXeWLSFiber::LXeWLSFiber(G4RotationMatrix *pRot,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeWLSFiber::CopyValues(){
-  fUpdated=fConstructor->GetUpdated();
+  fUpdated= fConstructor->getUpdated();
 
   fFiber_rmin = 0.00*cm;
   fFiber_rmax = 0.10*cm;    

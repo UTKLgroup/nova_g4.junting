@@ -130,30 +130,30 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeMainVolume::CopyValues(){
-  fUpdated=fConstructor->GetUpdated();
+  fUpdated= fConstructor->getUpdated();
 
-  fRectWidth = fConstructor->GetRectWidth();
-  fRectHeight = fConstructor->GetRectHeight();
-  fCellLength = fConstructor->GetCellLength();
-  fPVCThickness = fConstructor->GetPVCThickness();
-  fInner_Corner_Radius = fConstructor->GetInner_Corner_Radius();
-  fFibRadius = fConstructor->GetFibRadius();
-  fFib1X = fConstructor->GetFib1X();
-  fFib1Y = fConstructor->GetFib1Y();
-  fFib2X = fConstructor->GetFib2X();
-  fFib2Y = fConstructor->GetFib2Y();
-  fCelltoPMTL = fConstructor->GetCelltoPMTL();
-  fFibTail = fConstructor->GetFibTail();
+  fRectWidth = fConstructor->getRectangleWidth();
+  fRectHeight = fConstructor->getRectangleHeight();
+  fCellLength = fConstructor->getCellLength();
+  fPVCThickness = fConstructor->getPvcThickness();
+  fInner_Corner_Radius = fConstructor->getInnerCornerRadius();
+  fFibRadius = fConstructor->getFiberRadius();
+  fFib1X = fConstructor->getFiber1X();
+  fFib1Y = fConstructor->getFiber1Y();
+  fFib2X = fConstructor->getFiber2X();
+  fFib2Y = fConstructor->getFiber2Y();
+  fCelltoPMTL = fConstructor->getCellToPmtDistance();
+  fFibTail = fConstructor->getFiberTailLength();
 
-  fPMTHeight = fConstructor->GetPMTHeight();
-  fPMTZ = fConstructor->GetPMTZ();
-  fFibFullLength = fConstructor->GetFibFullLength();
-  fFibZ = fConstructor->GetFibZ();
-  fCellWidth = fConstructor->GetCellWidth();
-  fCellHeight = fConstructor->GetCellHeight();
-  fOuter_Corner_Radius = fConstructor->GetOuter_Corner_Radius();    
+  fPMTHeight = fConstructor->getPmtHeight();
+  fPMTZ = fConstructor->getPmtZ();
+  fFibFullLength = fConstructor->getFullFiberLength();
+  fFibZ = fConstructor->getFiberZ();
+  fCellWidth = fConstructor->getCellWidth();
+  fCellHeight = fConstructor->getCellHeight();
+  fOuter_Corner_Radius = fConstructor->getOuterCornerRadius();
 
-  UsePMT = fConstructor->GetUsePMT();
+  UsePMT = fConstructor->getUsePMT();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

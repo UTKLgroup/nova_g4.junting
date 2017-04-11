@@ -23,97 +23,95 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
 
     virtual G4VPhysicalVolume* Construct();
 
-    void SetDefaults();
-    void UpdateGeometry();
-    G4bool GetUpdated(){return fUpdated;}
-    void SetMainVolumeOn(G4bool b){fMainVolume=b; fUpdated=true;}
-    void PrintSettings();
-    void SetMainScintYield(G4double );
+    void setDefaults();
+    void updateGeometry();
+    void printSettings();
 
-    void SetRectWidth(G4double a){fRectWidth = a; fUpdated=true;}
-    void SetRectHeight(G4double a){fRectHeight = a; fUpdated=true;}
-    void SetCellLength(G4double a){fCellLength = a; fUpdated=true;}
-    void SetPVCThickness(G4double a){fPVCThickness = a; fUpdated=true;}
-    void SetInner_Corner_Radius(G4double a){fInner_Corner_Radius = a; fUpdated=true;}
-    void SetFibRadius(G4double a){fFibRadius = a; fUpdated=true;}
-    void SetFib1X(G4double a){fFib1X = a; fUpdated=true;}
-    void SetFib1Y(G4double a){fFib1Y = a; fUpdated=true;}
-    void SetFib2X(G4double a){fFib2X = a; fUpdated=true;}
-    void SetFib2Y(G4double a){fFib2Y = a; fUpdated=true;}
-    void SetCelltoPMTL(G4double a){fCelltoPMTL = a; fUpdated=true;}
-    void SetFibTail(G4double a){fFibTail = a; fUpdated=true;}
+    void setMainVolumeOn(G4bool b){mainVolume=b; updated=true;}
+    void setMainScintYield(G4double y);
+    void setRectWidth(G4double a){rectangleWidth = a; updated=true;}
+    void setRectHeight(G4double a){rectangleHeight = a; updated=true;}
+    void setCellLength(G4double a){cellLength = a; updated=true;}
+    void setPVCThickness(G4double a){pvcThickness = a; updated=true;}
+    void setInnerCornerRadius(G4double a){innerCornerRadius = a; updated=true;}
+    void setFiberRadius(G4double a){fiberRadius = a; updated=true;}
+    void setFiber1X(G4double a){fiber1X = a; updated=true;}
+    void setFiber1Y(G4double a){fiber1Y = a; updated=true;}
+    void setFiber2X(G4double a){fiber2X = a; updated=true;}
+    void setFiber2Y(G4double a){fiber2Y = a; updated=true;}
+    void setCellToPmtDistance(G4double a){cellToPmtDistance = a; updated=true;}
+    void setFiberTailLength(G4double a){fiberTailLength = a; updated=true;}
+    void setUsePMT(bool b){usePMT = b;}
+    void setPmtQuantumEfficiency(G4double qe){pmtQuantumEfficiency = qe; updated=true;}
 
-    G4double GetRectWidth(){return fRectWidth;}
-    G4double GetRectHeight(){return fRectHeight;}
-    G4double GetCellLength(){return fCellLength;}
-    G4double GetPVCThickness(){return fPVCThickness;}
-    G4double GetInner_Corner_Radius(){return fInner_Corner_Radius;}
-    G4double GetFibRadius(){return fFibRadius;}
-    G4double GetFib1X(){return fFib1X;}
-    G4double GetFib1Y(){return fFib1Y;}
-    G4double GetFib2X(){return fFib2X;}
-    G4double GetFib2Y(){return fFib2Y;}
-    G4double GetCelltoPMTL(){return fCelltoPMTL;}
-    G4double GetFibTail(){return fFibTail;}
-
-    void SetUsePMT(bool b){UsePMT = b;}
-    bool GetUsePMT(){return UsePMT;}
-    void SetpmtQE(G4double qe){fpmtQE = qe; fUpdated=true;}
-
-    G4double GetPMTHeight(){return fFibRadius / 4.;}
-    G4double GetFibFullLength(){return fCelltoPMTL + fCellLength / 2. + fFibTail;}
-    G4double GetOuter_Corner_Radius(){return fInner_Corner_Radius + fPVCThickness;}
-    G4double GetCellWidth(){return fRectWidth + 2. * GetOuter_Corner_Radius();}
-    G4double GetCellHeight(){return fRectHeight + 2. * GetOuter_Corner_Radius();}
-    G4double GetPMTZ(){return fCelltoPMTL + GetPMTHeight();}
-    G4double GetFibZ(){return GetFibFullLength() / 2. - (fFibTail + fCellLength / 2.);}
+    G4double getRectangleWidth(){return rectangleWidth;}
+    G4double getRectangleHeight(){return rectangleHeight;}
+    G4double getCellLength(){return cellLength;}
+    G4double getPvcThickness(){return pvcThickness;}
+    G4double getInnerCornerRadius(){return innerCornerRadius;}
+    G4double getFiberRadius(){return fiberRadius;}
+    G4double getFiber1X(){return fiber1X;}
+    G4double getFiber1Y(){return fiber1Y;}
+    G4double getFiber2X(){return fiber2X;}
+    G4double getFiber2Y(){return fiber2Y;}
+    G4double getCellToPmtDistance(){return cellToPmtDistance;}
+    G4double getFiberTailLength(){return fiberTailLength;}
+    G4double getPmtHeight(){return fiberRadius / 4.;}
+    G4double getFullFiberLength(){return cellToPmtDistance + cellLength / 2. + fiberTailLength;}
+    G4double getOuterCornerRadius(){return innerCornerRadius + pvcThickness;}
+    G4double getCellWidth(){return rectangleWidth + 2. * getOuterCornerRadius();}
+    G4double getCellHeight(){return rectangleHeight + 2. * getOuterCornerRadius();}
+    G4double getPmtZ(){return cellToPmtDistance + getPmtHeight();}
+    G4double getFiberZ(){return getFullFiberLength() / 2. - (fiberTailLength + cellLength / 2.);}
+    bool getUsePMT(){return usePMT;}
+    G4bool getUpdated(){return updated;}
 
   private:
     void DefineMaterials();
     G4VPhysicalVolume* ConstructDetector();
-    G4bool fUpdated;
-    G4Box* fExperimentalHall_box;
-    G4LogicalVolume* fExperimentalHall_log;
-    G4VPhysicalVolume* fExperimentalHall_phys;
+    G4bool updated;
+    G4Box* experimentalHallBox;
+    G4LogicalVolume* experimentalHallLog;
+    G4VPhysicalVolume* experimentalHallPhys;
 
-    G4Element* fO;
-    G4Element* fC;
-    G4Element* fH;
-    G4Element* fTi;
+    G4Element* oxygen;
+    G4Element* carbon;
+    G4Element* hydrogen;
+    G4Element* titanium;
 
-    G4Material* fVacuum;
-    G4Material* fGlass;
-    G4Material* fTiO2;
-    G4Material* fPVC;
-    G4Material* flscint;
-    G4Material* Polystyrene;
-    G4Material* PMMA;
-    G4Material* Fluorinated_Polymer;
+    G4Material* vacuum;
+    G4Material* glass;
+    G4Material* tiO2;
+    G4Material* pvc;
+    G4Material* liquidScintillator;
+    G4Material* polystyrene;
+    G4Material* pmma;
+    G4Material* fluorinatedPolymer;
 
-    G4MaterialPropertiesTable* fScintMPT;
-    G4MaterialPropertiesTable* vacMPT;
-    G4MaterialPropertiesTable* wlsMPT;
-    G4MaterialPropertiesTable* innercladMPT;
-    G4MaterialPropertiesTable* outercladMPT;
+    G4MaterialPropertiesTable* liquidScintillatorMpt;
+    G4MaterialPropertiesTable* vacuumMpt;
+    G4MaterialPropertiesTable* polystyreneMpt;
+    G4MaterialPropertiesTable* innerCladdingMpt;
+    G4MaterialPropertiesTable* outerCladdingMpt;
 
-    G4bool fMainVolume;
-    G4double fpmtQE;
-    G4double fScintLightYield;
-    G4double fRectWidth;
-    G4double fRectHeight;
-    G4double fCellLength;
-    G4double fPVCThickness;
-    G4double fInner_Corner_Radius;
-    G4double fFibRadius;
-    G4double fFib1X;
-    G4double fFib1Y;
-    G4double fFib2X;
-    G4double fFib2Y;
-    G4double fCelltoPMTL;
-    G4double fFibTail;
-    bool UsePMT;
+    G4bool mainVolume;
+    G4double scintillatorLightYield;
+    G4double rectangleWidth;
+    G4double rectangleHeight;
+    G4double cellLength;
+    G4double pvcThickness;
+    G4double innerCornerRadius;
+    G4double fiberRadius;
+    G4double fiber1X;
+    G4double fiber1Y;
+    G4double fiber2X;
+    G4double fiber2Y;
+    G4double cellToPmtDistance;
+    G4double fiberTailLength;
+    G4double pmtQuantumEfficiency;
+    bool usePMT;
 
-    G4String InputDir;
+    G4String inputDir;
 };
 
 #endif

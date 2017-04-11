@@ -100,7 +100,7 @@ LXeDetectorMessenger::LXeDetectorMessenger(NovaDetectorConstruction* detector)
 
   // other setups
 
-  fUsePMTCmd = new G4UIcmdWithABool("/LXe/detector/volumes/UsePMT",this);
+  fUsePMTCmd = new G4UIcmdWithABool("/LXe/detector/volumes/usePMT",this);
   fUsePMTCmd->SetGuidance("Use PMT or APD.");  
 
   fLxeCmd = new G4UIcmdWithABool("/LXe/detector/volumes/lxe",this);
@@ -122,7 +122,7 @@ LXeDetectorMessenger::LXeDetectorMessenger(NovaDetectorConstruction* detector)
   fpmtQECmd->SetGuidance("Set the pmt QE."); 
 
   fPrintSettings = new G4UIcmdWithoutParameter
-    ("/LXe/detector/PrintSettings",this);
+    ("/LXe/detector/printSettings",this);
   fPrintSettings->SetGuidance("Print the full detector setting.");
 }
 
@@ -158,62 +158,61 @@ LXeDetectorMessenger::~LXeDetectorMessenger()
 void LXeDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if (command == fRectWidthCmd){
-    fLXeDetector->SetRectWidth(fRectWidthCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setRectWidth(fRectWidthCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fRectHeightCmd){
-    fLXeDetector->SetRectHeight(fRectHeightCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setRectHeight(fRectHeightCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fCellLengthCmd){
-    fLXeDetector->SetCellLength(fCellLengthCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setCellLength(fCellLengthCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fPVCThicknessCmd){
-    fLXeDetector->SetPVCThickness(fPVCThicknessCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setPVCThickness(fPVCThicknessCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fInner_Corner_RadiusCmd){
-    fLXeDetector->SetInner_Corner_Radius(fInner_Corner_RadiusCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setInnerCornerRadius(fInner_Corner_RadiusCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fFibRadiusCmd){
-    fLXeDetector->SetFibRadius(fFibRadiusCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setFiberRadius(fFibRadiusCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fFib1XCmd){
-    fLXeDetector->SetFib1X(fFib1XCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setFiber1X(fFib1XCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fFib1YCmd){
-    fLXeDetector->SetFib1Y(fFib1YCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setFiber1Y(fFib1YCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fFib2XCmd){
-    fLXeDetector->SetFib2X(fFib2XCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setFiber2X(fFib2XCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fFib2YCmd){
-    fLXeDetector->SetFib2Y(fFib2YCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setFiber2Y(fFib2YCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fCelltoPMTLCmd){
-    fLXeDetector->SetCelltoPMTL(fCelltoPMTLCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setCellToPmtDistance(fCelltoPMTLCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fFibTailCmd){
-    fLXeDetector->SetFibTail(fFibTailCmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setFiberTailLength(fFibTailCmd->GetNewDoubleValue(newValue));
   }  
   else if (command == fUsePMTCmd){
-    fLXeDetector->SetUsePMT(fUsePMTCmd->GetNewBoolValue(newValue));
+    fLXeDetector->setUsePMT(fUsePMTCmd->GetNewBoolValue(newValue));
   }  
   else if (command == fUpdateCmd){
-    fLXeDetector->UpdateGeometry();
+    fLXeDetector->updateGeometry();
   }
   else if (command == fDefaultsCmd){
-    fLXeDetector->SetDefaults();
+    fLXeDetector->setDefaults();
   }
   else if (command == fLxeCmd){
-    fLXeDetector->SetMainVolumeOn(fLxeCmd->GetNewBoolValue(newValue));
+    fLXeDetector->setMainVolumeOn(fLxeCmd->GetNewBoolValue(newValue));
   }
   else if (command == fMainScintYield){
-    fLXeDetector->SetMainScintYield(fMainScintYield->GetNewDoubleValue(newValue));
+    fLXeDetector->setMainScintYield(fMainScintYield->GetNewDoubleValue(newValue));
   }
   else if (command == fpmtQECmd){
-        fLXeDetector
-	  ->SetpmtQE(fpmtQECmd->GetNewDoubleValue(newValue));
+    fLXeDetector->setPmtQuantumEfficiency(fpmtQECmd->GetNewDoubleValue(newValue));
   }  
   //print settings
   else if (command == fPrintSettings){
-    fLXeDetector->PrintSettings();
+    fLXeDetector->printSettings();
   }
 }

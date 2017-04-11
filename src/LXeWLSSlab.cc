@@ -33,7 +33,7 @@ LXeWLSSlab::LXeWLSSlab(G4RotationMatrix *pRot,
  
     fScintSlab_log
       = new G4LogicalVolume(ScintSlab_box,
-                            G4Material::GetMaterial("Polystyrene"),
+                            G4Material::GetMaterial("polystyrene"),
                             "Slab",0,0,0);
  
     G4double spacing = 2*slab_y/fNfibers;
@@ -56,7 +56,7 @@ LXeWLSSlab::LXeWLSSlab(G4RotationMatrix *pRot,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeWLSSlab::CopyValues(){
-  fUpdated=fConstructor->GetUpdated();
+  fUpdated= fConstructor->getUpdated();
 
   /* 
   fScint_x=fConstructor->GetScintX();
