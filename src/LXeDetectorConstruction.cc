@@ -1,25 +1,11 @@
 #include "LXeDetectorConstruction.hh"
 #include "LXePMTSD.hh"
-#include "LXeScintSD.hh"
-#include "LXeDetectorMessenger.hh"
 #include "LXeMainVolume.hh"
-#include "LXeWLSSlab.hh"
 
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "G4LogicalSkinSurface.hh"
-#include "G4OpticalSurface.hh"
-#include "G4MaterialTable.hh"
-#include "G4VisAttributes.hh"
-#include "G4Material.hh"
-#include "G4Box.hh"
-#include "G4Tubs.hh"
-#include "G4Sphere.hh"
-#include "G4LogicalVolume.hh"
-#include "G4ThreeVector.hh"
-#include "G4PVPlacement.hh"
-#include "globals.hh"
 #include "G4SolidStore.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PhysicalVolumeStore.hh"
@@ -30,28 +16,20 @@
 
 #include "G4NistManager.hh"
 
-#include "iomanip"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 LXeDetectorConstruction::LXeDetectorConstruction()
-        : fScintMPT(NULL)
 {
+    fScintMPT = NULL;
     fExperimentalHall_box = NULL;
     fExperimentalHall_log = NULL;
     fExperimentalHall_phys = NULL;
-
-    fLXe = fAl = fAir = fVacuum = fGlass = NULL;
-    fPstyrene = fPMMA = fPethylene1 = fPethylene2 = NULL;
     fTiO2 = fPVC = flscint = NULL;
-
-    fN = fO = fC = fH = fTi = NULL;
-
+    fO = fC = fH = fTi = NULL;
     fUpdated = false;
 
     SetDefaults();
-
-    fDetectorMessenger = new LXeDetectorMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -65,14 +43,8 @@ void LXeDetectorConstruction::DefineMaterials(){
 
     fH = new G4Element("H", "H", 1., 1.01*g/mole);
     fC = new G4Element("C", "C", 6., 12.01*g/mole);
-    fN = new G4Element("N", "N", 7., 14.01*g/mole);
     fO = new G4Element("O", "O", 8., 16.00*g/mole);
     fTi = new G4Element( "Ti", "Ti", 22., 47.87*g/mole);
-
-    //***Materials
-
-    //Aluminum
-    fAl = new G4Material("Al", 13., 26.98*g/mole, 2.7*g/cm3);
 
     //Vacuum
     fVacuum = new G4Material("Vacuum",
