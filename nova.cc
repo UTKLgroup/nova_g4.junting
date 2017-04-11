@@ -1,7 +1,7 @@
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 #include "LXePhysicsList.hh"
 #include "LXePrimaryGeneratorAction.hh"
 #include "LXeEventAction.hh"
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
   G4VSteppingVerbose::SetInstance(new LXeSteppingVerbose);
   G4RunManager* runManager = new G4RunManager;
 
-  runManager->SetUserInitialization(new LXeDetectorConstruction);
+  runManager->SetUserInitialization(new NovaDetectorConstruction);
   runManager->SetUserInitialization(new LXePhysicsList);
 
 #ifdef G4VIS_USE

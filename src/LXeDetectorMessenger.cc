@@ -1,5 +1,5 @@
 #include "LXeDetectorMessenger.hh"
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
@@ -13,7 +13,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeDetectorMessenger::LXeDetectorMessenger(LXeDetectorConstruction* detector)
+LXeDetectorMessenger::LXeDetectorMessenger(NovaDetectorConstruction* detector)
  : fLXeDetector(detector)
 {
   //Setup a command directory for detector controls with guidance

@@ -11,7 +11,7 @@
 #include "G4UnionSolid.hh"
 #include "G4SubtractionSolid.hh" 
 #include "WLSfiber.hh"
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 
 class LXeMainVolume : public G4PVPlacement
 {
@@ -22,7 +22,7 @@ class LXeMainVolume : public G4PVPlacement
                  G4LogicalVolume *pMotherLogical,
                  G4bool pMany,
                  G4int pCopyNo,
-                 LXeDetectorConstruction* c);
+                 NovaDetectorConstruction* c);
 
   private:
 
@@ -36,7 +36,7 @@ class LXeMainVolume : public G4PVPlacement
   
   G4bool fUpdated;
   
-  LXeDetectorConstruction* fConstructor;
+  NovaDetectorConstruction* fConstructor;
   
   // required
   G4double fRectWidth;

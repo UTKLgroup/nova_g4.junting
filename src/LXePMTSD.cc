@@ -1,6 +1,6 @@
 #include "LXePMTSD.hh"
 #include "LXePMTHit.hh"
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 #include "LXeUserTrackInformation.hh"
 
 #include "G4VPhysicalVolume.hh"
@@ -89,7 +89,7 @@ G4bool LXePMTSD::ProcessHits_constStep(const G4Step* aStep,
   hit->IncPhotonCount(); //increment hit for the selected pmt
 
   /*
-  if(!LXeDetectorConstruction::GetSphereOn()){
+  if(!NovaDetectorConstruction::GetSphereOn()){
     hit->SetDrawit(true);
     //If the sphere is disabled then this hit is automaticaly drawn
   }

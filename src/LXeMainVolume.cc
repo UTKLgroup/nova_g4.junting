@@ -17,7 +17,7 @@ LXeMainVolume::LXeMainVolume(G4RotationMatrix *pRot,
                              G4LogicalVolume *pMotherLogical,
                              G4bool pMany,
                              G4int pCopyNo,
-                             LXeDetectorConstruction* c)
+                             NovaDetectorConstruction* c)
   //Pass info to the G4PVPlacement constructor
   :G4PVPlacement(pRot,tlate,
                  //Temp logical volume must be created here

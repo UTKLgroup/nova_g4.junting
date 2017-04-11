@@ -1,4 +1,4 @@
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 #include "LXePMTSD.hh"
 #include "LXeMainVolume.hh"
 
@@ -17,7 +17,7 @@
 #include "G4NistManager.hh"
 
 
-LXeDetectorConstruction::LXeDetectorConstruction()
+NovaDetectorConstruction::NovaDetectorConstruction()
 {
   fScintMPT = NULL;
   fExperimentalHall_box = NULL;
@@ -30,10 +30,10 @@ LXeDetectorConstruction::LXeDetectorConstruction()
   SetDefaults();
 }
 
-LXeDetectorConstruction::~LXeDetectorConstruction()
+NovaDetectorConstruction::~NovaDetectorConstruction()
 {}
 
-void LXeDetectorConstruction::DefineMaterials()
+void NovaDetectorConstruction::DefineMaterials()
 {
   fH = new G4Element("H", "H", 1., 1.01*g/mole);
   fC = new G4Element("C", "C", 6., 12.01*g/mole);
@@ -315,13 +315,13 @@ void LXeDetectorConstruction::DefineMaterials()
   Fluorinated_Polymer->SetMaterialPropertiesTable(outercladMPT);
 }
 
-G4VPhysicalVolume* LXeDetectorConstruction::Construct()
+G4VPhysicalVolume* NovaDetectorConstruction::Construct()
 {
   DefineMaterials();
   return ConstructDetector();
 }
 
-G4VPhysicalVolume* LXeDetectorConstruction::ConstructDetector()
+G4VPhysicalVolume* NovaDetectorConstruction::ConstructDetector()
 {
   //The experimental hall walls are all 1m away from housing walls
   G4double expHall_x = GetCellWidth() / 2.  + 20.*cm;
@@ -342,7 +342,7 @@ G4VPhysicalVolume* LXeDetectorConstruction::ConstructDetector()
   return fExperimentalHall_phys;
 }
 
-void LXeDetectorConstruction::PrintSettings()
+void NovaDetectorConstruction::PrintSettings()
 {
   G4cout << std::setw(25) << "fScintLightYield = "     << std::setw(10) << fScintMPT->GetConstProperty("SCINTILLATIONYIELD") << std::setw(10) << " MeV-1" << G4endl;
   G4cout << std::setw(25) << "fCellLength = "          << std::setw(10) << fCellLength          / cm << std::setw(10) << " cm" << G4endl;
@@ -361,7 +361,7 @@ void LXeDetectorConstruction::PrintSettings()
   G4cout << G4endl;
 }
 
-void LXeDetectorConstruction::SetDefaults()
+void NovaDetectorConstruction::SetDefaults()
 {
   fScintLightYield     = 100.;
   fRectHeight          = 40.0*mm;
@@ -385,12 +385,9 @@ void LXeDetectorConstruction::SetDefaults()
   fUpdated = true;
 }
 
-void LXeDetectorConstruction::UpdateGeometry()
+void NovaDetectorConstruction::UpdateGeometry()
 {
-
-  // clean-up previous geometry
   G4GeometryManager::GetInstance()->OpenGeometry();
-
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
@@ -398,14 +395,13 @@ void LXeDetectorConstruction::UpdateGeometry()
   G4LogicalBorderSurface::CleanSurfaceTable();
   G4SurfaceProperty::CleanSurfacePropertyTable();
 
-  //define new one
   G4RunManager::GetRunManager()->DefineWorldVolume(ConstructDetector());
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 
-  fUpdated=false;
+  fUpdated = false;
 }
 
-void LXeDetectorConstruction::SetMainScintYield(G4double y)
+void NovaDetectorConstruction::SetMainScintYield(G4double y)
 {
-  fScintMPT->AddConstProperty("SCINTILLATIONYIELD",y/MeV);
+  fScintMPT->AddConstProperty("SCINTILLATIONYIELD", y/MeV);
 }

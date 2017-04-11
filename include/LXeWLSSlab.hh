@@ -8,7 +8,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4OpticalSurface.hh"
 
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 
 class LXeWLSSlab : public G4PVPlacement
 {
@@ -19,13 +19,13 @@ class LXeWLSSlab : public G4PVPlacement
                G4LogicalVolume *pMotherLogical,
                G4bool pMany,
                G4int pCopyNo,
-               LXeDetectorConstruction* c);
+               NovaDetectorConstruction* c);
 
   private:
 
     void CopyValues();
 
-    LXeDetectorConstruction* fConstructor;
+    NovaDetectorConstruction* fConstructor;
 
     G4bool fUpdated;
 

@@ -9,7 +9,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4OpticalSurface.hh"
 
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 
 class LXeWLSFiber : public G4PVPlacement
 {
@@ -20,7 +20,7 @@ class LXeWLSFiber : public G4PVPlacement
                 G4LogicalVolume *pMotherLogical,
                 G4bool pMany,
                 G4int pCopyNo,
-                LXeDetectorConstruction* c);
+                NovaDetectorConstruction* c);
 
   private:
 
@@ -48,7 +48,7 @@ class LXeWLSFiber : public G4PVPlacement
     G4double fClad2_sphi;
     G4double fClad2_ephi;
 
-    LXeDetectorConstruction* fConstructor;
+    NovaDetectorConstruction* fConstructor;
 };
 
 #endif

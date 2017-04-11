@@ -13,7 +13,7 @@ LXeWLSFiber::LXeWLSFiber(G4RotationMatrix *pRot,
                              G4LogicalVolume *pMotherLogical,
                              G4bool pMany,
                              G4int pCopyNo,
-                             LXeDetectorConstruction* c)
+                             NovaDetectorConstruction* c)
   :G4PVPlacement(pRot,tlate,
                  new G4LogicalVolume(new G4Box("temp",1,1,1),
                                      G4Material::GetMaterial("Vacuum"),

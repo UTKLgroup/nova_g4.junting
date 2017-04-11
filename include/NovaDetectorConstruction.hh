@@ -1,6 +1,12 @@
 #ifndef LXeDetectorConstruction_H
 #define LXeDetectorConstruction_H 1
 
+#include "G4Material.hh"
+#include "LXeDetectorMessenger.hh"
+#include "G4VisAttributes.hh"
+#include "G4RotationMatrix.hh"
+#include "G4VUserDetectorConstruction.hh"
+
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Box;
@@ -9,18 +15,11 @@ class LXePMTSD;
 class LXeScintSD;
 class G4Sphere;
 
-#include "G4Material.hh"
-#include "LXeDetectorMessenger.hh"
-#include "G4VisAttributes.hh"
-#include "G4RotationMatrix.hh"
-#include "G4VUserDetectorConstruction.hh"
-
-
-class LXeDetectorConstruction : public G4VUserDetectorConstruction
+class NovaDetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    LXeDetectorConstruction();
-    virtual ~LXeDetectorConstruction();
+    NovaDetectorConstruction();
+    virtual ~NovaDetectorConstruction();
 
     virtual G4VPhysicalVolume* Construct();
 
@@ -70,7 +69,6 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
     G4double GetFibZ(){return GetFibFullLength() / 2. - (fFibTail + fCellLength / 2.);}
 
   private:
-
     void DefineMaterials();
     G4VPhysicalVolume* ConstructDetector();
     G4bool fUpdated;

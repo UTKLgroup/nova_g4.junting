@@ -1,7 +1,7 @@
 #include "LXeTrajectory.hh"
 #include "LXeTrackingAction.hh"
 #include "LXeUserTrackInformation.hh"
-#include "LXeDetectorConstruction.hh"
+#include "NovaDetectorConstruction.hh"
 #include "LXeRecorderBase.hh"
 
 #include "G4TrackingManager.hh"
@@ -65,7 +65,7 @@ void LXeTrackingAction::PostUserTrackingAction(const G4Track* aTrack){
       trajectory->SetDrawTrajectory(true);
     }
 
-    if(LXeDetectorConstruction::GetSphereOn()){
+    if(NovaDetectorConstruction::GetSphereOn()){
       if((trackInformation->GetTrackStatus()&hitPMT)&&
          (trackInformation->GetTrackStatus()&hitSphere)){
         trajectory->SetDrawTrajectory(true);
