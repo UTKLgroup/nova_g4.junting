@@ -1,6 +1,5 @@
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
-#include "G4String.hh"
 
 #include "LXeDetectorConstruction.hh"
 #include "LXePhysicsList.hh"
@@ -25,7 +24,6 @@
 int main(int argc, char** argv)
 {
   G4VSteppingVerbose::SetInstance(new LXeSteppingVerbose);
-
   G4RunManager* runManager = new G4RunManager;
 
   runManager->SetUserInitialization(new LXeDetectorConstruction);
@@ -36,49 +34,38 @@ int main(int argc, char** argv)
   visManager->Initialize();
 #endif
 
-  LXeRecorderBase* recorder = NULL;//No recording is done in this example
-
+  LXeRecorderBase* recorder = NULL;
   runManager->SetUserAction(new LXePrimaryGeneratorAction(""));
   runManager->SetUserAction(new LXeStackingAction);
-
   runManager->SetUserAction(new LXeRunAction(recorder));
   runManager->SetUserAction(new LXeEventAction(recorder));
   runManager->SetUserAction(new LXeTrackingAction(recorder));
   runManager->SetUserAction(new LXeSteppingAction(recorder));
 
-  // runManager->Initialize();
- 
-  // get the pointer to the UI manager and set verbosities
-  G4UImanager* UImanager = G4UImanager::GetUIpointer();
+  G4UImanager* uiManager = G4UImanager::GetUIpointer();
 
-  if(argc==1){
+  if (argc==1) {
 #ifdef G4UI_USE
     G4UIExecutive* ui = new G4UIExecutive(argc, argv);
 #ifdef G4VIS_USE
-    UImanager->ApplyCommand("/control/execute vis.mac");
+    uiManager->ApplyCommand("/control/execute vis.mac");
 #endif
     ui->SessionStart();
     delete ui;
 #endif
   }
   else{
-    G4String command = "/control/execute ";
     G4String filename = argv[1];
-    G4String rndmcmd = "/random/setSeeds ";
-    G4String rndmseed = argv[2];
+    G4String randomSeed = argv[2];
 
-    UImanager->ApplyCommand(rndmcmd + rndmseed + " 1");
-    G4cout << (rndmcmd + rndmseed + " 1") << G4endl;
-    UImanager->ApplyCommand(command+filename);
+    uiManager->ApplyCommand("/random/setSeeds " + randomSeed + " 1");
+    uiManager->ApplyCommand("/control/execute " + filename);
   }
-  
-  if(recorder)delete recorder;
 
 #ifdef G4VIS_USE
   delete visManager;
 #endif
 
-  // job termination
   delete runManager;
   return 0;
 }

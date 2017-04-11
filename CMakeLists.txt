@@ -23,5 +23,5 @@ include_directories(${PROJECT_SOURCE_DIR}/cry_v1.7/src)
 find_package(ROOT)
 include_directories(${ROOT_INCLUDE_DIRS})
 
-add_executable(LXe LXe.cc ${sources} ${headers} ${cry_sources})
-target_link_libraries(LXe ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CRY_LIBRARIES})
+add_executable(nova nova.cc ${sources} ${headers} ${cry_sources})
+target_link_libraries(nova ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CRY_LIBRARIES})
