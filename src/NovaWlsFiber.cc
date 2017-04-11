@@ -1,17 +1,17 @@
-#include "WLSfiber.hh"
+#include "NovaWlsFiber.hh"
 #include <G4SIunits.hh>
 #include "G4Tubs.hh"
 #include "G4PVPlacement.hh"
 
 using namespace std;
 
-WLSfiber::WLSfiber() {
+NovaWlsFiber::NovaWlsFiber() {
 }
 
-WLSfiber::~WLSfiber() {
+NovaWlsFiber::~NovaWlsFiber() {
 }
 
-G4LogicalVolume *WLSfiber::BuildStraight(G4double radius, G4double length){
+G4LogicalVolume* NovaWlsFiber::BuildStraight(G4double radius, G4double length){
     G4double clad_percent = 0.03;
     G4double core_percent = 1. - 2. * clad_percent;
     G4double core_radius  = radius * core_percent;

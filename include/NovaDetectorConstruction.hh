@@ -27,22 +27,22 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void updateGeometry();
     void printSettings();
 
-    void setMainVolumeOn(G4bool b){mainVolume=b; updated=true;}
+    void setMainVolumeOn(G4bool b){mainVolume=b; isUpdated=true;}
     void setMainScintYield(G4double y);
-    void setRectWidth(G4double a){rectangleWidth = a; updated=true;}
-    void setRectHeight(G4double a){rectangleHeight = a; updated=true;}
-    void setCellLength(G4double a){cellLength = a; updated=true;}
-    void setPVCThickness(G4double a){pvcThickness = a; updated=true;}
-    void setInnerCornerRadius(G4double a){innerCornerRadius = a; updated=true;}
-    void setFiberRadius(G4double a){fiberRadius = a; updated=true;}
-    void setFiber1X(G4double a){fiber1X = a; updated=true;}
-    void setFiber1Y(G4double a){fiber1Y = a; updated=true;}
-    void setFiber2X(G4double a){fiber2X = a; updated=true;}
-    void setFiber2Y(G4double a){fiber2Y = a; updated=true;}
-    void setCellToPmtDistance(G4double a){cellToPmtDistance = a; updated=true;}
-    void setFiberTailLength(G4double a){fiberTailLength = a; updated=true;}
+    void setRectWidth(G4double a){rectangleWidth = a; isUpdated=true;}
+    void setRectHeight(G4double a){rectangleHeight = a; isUpdated=true;}
+    void setCellLength(G4double a){cellLength = a; isUpdated=true;}
+    void setPVCThickness(G4double a){pvcThickness = a; isUpdated=true;}
+    void setInnerCornerRadius(G4double a){innerCornerRadius = a; isUpdated=true;}
+    void setFiberRadius(G4double a){fiberRadius = a; isUpdated=true;}
+    void setFiber1X(G4double a){fiber1X = a; isUpdated=true;}
+    void setFiber1Y(G4double a){fiber1Y = a; isUpdated=true;}
+    void setFiber2X(G4double a){fiber2X = a; isUpdated=true;}
+    void setFiber2Y(G4double a){fiber2Y = a; isUpdated=true;}
+    void setCellToPmtDistance(G4double a){cellToPmtDistance = a; isUpdated=true;}
+    void setFiberTailLength(G4double a){fiberTailLength = a; isUpdated=true;}
     void setUsePMT(bool b){usePmt = b;}
-    void setPmtQuantumEfficiency(G4double qe){pmtQuantumEfficiency = qe; updated=true;}
+    void setPmtQuantumEfficiency(G4double qe){pmtQuantumEfficiency = qe; isUpdated=true;}
 
     G4double getRectangleWidth(){return rectangleWidth;}
     G4double getRectangleHeight(){return rectangleHeight;}
@@ -64,7 +64,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double getPmtZ(){return cellToPmtDistance + getPmtHeight();}
     G4double getFiberZ(){return getFullFiberLength() / 2. - (fiberTailLength + cellLength / 2.);}
     bool getUsePMT(){return usePmt;}
-    G4bool getUpdated(){return updated;}
+    G4bool getIsUpdated(){return isUpdated;}
     G4double getPlanckConstant() {
       return 1239.84193;
     }
@@ -72,7 +72,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
   private:
     void DefineMaterials();
     G4VPhysicalVolume* ConstructDetector();
-    G4bool updated;
+    G4bool isUpdated;
     G4Box* experimentalHallBox;
     G4LogicalVolume* experimentalHallLog;
     G4VPhysicalVolume* experimentalHallPhy;

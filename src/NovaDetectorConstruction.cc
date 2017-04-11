@@ -25,7 +25,7 @@ NovaDetectorConstruction::NovaDetectorConstruction()
   experimentalHallPhy = NULL;
   tiO2 = pvc = liquidScintillator = NULL;
   oxygen = carbon = hydrogen = titanium = NULL;
-  updated = false;
+  isUpdated = false;
 
   setDefaults();
 }
@@ -40,7 +40,7 @@ void NovaDetectorConstruction::DefineMaterials()
   oxygen = new G4Element("O", "O", 8., 16.00*g/mole);
   titanium = new G4Element( "Ti", "Ti", 22., 47.87*g/mole);
 
-  vacuum = new G4Material("Vacuum",
+  vacuum = new G4Material("vacuum",
                            1.,
                            1.01*g/mole,
                            universe_mean_density,
@@ -48,12 +48,12 @@ void NovaDetectorConstruction::DefineMaterials()
                            0.1*kelvin,
                            1.e-19*pascal);
 
-  tiO2 = new G4Material("TiO2", 4.23*g/cm3, 2, kStateSolid);
+  tiO2 = new G4Material("tiO2", 4.23*g/cm3, 2, kStateSolid);
   tiO2->AddElement(oxygen, 2);
   tiO2->AddElement(titanium, 1);
 
 
-  liquidScintillator = new G4Material("liquid_scintillator",  1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  liquidScintillator = new G4Material("liquidScintillator",  1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
   liquidScintillator->AddElement(hydrogen, 0.666);
   liquidScintillator->AddElement(carbon, 0.334);
 
@@ -73,12 +73,12 @@ void NovaDetectorConstruction::DefineMaterials()
   fluorinatedPolymer->AddElement(oxygen, 0.132);
 
   // PVC
-  pvc = new G4Material("PVC", 1.4316*g/cm3, 2, kStateSolid);
+  pvc = new G4Material("pvc", 1.4316*g/cm3, 2, kStateSolid);
   pvc->AddMaterial(tiO2, 0.15);
   pvc->AddMaterial(polystyrene, 0.85);
 
   //Glass
-  glass = new G4Material("Glass", 1.032*g/cm3, 2);
+  glass = new G4Material("glass", 1.032*g/cm3, 2);
   glass->AddElement(carbon, 91.533*perCent);
   glass->AddElement(hydrogen, 8.467*perCent);
 
@@ -375,7 +375,7 @@ void NovaDetectorConstruction::setDefaults()
   mainVolume = true;
   inputDir = "/Users/juntinghuang/Desktop/nova/input/";
   G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
-  updated = true;
+  isUpdated = true;
 }
 
 void NovaDetectorConstruction::updateGeometry()
@@ -391,7 +391,7 @@ void NovaDetectorConstruction::updateGeometry()
   G4RunManager::GetRunManager()->DefineWorldVolume(ConstructDetector());
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 
-  updated = false;
+  isUpdated = false;
 }
 
 void NovaDetectorConstruction::setMainScintYield(G4double y)

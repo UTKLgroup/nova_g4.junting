@@ -56,7 +56,7 @@ LXeWLSSlab::LXeWLSSlab(G4RotationMatrix *pRot,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeWLSSlab::CopyValues(){
-  fUpdated= fConstructor->getUpdated();
+  fUpdated= fConstructor->getIsUpdated();
 
   /* 
   fScint_x=fConstructor->GetScintX();

@@ -64,7 +64,7 @@ LXeWLSFiber::LXeWLSFiber(G4RotationMatrix *pRot,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeWLSFiber::CopyValues(){
-  fUpdated= fConstructor->getUpdated();
+  fUpdated= fConstructor->getIsUpdated();
 
   fFiber_rmin = 0.00*cm;
   fFiber_rmax = 0.10*cm;    

@@ -10,7 +10,7 @@
 #include "G4OpticalSurface.hh"
 #include "G4UnionSolid.hh"
 #include "G4SubtractionSolid.hh" 
-#include "WLSfiber.hh"
+#include "NovaWlsFiber.hh"
 #include "NovaDetectorConstruction.hh"
 
 class NovaMainVolume : public G4PVPlacement
@@ -32,7 +32,7 @@ class NovaMainVolume : public G4PVPlacement
     G4UnionSolid* MakeCell(G4double radius);
     G4UnionSolid* makePvc(G4double innerRadius, G4double outerRadius);
 
-    G4bool fUpdated;
+    G4bool isUpdated;
 
     NovaDetectorConstruction* fConstructor;
 
@@ -41,41 +41,41 @@ class NovaMainVolume : public G4PVPlacement
     G4double rectangleHeight;
     G4double cellLength;
     G4double pvcThickness;
-    G4double fInner_Corner_Radius;
-    G4double fFibRadius;
-    G4double fFib1X;
-    G4double fFib1Y;
-    G4double fFib2X;
-    G4double fFib2Y;
-    G4double fCelltoPMTL;
-    G4double fFibTail;
-    bool UsePMT;
+    G4double innerCornerRadius;
+    G4double fiberRadius;
+    G4double fiber1X;
+    G4double fiber1Y;
+    G4double fiber2X;
+    G4double fiber2Y;
+    G4double cellToPmtDistance;
+    G4double fiberTailLength;
+    bool usePMT;
 
-    G4double fPMTHeight;
-    G4double fPMTZ;
-    G4double fFibFullLength;
-    G4double fFibZ;
-    G4double fCellWidth;
-    G4double fCellHeight;
-    G4double fOuter_Corner_Radius;
+    G4double pmtHeight;
+    G4double pmtZ;
+    G4double fullFiberLength;
+    G4double fiberZ;
+    G4double cellWidth;
+    G4double cellHeight;
+    G4double outerCornerRadius;
 
-    G4Box* fHousing_box;
-    static G4LogicalVolume* fHousing_log;
+    G4Box* housingBox;
+    static G4LogicalVolume* housingLog;
 
-    G4Tubs* fPmt;
-    G4Tubs* fPhotocath;
+    G4Tubs* pmt;
+    G4Tubs* photoCathode;
 
-    G4LogicalVolume* fPmt_log;
-    G4LogicalVolume* fPhotocath_log;
+    G4LogicalVolume* pmtLog;
+    G4LogicalVolume* photocathodeLog;
 
-    G4UnionSolid* PVC_s ;
-    G4LogicalVolume* PVC_l ;
+    G4UnionSolid* pvcBox ;
+    G4LogicalVolume* pvcLog ;
 
-    G4SubtractionSolid* scnt_s;
-    G4LogicalVolume* scnt_l;
+    G4SubtractionSolid* scintillator;
+    G4LogicalVolume* scintillatorLog;
 
-    WLSfiber* FibMaker;
-    G4LogicalVolume* fiber_l;
+    NovaWlsFiber* wlsFiber;
+    G4LogicalVolume* fiberLog;
 
     G4Tubs* pmt_s;
     G4LogicalVolume* pmt_l;
@@ -86,8 +86,8 @@ class NovaMainVolume : public G4PVPlacement
     G4MaterialPropertiesTable* paintMPT;
     G4OpticalSurface* op_paint;
 
-    static LXeScintSD* fScint_SD;
-    static LXePMTSD* fPmt_SD;
+    static LXeScintSD* scintSd;
+    static LXePMTSD* pmtSd;
 };
 
 #endif
