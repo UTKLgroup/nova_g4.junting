@@ -255,7 +255,6 @@ void LXeDetectorConstruction::DefineMaterials(){
     ReadWLSe.open(InputDir + "bisMSB_emission.txt");
     if(ReadWLSe.is_open()){
         while (!ReadWLSe.eof()){
-            G4String filler;
             ReadWLSe >> wavelength >> filler >> variable;
             ScintWLSemitE.push_back(1240 / wavelength * eV);
             ScintWLSemit.push_back(variable);
