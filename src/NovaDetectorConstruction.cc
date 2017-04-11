@@ -1,6 +1,6 @@
 #include "NovaDetectorConstruction.hh"
 #include "LXePMTSD.hh"
-#include "LXeMainVolume.hh"
+#include "NovaMainVolume.hh"
 
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
@@ -331,7 +331,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::ConstructDetector()
   experimentalHallLog->SetVisAttributes(G4VisAttributes::Invisible);
 
   if(mainVolume){
-    new LXeMainVolume(0, G4ThreeVector(), experimentalHallLog, false, 0, this);
+    new NovaMainVolume(0, G4ThreeVector(), experimentalHallLog, false, 0, this);
   }
 
   return experimentalHallPhy;
