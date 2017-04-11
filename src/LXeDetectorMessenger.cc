@@ -100,7 +100,7 @@ LXeDetectorMessenger::LXeDetectorMessenger(NovaDetectorConstruction* detector)
 
   // other setups
 
-  fUsePMTCmd = new G4UIcmdWithABool("/LXe/detector/volumes/usePMT",this);
+  fUsePMTCmd = new G4UIcmdWithABool("/LXe/detector/volumes/usePmt",this);
   fUsePMTCmd->SetGuidance("Use PMT or APD.");  
 
   fLxeCmd = new G4UIcmdWithABool("/LXe/detector/volumes/lxe",this);

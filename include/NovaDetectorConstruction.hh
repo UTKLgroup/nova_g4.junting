@@ -41,7 +41,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void setFiber2Y(G4double a){fiber2Y = a; updated=true;}
     void setCellToPmtDistance(G4double a){cellToPmtDistance = a; updated=true;}
     void setFiberTailLength(G4double a){fiberTailLength = a; updated=true;}
-    void setUsePMT(bool b){usePMT = b;}
+    void setUsePMT(bool b){usePmt = b;}
     void setPmtQuantumEfficiency(G4double qe){pmtQuantumEfficiency = qe; updated=true;}
 
     G4double getRectangleWidth(){return rectangleWidth;}
@@ -63,8 +63,11 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double getCellHeight(){return rectangleHeight + 2. * getOuterCornerRadius();}
     G4double getPmtZ(){return cellToPmtDistance + getPmtHeight();}
     G4double getFiberZ(){return getFullFiberLength() / 2. - (fiberTailLength + cellLength / 2.);}
-    bool getUsePMT(){return usePMT;}
+    bool getUsePMT(){return usePmt;}
     G4bool getUpdated(){return updated;}
+    G4double getPlanckConstant() {
+      return 1239.84193;
+    }
 
   private:
     void DefineMaterials();
@@ -72,7 +75,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4bool updated;
     G4Box* experimentalHallBox;
     G4LogicalVolume* experimentalHallLog;
-    G4VPhysicalVolume* experimentalHallPhys;
+    G4VPhysicalVolume* experimentalHallPhy;
 
     G4Element* oxygen;
     G4Element* carbon;
@@ -91,8 +94,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4MaterialPropertiesTable* liquidScintillatorMpt;
     G4MaterialPropertiesTable* vacuumMpt;
     G4MaterialPropertiesTable* polystyreneMpt;
-    G4MaterialPropertiesTable* innerCladdingMpt;
-    G4MaterialPropertiesTable* outerCladdingMpt;
+    G4MaterialPropertiesTable* pmmaMpt;
+    G4MaterialPropertiesTable* fluorinatedPolymerMpt;
 
     G4bool mainVolume;
     G4double scintillatorLightYield;
@@ -109,7 +112,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double cellToPmtDistance;
     G4double fiberTailLength;
     G4double pmtQuantumEfficiency;
-    bool usePMT;
+    bool usePmt;
 
     G4String inputDir;
 };
