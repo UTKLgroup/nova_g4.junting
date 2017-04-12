@@ -12,29 +12,18 @@
 #include "LXeSteppingVerbose.hh"
 
 #include "LXeRecorderBase.hh"
-
-#ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
-#endif
-
-#ifdef G4UI_USE
 #include "G4UIExecutive.hh"
-#endif
+
 
 int main(int argc, char** argv)
 {
   G4VSteppingVerbose::SetInstance(new LXeSteppingVerbose);
-  G4RunManager* runManager = new G4RunManager;
-
-  runManager->SetUserInitialization(new NovaDetectorConstruction);
-  runManager->SetUserInitialization(new LXePhysicsList);
-
-#ifdef G4VIS_USE
-  G4VisManager* visManager = new G4VisExecutive;
-  visManager->Initialize();
-#endif
 
   LXeRecorderBase* recorder = NULL;
+  G4RunManager* runManager = new G4RunManager;
+  runManager->SetUserInitialization(new NovaDetectorConstruction);
+  runManager->SetUserInitialization(new LXePhysicsList);
   runManager->SetUserAction(new LXePrimaryGeneratorAction(""));
   runManager->SetUserAction(new LXeStackingAction);
   runManager->SetUserAction(new LXeRunAction(recorder));
@@ -43,29 +32,24 @@ int main(int argc, char** argv)
   runManager->SetUserAction(new LXeSteppingAction(recorder));
 
   G4UImanager* uiManager = G4UImanager::GetUIpointer();
+  G4VisManager* visManager = new G4VisExecutive;
+  visManager->Initialize();
 
   if (argc==1) {
-#ifdef G4UI_USE
     G4UIExecutive* ui = new G4UIExecutive(argc, argv);
-#ifdef G4VIS_USE
     uiManager->ApplyCommand("/control/execute vis.mac");
-#endif
+    uiManager->ApplyCommand("/control/execute gui.mac");
     ui->SessionStart();
     delete ui;
-#endif
   }
   else{
     G4String filename = argv[1];
     G4String randomSeed = argv[2];
-
     uiManager->ApplyCommand("/random/setSeeds " + randomSeed + " 1");
     uiManager->ApplyCommand("/control/execute " + filename);
   }
 
-#ifdef G4VIS_USE
   delete visManager;
-#endif
-
   delete runManager;
   return 0;
 }
