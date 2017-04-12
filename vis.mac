@@ -7,7 +7,9 @@
 /vis/viewer/set/autoRefresh false
 /vis/verbose errors
 /vis/drawVolume
-/vis/viewer/set/viewpointThetaPhi 90. 180.
+/vis/drawTree worlds
+
+/vis/viewer/set/viewpointThetaPhi 45. 45.
 /vis/scene/add/trajectories smooth
 /vis/modeling/trajectories/create/drawByCharge
 /vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true

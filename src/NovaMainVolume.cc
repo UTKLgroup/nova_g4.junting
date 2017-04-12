@@ -1,4 +1,5 @@
 #include <G4SIunits.hh>
+#include <G4NistManager.hh>
 #include "NovaMainVolume.hh"
 #include "G4SDManager.hh"
 #include "G4LogicalSkinSurface.hh"
@@ -14,6 +15,7 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
     : G4PVPlacement(pRot,tlate, new G4LogicalVolume(new G4Box("temp",1,1,1), G4Material::GetMaterial("Vacuum"), "temp", 0, 0, 0), "housing",pMotherLogical,pMany,pCopyNo),fConstructor(c)
 {
   CopyValues();
+  G4NistManager* nistManager = G4NistManager::Instance();
 
   if(!housingLog || isUpdated){
 
@@ -21,11 +23,11 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
                            cellWidth / 2.0 + 10.0*cm,
                            cellHeight / 2.0 + 10.0*cm,
                            cellToPmtDistance + 10.0*cm);
-    housingLog = new G4LogicalVolume(housingBox, G4Material::GetMaterial("Vacuum"), "housingLog", 0, 0, 0);
+    housingLog = new G4LogicalVolume(housingBox, G4Material::GetMaterial("vacuum"), "housingLog", 0, 0, 0);
 
     pvcBox = NovaMainVolume::makePvc(innerCornerRadius, outerCornerRadius);
-    pvcLog = new G4LogicalVolume(pvcBox, G4Material::GetMaterial("PVC"), "pvcLog", 0, 0, 0);
-    new G4PVPlacement(0, G4ThreeVector(0, -cellHeight / 2.0 + pvcThickness / 2.0), pvcLog, "PVC", housingLog, false, 0);
+    pvcLog = new G4LogicalVolume(pvcBox, G4Material::GetMaterial("pvc"), "pvcLog", 0, 0, 0);
+    new G4PVPlacement(0, G4ThreeVector(0, -cellHeight / 2.0 + pvcThickness / 2.0), pvcLog, "pvc", housingLog, false, 0);
 
     G4UnionSolid* scintillatorSolid = NovaMainVolume::MakeCell(innerCornerRadius);
     G4Tubs* fiber = new G4Tubs("fiber", 0, fiberRadius, cellLength/2, 0, twopi*rad);
@@ -72,7 +74,7 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
                                  "pmt_log");
 
     photocathodeLog = new G4LogicalVolume(photoCathode,
-                                          G4Material::GetMaterial("Al"),
+                                          nistManager->FindOrBuildMaterial("G4_Al", false),
                                           "photoCathodeLog");
 
     new G4PVPlacement(0,

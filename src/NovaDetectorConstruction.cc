@@ -328,7 +328,6 @@ G4VPhysicalVolume* NovaDetectorConstruction::ConstructDetector()
   experimentalHallBox  = new G4Box("expHall_box", expHall_x, expHall_y, expHall_z);
   experimentalHallLog  = new G4LogicalVolume(experimentalHallBox, vacuum, "expHall_log", 0, 0, 0);
   experimentalHallPhy = new G4PVPlacement(0, G4ThreeVector(), experimentalHallLog, "expHall", 0, false, 0);
-  experimentalHallLog->SetVisAttributes(G4VisAttributes::Invisible);
 
   if(mainVolume){
     new NovaMainVolume(0, G4ThreeVector(), experimentalHallLog, false, 0, this);
@@ -372,7 +371,7 @@ void NovaDetectorConstruction::setDefaults()
   cellToPmtDistance = 100.0*cm;
   fiberTailLength = 10.0*cm;
   usePmt = true;
-  mainVolume = true;
+  mainVolume = false;
   inputDir = "/Users/juntinghuang/Desktop/nova/input/";
   G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
   isUpdated = true;
