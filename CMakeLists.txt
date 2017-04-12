@@ -25,3 +25,17 @@ include_directories(${ROOT_INCLUDE_DIRS})
 
 add_executable(nova nova.cc ${sources} ${headers} ${cry_sources})
 target_link_libraries(nova ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CRY_LIBRARIES})
+
+set(NOVA_SCRIPTS
+        vis.mac
+        gui.mac
+        run.png
+        )
+
+foreach(_script ${NOVA_SCRIPTS})
+    configure_file(
+            ${PROJECT_SOURCE_DIR}/${_script}
+            ${PROJECT_BINARY_DIR}/${_script}
+            COPYONLY
+    )
+endforeach()
