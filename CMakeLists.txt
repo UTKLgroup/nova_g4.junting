@@ -39,3 +39,8 @@ foreach(_script ${NOVA_SCRIPTS})
             COPYONLY
     )
 endforeach()
+
+add_custom_command(TARGET nova PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/input
+        ${PROJECT_BINARY_DIR}/input)
