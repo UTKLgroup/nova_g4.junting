@@ -92,7 +92,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void definePmma(G4String materialName);
     void defineFluorinatedPolymer(G4String materialName);
     void definePvc(G4String materialName);
-    G4UnionSolid* makePvc(G4double innerRadius, G4double outerRadius);
+    G4UnionSolid* makePvcCell();
+    G4UnionSolid* makeLiquidScintillator();
 
     G4VPhysicalVolume* constructDetector();
     G4bool isUpdated;

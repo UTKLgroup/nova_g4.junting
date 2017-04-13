@@ -262,19 +262,48 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
   G4double expHall_y = getCellHeight() / 2.0  + 20.0*cm;
   G4double expHall_z = getCellToPmtDistance() + 20.0*cm;
 
-  experimentalHallSolid = new G4Box("experimentalHallSolid", expHall_x, expHall_y, expHall_z);
-  experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid, G4Material::GetMaterial("G4_Galactic"), "experimentalHallLogicalVolume", 0, 0, 0);
-  experimentalHallPhysicalVolume = new G4PVPlacement(0, G4ThreeVector(), experimentalHallLogicalVolume, "experimentalHallPhysicalVolume", 0, false, 0);
+  experimentalHallSolid = new G4Box("experimentalHallSolid",expHall_x, expHall_y, expHall_z);
+  experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
+                                                       G4Material::GetMaterial("G4_Galactic"),
+                                                       "experimentalHallLogicalVolume",
+                                                       0, 0, 0);
+  experimentalHallPhysicalVolume = new G4PVPlacement(0,
+                                                     G4ThreeVector(),
+                                                     experimentalHallLogicalVolume,
+                                                     "experimentalHallPhysicalVolume",
+                                                     0, false, 0);
 
-  G4UnionSolid* pvcSolid = makePvc(innerCornerRadius, getOuterCornerRadius());
-  G4LogicalVolume* pvcLog = new G4LogicalVolume(pvcSolid, G4Material::GetMaterial("pvc"), "pvcLog", 0, 0, 0);
-  new G4PVPlacement(0, G4ThreeVector(0, -getCellHeight() / 2.0 + pvcThickness / 2.0), pvcLog, "pvc", experimentalHallLogicalVolume, false, 0);
+  G4UnionSolid* pvcSolid = makePvcCell();
+  G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSolid,
+                                                          G4Material::GetMaterial("pvc"),
+                                                          "pvcLogicalVolume",
+                                                          0, 0, 0);
+  new G4PVPlacement(0,
+                    G4ThreeVector(0, -getCellHeight() / 2.0 + pvcThickness / 2.0),
+                    pvcLogicalVolume,
+                    "pvc",
+                    experimentalHallLogicalVolume,
+                    false, 0);
+
+  G4UnionSolid* liquidScintillatorSolid = makeLiquidScintillator();
+  G4LogicalVolume* liquidScintillatorLogicalVolume = new G4LogicalVolume(liquidScintillatorSolid,
+                                                                         G4Material::GetMaterial("liquidScintillator"),
+                                                                         "liquidScintillatorLogicalVolume",
+                                                                         0, 0, 0);
+  new G4PVPlacement(0,
+                    G4ThreeVector(),
+                    liquidScintillatorLogicalVolume,
+                    "liquidScintillator",
+                    experimentalHallLogicalVolume,
+                    false, 0);
 
   return experimentalHallPhysicalVolume;
 }
 
-G4UnionSolid* NovaDetectorConstruction::makePvc(G4double innerRadius, G4double outerRadius)
+G4UnionSolid* NovaDetectorConstruction::makePvcCell()
 {
+  G4double outerCornerRadius = getOuterCornerRadius();
+
   G4Box* pvcHorizontal = new G4Box("pvcHorizontal",
                                    rectangleWidth / 2.0,
                                    pvcThickness / 2.0,
@@ -286,60 +315,140 @@ G4UnionSolid* NovaDetectorConstruction::makePvc(G4double innerRadius, G4double o
                                  cellLength / 2.0);
 
   G4Tubs* pvcCorner = new G4Tubs("pvcCorner",
-                                 innerRadius,
-                                 outerRadius,
+                                 innerCornerRadius,
+                                 outerCornerRadius,
                                  cellLength / 2.0,
                                  0.0,
                                  0.5 * pi * rad);
 
-  G4RotationMatrix Rotate90, Rotate180, Rotate270;
-  Rotate90.rotateZ(90 * deg);
-  Rotate180.rotateZ(180 * deg);
-  Rotate270.rotateZ(270 * deg);
+  G4RotationMatrix rotate90, rotate180, rotate270;
+  rotate90.rotateZ(90 * deg);
+  rotate180.rotateZ(180 * deg);
+  rotate270.rotateZ(270 * deg);
 
   G4UnionSolid* pvcPart1 = new G4UnionSolid("pvcPart1",
                                             pvcHorizontal,
                                             pvcCorner,
-                                            &Rotate90,
-                                            G4ThreeVector(rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0));
+                                            &rotate90,
+                                            G4ThreeVector(rectangleWidth / 2.0,
+                                                          innerCornerRadius + pvcThickness / 2.0));
 
   G4UnionSolid* pvcPart2 = new G4UnionSolid("pvcPart2",
                                             pvcPart1,
                                             pvcVertical,
-                                            &Rotate90,
-                                            G4ThreeVector(rectangleWidth / 2.0 + innerRadius + pvcThickness / 2.0, innerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
+                                            &rotate90,
+                                            G4ThreeVector(rectangleWidth / 2.0 + innerCornerRadius + pvcThickness / 2.0,
+                                                          innerCornerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
 
   G4UnionSolid* pvcPart3 = new G4UnionSolid("pvcPart3",
                                             pvcPart2,
                                             pvcCorner,
                                             0,
-                                            G4ThreeVector(rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0 + rectangleHeight));
+                                            G4ThreeVector(rectangleWidth / 2.0,
+                                                          innerCornerRadius + pvcThickness / 2.0 + rectangleHeight));
 
   G4UnionSolid* pvcPart4 = new G4UnionSolid("pvcPart4",
                                             pvcPart3,
                                             pvcHorizontal,
                                             0,
-                                            G4ThreeVector(0, 2.0 * innerRadius + rectangleHeight + pvcThickness));
+                                            G4ThreeVector(0,
+                                                          2.0 * innerCornerRadius + rectangleHeight + pvcThickness));
 
   G4UnionSolid* pvcPart5 = new G4UnionSolid("pvcPart5",
                                             pvcPart4,
                                             pvcCorner,
-                                            &Rotate270,
-                                            G4ThreeVector(-rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0 + rectangleHeight));
+                                            &rotate270,
+                                            G4ThreeVector(-rectangleWidth / 2.0,
+                                                          innerCornerRadius + pvcThickness / 2.0 + rectangleHeight));
 
   G4UnionSolid* pvcPart6 = new G4UnionSolid("pvcPart6",
                                             pvcPart5,
                                             pvcVertical,
-                                            &Rotate90,
-                                            G4ThreeVector(-(rectangleWidth / 2.0 + innerRadius + pvcThickness / 2.0), innerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
+                                            &rotate90,
+                                            G4ThreeVector(-(rectangleWidth / 2.0 + innerCornerRadius + pvcThickness / 2.0),
+                                                          innerCornerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
 
   G4UnionSolid* pvcPart7 = new G4UnionSolid("pvcPart7",
                                             pvcPart6,
                                             pvcCorner,
-                                            &Rotate180,
-                                            G4ThreeVector(-rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0));
+                                            &rotate180,
+                                            G4ThreeVector(-rectangleWidth / 2.0,
+                                                          innerCornerRadius + pvcThickness / 2.0));
 
   return pvcPart7;
+}
+
+G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
+  G4double fullHeight = rectangleHeight + 2. * innerCornerRadius;
+
+  G4Box* box1 = new G4Box("box1",
+                          rectangleWidth / 2.,
+                          fullHeight / 2.,
+                          cellLength / 2.);
+
+  G4Box* box2 = new G4Box("box2",
+                          innerCornerRadius / 2.,
+                          rectangleHeight / 2.,
+                          cellLength / 2.);
+
+  G4Tubs* innerCorner = new G4Tubs("innerCorner",
+                                   0.0 * mm,
+                                   innerCornerRadius,
+                                   cellLength / 2.0,
+                                   0.0,
+                                   pi / 2.0 * rad);
+
+  G4UnionSolid* unionBox1 = new G4UnionSolid("unionBox1",
+                                              box1,
+                                              box2,
+                                              0,
+                                              G4ThreeVector(rectangleWidth / 2. + innerCornerRadius / 2., 0, 0));
+
+  G4UnionSolid* unionBox2 = new G4UnionSolid("unionBox2",
+                                             unionBox1,
+                                             box2,
+                                             0,
+                                             G4ThreeVector(-rectangleWidth / 2. - innerCornerRadius / 2., 0, 0));
+
+  G4UnionSolid* unionCorner1 = new G4UnionSolid("unionCorner1",
+                                                unionBox2,
+                                                innerCorner,
+                                                0,
+                                                G4ThreeVector(rectangleWidth / 2.,
+                                                              rectangleHeight / 2.,
+                                                              0));
+
+  G4RotationMatrix rotate270;
+  rotate270.rotateZ(270 * deg);
+  G4UnionSolid* unionCorner2 = new G4UnionSolid("unionCorner2",
+                                                unionCorner1,
+                                                innerCorner,
+                                                &rotate270,
+                                                G4ThreeVector(-rectangleWidth / 2.,
+                                                              rectangleHeight / 2.,
+                                                              0));
+
+  G4RotationMatrix rotate90;
+  rotate90.rotateZ(90 * deg);
+  G4UnionSolid* unionCorner3 = new G4UnionSolid("unionCorner3",
+                                                unionCorner2,
+                                                innerCorner,
+                                                &rotate90,
+                                                G4ThreeVector(rectangleWidth / 2.,
+                                                              -rectangleHeight / 2.,
+                                                              0));
+
+  G4RotationMatrix rotate180;
+  rotate180.rotateZ(180 * deg);
+  G4UnionSolid* unionCorner4 = new G4UnionSolid("unionCorner4",
+                                                unionCorner3,
+                                                innerCorner,
+                                                &rotate180,
+                                                G4ThreeVector(-rectangleWidth / 2.,
+                                                              -rectangleHeight / 2.,
+                                                              0));
+
+  return unionCorner4;
 }
 
 void NovaDetectorConstruction::printSettings()
