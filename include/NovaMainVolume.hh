@@ -29,7 +29,7 @@ class NovaMainVolume : public G4PVPlacement
 
     void CopyValues();
 
-    G4UnionSolid* MakeCell(G4double radius);
+    G4UnionSolid* makeCell(G4double radius);
     G4UnionSolid* makePvc(G4double innerRadius, G4double outerRadius);
 
     G4bool isUpdated;
@@ -59,7 +59,7 @@ class NovaMainVolume : public G4PVPlacement
     G4double cellHeight;
     G4double outerCornerRadius;
 
-    G4Box* housingBox;
+    G4Box* housingSolid;
     static G4LogicalVolume* housingLog;
 
     G4Tubs* pmt;
@@ -68,7 +68,7 @@ class NovaMainVolume : public G4PVPlacement
     G4LogicalVolume* pmtLog;
     G4LogicalVolume* photocathodeLog;
 
-    G4UnionSolid* pvcBox ;
+    G4UnionSolid* pvcSolid ;
     G4LogicalVolume* pvcLog ;
 
     G4SubtractionSolid* scintillator;

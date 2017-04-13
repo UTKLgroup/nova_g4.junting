@@ -243,11 +243,11 @@ void NovaDetectorConstruction::defineMaterials()
   nistManager->FindOrBuildMaterial("G4_Al");
 
   defineLiquidScintillator("liquidScintillator");
-  defineGlass();
   defineFiberCore("fiberCore");
   definePmma("pmma");
   defineFluorinatedPolymer("fluorinatedPolymer");
   definePvc("pvc");
+  defineGlass();
 }
 
 G4VPhysicalVolume* NovaDetectorConstruction::Construct()
@@ -266,11 +266,80 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid, G4Material::GetMaterial("G4_Galactic"), "experimentalHallLogicalVolume", 0, 0, 0);
   experimentalHallPhysicalVolume = new G4PVPlacement(0, G4ThreeVector(), experimentalHallLogicalVolume, "experimentalHallPhysicalVolume", 0, false, 0);
 
-  if(mainVolume){
-    new NovaMainVolume(0, G4ThreeVector(), experimentalHallLogicalVolume, false, 0, this);
-  }
+  G4UnionSolid* pvcSolid = makePvc(innerCornerRadius, getOuterCornerRadius());
+  G4LogicalVolume* pvcLog = new G4LogicalVolume(pvcSolid, G4Material::GetMaterial("pvc"), "pvcLog", 0, 0, 0);
+  new G4PVPlacement(0, G4ThreeVector(0, -getCellHeight() / 2.0 + pvcThickness / 2.0), pvcLog, "pvc", experimentalHallLogicalVolume, false, 0);
 
   return experimentalHallPhysicalVolume;
+}
+
+G4UnionSolid* NovaDetectorConstruction::makePvc(G4double innerRadius, G4double outerRadius)
+{
+  G4Box* pvcHorizontal = new G4Box("pvcHorizontal",
+                                   rectangleWidth / 2.0,
+                                   pvcThickness / 2.0,
+                                   cellLength / 2.0);
+
+  G4Box* pvcVertical = new G4Box("pvcVertical",
+                                 rectangleHeight / 2.0,
+                                 pvcThickness / 2.0,
+                                 cellLength / 2.0);
+
+  G4Tubs* pvcCorner = new G4Tubs("pvcCorner",
+                                 innerRadius,
+                                 outerRadius,
+                                 cellLength / 2.0,
+                                 0.0,
+                                 0.5 * pi * rad);
+
+  G4RotationMatrix Rotate90, Rotate180, Rotate270;
+  Rotate90.rotateZ(90 * deg);
+  Rotate180.rotateZ(180 * deg);
+  Rotate270.rotateZ(270 * deg);
+
+  G4UnionSolid* pvcPart1 = new G4UnionSolid("pvcPart1",
+                                            pvcHorizontal,
+                                            pvcCorner,
+                                            &Rotate90,
+                                            G4ThreeVector(rectangleWidth / 2., innerRadius + pvcThickness / 2.));
+
+  G4UnionSolid* pvcPart2 = new G4UnionSolid("pvcPart2",
+                                            pvcPart1,
+                                            pvcVertical,
+                                            &Rotate90,
+                                            G4ThreeVector(rectangleWidth / 2. + innerRadius + pvcThickness / 2., innerRadius + pvcThickness / 2. + rectangleHeight / 2.));
+
+  G4UnionSolid* pvcPart3 = new G4UnionSolid("pvcPart3",
+                                            pvcPart2,
+                                            pvcCorner,
+                                            0,
+                                            G4ThreeVector(rectangleWidth / 2., innerRadius + pvcThickness / 2. + rectangleHeight));
+
+  G4UnionSolid* pvcPart4 = new G4UnionSolid("pvcPart4",
+                                            pvcPart3,
+                                            pvcHorizontal,
+                                            0,
+                                            G4ThreeVector(0, 2. * innerRadius + rectangleHeight + pvcThickness));
+
+  G4UnionSolid* pvcPart5 = new G4UnionSolid("pvcPart5",
+                                            pvcPart4,
+                                            pvcCorner,
+                                            &Rotate270,
+                                            G4ThreeVector(-rectangleWidth / 2., innerRadius + pvcThickness / 2. + rectangleHeight));
+
+  G4UnionSolid* pvcPart6 = new G4UnionSolid("pvcPart6",
+                                            pvcPart5,
+                                            pvcVertical,
+                                            &Rotate90,
+                                            G4ThreeVector(-(rectangleWidth / 2. + innerRadius + pvcThickness / 2.), innerRadius + pvcThickness / 2. + rectangleHeight / 2.));
+
+  G4UnionSolid* pvcPart7 = new G4UnionSolid("pvcPart7",
+                                            pvcPart6,
+                                            pvcCorner,
+                                            &Rotate180,
+                                            G4ThreeVector(-rectangleWidth / 2., innerRadius + pvcThickness / 2.));
+
+  return pvcPart7;
 }
 
 void NovaDetectorConstruction::printSettings()
@@ -308,7 +377,6 @@ void NovaDetectorConstruction::setDefaults()
   cellToPmtDistance = 100.0*cm;
   fiberTailLength = 10.0*cm;
   usePmt = true;
-  mainVolume = false;
   G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
   isUpdated = true;
 }

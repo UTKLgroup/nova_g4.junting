@@ -18,27 +18,27 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
 
   if(!housingLog || isUpdated){
 
-    housingBox = new G4Box("holder_s",
+    housingSolid = new G4Box("housingSolid",
                            cellWidth / 2.0 + 10.0*cm,
                            cellHeight / 2.0 + 10.0*cm,
                            cellToPmtDistance + 10.0*cm);
-    housingLog = new G4LogicalVolume(housingBox, G4Material::GetMaterial("vacuum"), "housingLog", 0, 0, 0);
+    housingLog = new G4LogicalVolume(housingSolid, G4Material::GetMaterial("G4_Galactic"), "housingLog", 0, 0, 0);
 
-    pvcBox = NovaMainVolume::makePvc(innerCornerRadius, outerCornerRadius);
-    pvcLog = new G4LogicalVolume(pvcBox, G4Material::GetMaterial("pvc"), "pvcLog", 0, 0, 0);
+    pvcSolid = makePvc(innerCornerRadius, outerCornerRadius);
+    pvcLog = new G4LogicalVolume(pvcSolid, G4Material::GetMaterial("pvc"), "pvcLog", 0, 0, 0);
     new G4PVPlacement(0, G4ThreeVector(0, -cellHeight / 2.0 + pvcThickness / 2.0), pvcLog, "pvc", housingLog, false, 0);
 
-    G4UnionSolid* scintillatorSolid = NovaMainVolume::MakeCell(innerCornerRadius);
-    G4Tubs* fiber = new G4Tubs("fiber", 0, fiberRadius, cellLength/2, 0, twopi*rad);
+    G4UnionSolid* scintillatorSolid = makeCell(innerCornerRadius);
+    G4Tubs* fiberSolid = new G4Tubs("fiberSolid", 0, fiberRadius, cellLength/2, 0, twopi*rad);
     G4SubtractionSolid* scintillatorSubtractOneFiber = new G4SubtractionSolid("scintillatorSubtractOneFiber",
                                                                               scintillatorSolid,
-                                                                              fiber,
+                                                                              fiberSolid,
                                                                               0,
                                                                               G4ThreeVector(fiber1X, fiber1Y));
 
     scintillator = new G4SubtractionSolid("scintillator",
                                           scintillatorSubtractOneFiber,
-                                          fiber,
+                                          fiberSolid,
                                           0,
                                           G4ThreeVector(fiber2X, fiber2Y));
 
@@ -299,7 +299,7 @@ G4UnionSolid* NovaMainVolume::makePvc(G4double innerRadius, G4double outerRadius
   return pvcPart7;
 }
 
-G4UnionSolid* NovaMainVolume::MakeCell(G4double radius){
+G4UnionSolid* NovaMainVolume::makeCell(G4double radius){
   G4double fullHeight = rectangleHeight + 2. * radius;
   G4double fullWidth = rectangleWidth + 2. * radius;
 

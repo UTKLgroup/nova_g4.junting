@@ -3,6 +3,7 @@
 
 #include <G4NistManager.hh>
 #include <G4SIunits.hh>
+#include <G4UnionSolid.hh>
 #include "G4Material.hh"
 #include "LXeDetectorMessenger.hh"
 #include "G4VisAttributes.hh"
@@ -29,7 +30,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void updateGeometry();
     void printSettings();
 
-    void setMainVolumeOn(G4bool b){mainVolume=b; isUpdated=true;}
     void setMainScintYield(G4double y);
     void setRectWidth(G4double a){rectangleWidth = a; isUpdated=true;}
     void setRectHeight(G4double a){rectangleHeight = a; isUpdated=true;}
@@ -92,6 +92,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void definePmma(G4String materialName);
     void defineFluorinatedPolymer(G4String materialName);
     void definePvc(G4String materialName);
+    G4UnionSolid* makePvc(G4double innerRadius, G4double outerRadius);
 
     G4VPhysicalVolume* constructDetector();
     G4bool isUpdated;
@@ -122,7 +123,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double inputVariable;
     G4String filler;
 
-    G4bool mainVolume;
     G4double liquidScintillatorLightYield;
     G4double rectangleWidth;
     G4double rectangleHeight;

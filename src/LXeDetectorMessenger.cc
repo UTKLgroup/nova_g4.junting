@@ -183,7 +183,7 @@ void LXeDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   }  
   else if (command == fFib2XCmd){
     fLXeDetector->setFiber2X(fFib2XCmd->GetNewDoubleValue(newValue));
-  }  
+  }
   else if (command == fFib2YCmd){
     fLXeDetector->setFiber2Y(fFib2YCmd->GetNewDoubleValue(newValue));
   }  
@@ -201,9 +201,6 @@ void LXeDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   }
   else if (command == fDefaultsCmd){
     fLXeDetector->setDefaults();
-  }
-  else if (command == fLxeCmd){
-    fLXeDetector->setMainVolumeOn(fLxeCmd->GetNewBoolValue(newValue));
   }
   else if (command == fMainScintYield){
     fLXeDetector->setMainScintYield(fMainScintYield->GetNewDoubleValue(newValue));
