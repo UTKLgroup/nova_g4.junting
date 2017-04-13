@@ -24,7 +24,7 @@ G4LogicalVolume* NovaWlsFiber::BuildStraight(G4double radius, G4double length){
     G4LogicalVolume* inner_cladding_l = new G4LogicalVolume(inner_cladding_s, G4Material::GetMaterial("pmma"), "inner_cladding_l");
 
     G4Tubs* core_s = new G4Tubs("straight_core", 0, core_radius, length / 2. , 0., 360.*deg);
-    G4LogicalVolume* core_l = new G4LogicalVolume(core_s, G4Material::GetMaterial("polystyrene"), "core_l");
+    G4LogicalVolume* core_l = new G4LogicalVolume(core_s, G4Material::GetMaterial("fiberCore"), "core_l");
 
     new G4PVPlacement(0, G4ThreeVector(), core_l, "fibcore", inner_cladding_l, false, 0);
     new G4PVPlacement(0, G4ThreeVector(), inner_cladding_l, "inner_cladding", outer_cladding_l, false, 0);

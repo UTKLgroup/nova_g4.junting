@@ -17,13 +17,7 @@
 
 NovaDetectorConstruction::NovaDetectorConstruction()
 {
-  liquidScintillatorMpt = NULL;
-  experimentalHallSolid = NULL;
-  experimentalHallLogicalVolume = NULL;
-  experimentalHallPhysicalVolume = NULL;
-  tiO2 = pvc = liquidScintillator = NULL;
   isUpdated = false;
-
   setDefaults();
 }
 
@@ -36,12 +30,11 @@ void NovaDetectorConstruction::defineLiquidScintillator()
   liquidScintillator->AddElement(H, 0.666);
   liquidScintillator->AddElement(C, 0.334);
   liquidScintillatorMpt = new G4MaterialPropertiesTable();
-  G4double refractionIndex = 1.47;
 
   std::vector<G4double> emissionEnergies;
   std::vector<G4double> fastEmissions;
   std::vector<G4double> slowEmissions;
-  std::ifstream fEmission(getFilePath(PPO_EMISSION_FILENAME));
+  std::ifstream fEmission(getFilePath(LIQUID_SCINTILLATOR_EMISSION_FILENAME));
   if(fEmission.is_open()){
     while(!fEmission.eof()){
       fEmission >> inputWavelength >> filler >> inputVariable;
@@ -54,7 +47,7 @@ void NovaDetectorConstruction::defineLiquidScintillator()
 
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
-  std::ifstream fAbsorption(getFilePath(POLYSTYRENE_BULK_ABSORPTION_FILENAME));
+  std::ifstream fAbsorption(getFilePath(LIQUID_SCINTILLATOR_ABSORPTION_LENGTH_FILENAME));
   if(fAbsorption.is_open()){
     while(!fAbsorption.eof()){
       fAbsorption >> inputWavelength >> filler >> inputVariable;
@@ -65,7 +58,7 @@ void NovaDetectorConstruction::defineLiquidScintillator()
 
   std::vector<G4double> wlsAbsorptionEnergies;
   std::vector<G4double> wlsAbsorptions;
-  std::ifstream fWlsAbsorption(getFilePath(LIQUID_SCINTILLATOR_WLS_ABSORPTION_FILENAME));
+  std::ifstream fWlsAbsorption(getFilePath(LIQUID_SCINTILLATOR_WLS_ABSORPTION_LENGTH_FILENAME));
   if (fWlsAbsorption.is_open()){
     while (!fWlsAbsorption.eof()){
       fWlsAbsorption >> inputWavelength >> filler >> inputVariable;
@@ -76,7 +69,7 @@ void NovaDetectorConstruction::defineLiquidScintillator()
 
   std::vector<G4double> wlsEmissionEnergies;
   std::vector<G4double> wlsEmissions;
-  std::ifstream fWlsEmission(getFilePath(BISMSB_EMISSION_FILENAME));
+  std::ifstream fWlsEmission(getFilePath(LIQUID_SCINTILLATOR_WLS_EMISSION_FILENAME));
   if(fWlsEmission.is_open()){
     while (!fWlsEmission.eof()){
       fWlsEmission >> inputWavelength >> filler >> inputVariable;
@@ -85,6 +78,7 @@ void NovaDetectorConstruction::defineLiquidScintillator()
     }
   }
 
+  G4double refractionIndex = 1.47;
   std::vector<G4double> refractionIndices(emissionEnergies.size(), refractionIndex);
 
   liquidScintillatorMpt->AddProperty("RINDEX", &emissionEnergies[0], &refractionIndices[0], (G4int) emissionEnergies.size());
@@ -118,11 +112,11 @@ void NovaDetectorConstruction::defineGlass()
   glass->SetMaterialPropertiesTable(glassMpt);
 }
 
-void NovaDetectorConstruction::definePolystyrene()
+void NovaDetectorConstruction::defineFiberCore()
 {
-  polystyrene = new G4Material("polystyrene",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  polystyrene->AddElement(H, 0.498);
-  polystyrene->AddElement(C, 0.502);
+  fiberCore = new G4Material("fiberCore",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  fiberCore->AddElement(H, 0.498);
+  fiberCore->AddElement(C, 0.502);
 
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
@@ -161,14 +155,14 @@ void NovaDetectorConstruction::definePolystyrene()
   G4double refractionIndex = 1.59;
   std::vector<G4double> refractionIndices(wlsAbsorptionEnergies.size(), refractionIndex);
 
-  polystyreneMpt = new G4MaterialPropertiesTable();
-  polystyreneMpt->AddProperty("ABSLENGTH", &absorptionEnergies[0], &absorptions[0], (G4int) absorptionEnergies.size());
-  polystyreneMpt->AddProperty("WLSABSLENGTH", &wlsAbsorptionEnergies[0],  &wlsAbsorptions[0],  (G4int) wlsAbsorptionEnergies.size());
-  polystyreneMpt->AddProperty("WLSCOMPONENT", &wlsEmissionEnergies[0], &wlsEmissions[0], (G4int) wlsEmissionEnergies.size());
-  polystyreneMpt->AddConstProperty("WLSTIMECONSTANT", 11.8 * ns);
-  polystyreneMpt->AddProperty("RINDEX", &wlsAbsorptionEnergies[0], &refractionIndices[0], (G4int) wlsAbsorptionEnergies.size());
-  polystyreneMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.7);
-  polystyrene->SetMaterialPropertiesTable(polystyreneMpt);
+  fiberCoreMpt = new G4MaterialPropertiesTable();
+  fiberCoreMpt->AddProperty("ABSLENGTH", &absorptionEnergies[0], &absorptions[0], (G4int) absorptionEnergies.size());
+  fiberCoreMpt->AddProperty("WLSABSLENGTH", &wlsAbsorptionEnergies[0],  &wlsAbsorptions[0],  (G4int) wlsAbsorptionEnergies.size());
+  fiberCoreMpt->AddProperty("WLSCOMPONENT", &wlsEmissionEnergies[0], &wlsEmissions[0], (G4int) wlsEmissionEnergies.size());
+  fiberCoreMpt->AddConstProperty("WLSTIMECONSTANT", 11.8 * ns);
+  fiberCoreMpt->AddProperty("RINDEX", &wlsAbsorptionEnergies[0], &refractionIndices[0], (G4int) wlsAbsorptionEnergies.size());
+  fiberCoreMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.7);
+  fiberCore->SetMaterialPropertiesTable(fiberCoreMpt);
 }
 
 void NovaDetectorConstruction::definePmma()
@@ -181,7 +175,7 @@ void NovaDetectorConstruction::definePmma()
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
 
-  std::ifstream fPmmaAbsorption(getFilePath(PMMA_ABSORPTION_LENGTH_FILENAME));
+  std::ifstream fPmmaAbsorption(getFilePath(FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME));
   if(fPmmaAbsorption.is_open()){
     while(!fPmmaAbsorption.eof()){
       fPmmaAbsorption >> inputWavelength >> filler >> inputVariable;
@@ -229,6 +223,10 @@ void NovaDetectorConstruction::definePvc()
   tiO2->AddElement(O, 2);
   tiO2->AddElement(Ti, 1);
 
+  polystyrene = new G4Material("fiberCore",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  polystyrene->AddElement(H, 0.498);
+  polystyrene->AddElement(C, 0.502);
+
   pvc = new G4Material("pvc", 1.4316*g/cm3, 2, kStateSolid);
   pvc->AddMaterial(tiO2, 0.15);
   pvc->AddMaterial(polystyrene, 0.85);
@@ -247,7 +245,7 @@ void NovaDetectorConstruction::defineMaterials()
 
   defineLiquidScintillator();
   defineGlass();
-  definePolystyrene();
+  defineFiberCore();
   definePmma();
   defineFluorinatedPolymer();
   definePvc();

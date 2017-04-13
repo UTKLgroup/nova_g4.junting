@@ -75,20 +75,20 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
   private:
     G4double PLANK_CONSTANT = 1239.84193;
     G4String INPUT_DIR = "input";
-    G4String PPO_EMISSION_FILENAME = "ppo_emission.txt";
-    G4String POLYSTYRENE_BULK_ABSORPTION_FILENAME = "PSTBulkAbsorb.cfg";
-    G4String LIQUID_SCINTILLATOR_WLS_ABSORPTION_FILENAME = "UPS923.cfg";
-    G4String BISMSB_EMISSION_FILENAME = "bisMSB_emission.txt";
+    G4String LIQUID_SCINTILLATOR_EMISSION_FILENAME = "ppo_emission.txt";
+    G4String LIQUID_SCINTILLATOR_ABSORPTION_LENGTH_FILENAME = "PSTBulkAbsorb.cfg";
+    G4String LIQUID_SCINTILLATOR_WLS_ABSORPTION_LENGTH_FILENAME = "UPS923.cfg";
+    G4String LIQUID_SCINTILLATOR_WLS_EMISSION_FILENAME = "bisMSB_emission.txt";
+    G4String FIBER_CORE_ABSORPTION_LENGTH_FILENAME = "fiberPSTabsorb.dat";
     G4String FIBER_CORE_WLS_ABSORPTION_LENGTH_FILENAME = "y11_abs_length.dat";
     G4String FIBER_CORE_WLS_EMISSION_FILENAME = "WLSemit.cfg";
-    G4String FIBER_CORE_ABSORPTION_LENGTH_FILENAME = "fiberPSTabsorb.dat";
-    G4String PMMA_ABSORPTION_LENGTH_FILENAME = "PMMABulkAbsorb.dat";
+    G4String FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME = "PMMABulkAbsorb.dat";
 
     G4String getFilePath(G4String filename) {return INPUT_DIR + "/" + filename;}
     void defineMaterials();
     void defineLiquidScintillator();
     void defineGlass();
-    void definePolystyrene();
+    void defineFiberCore();
     void definePmma();
     void defineFluorinatedPolymer();
     void definePvc();
@@ -106,14 +106,15 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4Element* Ti;
 
     G4Material* tiO2;
+    G4Material* polystyrene;
     G4Material* pvc;
     G4Material* liquidScintillator;
-    G4Material* polystyrene;
+    G4Material* fiberCore;
     G4Material* pmma;
     G4Material* fluorinatedPolymer;
 
     G4MaterialPropertiesTable* liquidScintillatorMpt;
-    G4MaterialPropertiesTable* polystyreneMpt;
+    G4MaterialPropertiesTable* fiberCoreMpt;
     G4MaterialPropertiesTable* pmmaMpt;
     G4MaterialPropertiesTable* fluorinatedPolymerMpt;
 
