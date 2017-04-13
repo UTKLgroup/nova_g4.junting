@@ -473,18 +473,18 @@ void NovaDetectorConstruction::printSettings()
 void NovaDetectorConstruction::setDefaults()
 {
   liquidScintillatorLightYield = 100.0;
-  rectangleHeight = 40.0*mm;
-  rectangleWidth = 17.7*mm;
-  innerCornerRadius = 9.7*mm;
-  pvcThickness = 3.3*mm;
-  fiberRadius = 0.35*mm;
-  cellLength = 120.0*cm;
-  fiber1X = 1.0*cm;
+  rectangleHeight = 40.0 * mm;
+  rectangleWidth = 17.7 * mm;
+  innerCornerRadius = 9.7 * mm;
+  pvcThickness = 3.3 * mm;
+  fiberRadius = 0.35 * mm;
+  cellLength = 120.0 * cm;
+  fiber1X = 1.0 * cm;
   fiber1Y = 0.0;
-  fiber2X = -1.0*cm;
+  fiber2X = -1.0 * cm;
   fiber2Y = 0.0;
-  cellToPmtDistance = 100.0*cm;
-  fiberTailLength = 10.0*cm;
+  cellToPmtDistance = 100.0 * cm;
+  fiberTailLength = 10.0 * cm;
   usePmt = true;
   G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
   isUpdated = true;
