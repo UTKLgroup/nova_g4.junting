@@ -86,12 +86,12 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
 
     G4String getFilePath(G4String filename) {return INPUT_DIR + "/" + filename;}
     void defineMaterials();
-    void defineLiquidScintillator();
     void defineGlass();
-    void defineFiberCore();
-    void definePmma();
-    void defineFluorinatedPolymer();
-    void definePvc();
+    void defineLiquidScintillator(G4String materialName);
+    void defineFiberCore(G4String materialName);
+    void definePmma(G4String materialName);
+    void defineFluorinatedPolymer(G4String materialName);
+    void definePvc(G4String materialName);
 
     G4VPhysicalVolume* constructDetector();
     G4bool isUpdated;
