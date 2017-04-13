@@ -301,43 +301,43 @@ G4UnionSolid* NovaDetectorConstruction::makePvc(G4double innerRadius, G4double o
                                             pvcHorizontal,
                                             pvcCorner,
                                             &Rotate90,
-                                            G4ThreeVector(rectangleWidth / 2., innerRadius + pvcThickness / 2.));
+                                            G4ThreeVector(rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0));
 
   G4UnionSolid* pvcPart2 = new G4UnionSolid("pvcPart2",
                                             pvcPart1,
                                             pvcVertical,
                                             &Rotate90,
-                                            G4ThreeVector(rectangleWidth / 2. + innerRadius + pvcThickness / 2., innerRadius + pvcThickness / 2. + rectangleHeight / 2.));
+                                            G4ThreeVector(rectangleWidth / 2.0 + innerRadius + pvcThickness / 2.0, innerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
 
   G4UnionSolid* pvcPart3 = new G4UnionSolid("pvcPart3",
                                             pvcPart2,
                                             pvcCorner,
                                             0,
-                                            G4ThreeVector(rectangleWidth / 2., innerRadius + pvcThickness / 2. + rectangleHeight));
+                                            G4ThreeVector(rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0 + rectangleHeight));
 
   G4UnionSolid* pvcPart4 = new G4UnionSolid("pvcPart4",
                                             pvcPart3,
                                             pvcHorizontal,
                                             0,
-                                            G4ThreeVector(0, 2. * innerRadius + rectangleHeight + pvcThickness));
+                                            G4ThreeVector(0, 2.0 * innerRadius + rectangleHeight + pvcThickness));
 
   G4UnionSolid* pvcPart5 = new G4UnionSolid("pvcPart5",
                                             pvcPart4,
                                             pvcCorner,
                                             &Rotate270,
-                                            G4ThreeVector(-rectangleWidth / 2., innerRadius + pvcThickness / 2. + rectangleHeight));
+                                            G4ThreeVector(-rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0 + rectangleHeight));
 
   G4UnionSolid* pvcPart6 = new G4UnionSolid("pvcPart6",
                                             pvcPart5,
                                             pvcVertical,
                                             &Rotate90,
-                                            G4ThreeVector(-(rectangleWidth / 2. + innerRadius + pvcThickness / 2.), innerRadius + pvcThickness / 2. + rectangleHeight / 2.));
+                                            G4ThreeVector(-(rectangleWidth / 2.0 + innerRadius + pvcThickness / 2.0), innerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
 
   G4UnionSolid* pvcPart7 = new G4UnionSolid("pvcPart7",
                                             pvcPart6,
                                             pvcCorner,
                                             &Rotate180,
-                                            G4ThreeVector(-rectangleWidth / 2., innerRadius + pvcThickness / 2.));
+                                            G4ThreeVector(-rectangleWidth / 2.0, innerRadius + pvcThickness / 2.0));
 
   return pvcPart7;
 }
