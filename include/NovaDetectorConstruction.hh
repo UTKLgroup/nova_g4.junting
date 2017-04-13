@@ -1,6 +1,7 @@
 #ifndef LXeDetectorConstruction_H
 #define LXeDetectorConstruction_H 1
 
+#include <G4NistManager.hh>
 #include "G4Material.hh"
 #include "LXeDetectorMessenger.hh"
 #include "G4VisAttributes.hh"
@@ -68,22 +69,16 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double getPlanckConstant() {
       return 1239.84193;
     }
+    void getLiquidScintillator();
 
   private:
-    void DefineMaterials();
-    G4VPhysicalVolume* ConstructDetector();
+    void defineMaterials();
+    G4VPhysicalVolume* constructDetector();
     G4bool isUpdated;
-    G4Box* experimentalHallBox;
-    G4LogicalVolume* experimentalHallLog;
-    G4VPhysicalVolume* experimentalHallPhy;
-
-    G4Element* oxygen;
-    G4Element* carbon;
-    G4Element* hydrogen;
-    G4Element* titanium;
-
-    G4Material* vacuum;
-    G4Material* glass;
+    G4Box* experimentalHallSolid;
+    G4LogicalVolume* experimentalHallLogicalVolume;
+    G4VPhysicalVolume* experimentalHallPhysicalVolume;
+    G4NistManager* nistManager;
     G4Material* tiO2;
     G4Material* pvc;
     G4Material* liquidScintillator;
@@ -92,7 +87,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4Material* fluorinatedPolymer;
 
     G4MaterialPropertiesTable* liquidScintillatorMpt;
-    G4MaterialPropertiesTable* vacuumMpt;
     G4MaterialPropertiesTable* polystyreneMpt;
     G4MaterialPropertiesTable* pmmaMpt;
     G4MaterialPropertiesTable* fluorinatedPolymerMpt;

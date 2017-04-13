@@ -15,7 +15,6 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
     : G4PVPlacement(pRot,tlate, new G4LogicalVolume(new G4Box("temp",1,1,1), G4Material::GetMaterial("Vacuum"), "temp", 0, 0, 0), "housing",pMotherLogical,pMany,pCopyNo),fConstructor(c)
 {
   CopyValues();
-  G4NistManager* nistManager = G4NistManager::Instance();
 
   if(!housingLog || isUpdated){
 
@@ -70,11 +69,11 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
                               pmtSpanningAngle);
 
     pmtLog = new G4LogicalVolume(pmt,
-                                 G4Material::GetMaterial("glass"),
+                                 G4Material::GetMaterial("G4_GLASS_PLATE"),
                                  "pmt_log");
 
     photocathodeLog = new G4LogicalVolume(photoCathode,
-                                          nistManager->FindOrBuildMaterial("G4_Al", false),
+                                          G4Material::GetMaterial("G4_Al"),
                                           "photoCathodeLog");
 
     new G4PVPlacement(0,
