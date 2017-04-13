@@ -297,6 +297,9 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
                     experimentalHallLogicalVolume,
                     false, 0);
 
+  G4LogicalVolume* wlsFiberLogicalVolume = makeWlsFiber();
+  new G4PVPlacement(0, G4ThreeVector(), wlsFiberLogicalVolume, "wlsFiber", liquidScintillatorLogicalVolume, false, 0);
+
   return experimentalHallPhysicalVolume;
 }
 
@@ -449,6 +452,34 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
                                                               0));
 
   return unionCorner4;
+}
+
+G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
+{
+  G4double claddingPercent = 0.03;
+  G4double corePercent = 1. - 2. * claddingPercent;
+  G4double coreRadius  = fiberRadius * corePercent;
+  G4double innerCladdingRadius = coreRadius + fiberRadius * claddingPercent;
+
+  G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, cellLength / 2.0, 0.0, 360.0 * deg);
+  G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
+                                                                    G4Material::GetMaterial("fluorinatedPolymer"),
+                                                                    "outerCladdingLogicalVolume");
+
+  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, cellLength / 2.0, 0.0, 360.0 * deg);
+  G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
+                                                          G4Material::GetMaterial("pmma"),
+                                                          "innerCladdingLogicalVolume");
+
+  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, cellLength / 2.0, 0.0, 360.0 * deg);
+  G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
+                                                           G4Material::GetMaterial("fiberCore"),
+                                                           "coreLogicalVolume");
+
+  new G4PVPlacement(0, G4ThreeVector(), coreLogicalVolume, "core", innerCladdingLogicalVolume, false, 0);
+  new G4PVPlacement(0, G4ThreeVector(), innerCladdingLogicalVolume, "innerCladding", outerCladdingLogicalVolume, false, 0);
+
+  return outerCladdingLogicalVolume;
 }
 
 void NovaDetectorConstruction::printSettings()

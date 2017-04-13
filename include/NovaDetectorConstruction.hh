@@ -94,6 +94,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void definePvc(G4String materialName);
     G4UnionSolid* makePvcCell();
     G4UnionSolid* makeLiquidScintillator();
+    G4LogicalVolume* makeWlsFiber();
 
     G4VPhysicalVolume* constructDetector();
     G4bool isUpdated;
