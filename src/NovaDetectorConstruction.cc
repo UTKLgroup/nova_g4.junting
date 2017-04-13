@@ -12,7 +12,6 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4GeometryManager.hh"
 #include "G4UImanager.hh"
-#include "G4SystemOfUnits.hh"
 
 
 NovaDetectorConstruction::NovaDetectorConstruction()
