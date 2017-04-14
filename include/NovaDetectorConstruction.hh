@@ -95,8 +95,9 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4UnionSolid* makePvcCell();
     G4UnionSolid* makeLiquidScintillator();
     G4LogicalVolume* makeWlsFiber();
-
     G4VPhysicalVolume* constructDetector();
+    G4VPhysicalVolume* constructLiquidScintillatorCell();
+    G4VPhysicalVolume* constructSingleWlsFiber();
     G4bool isUpdated;
     G4Box* experimentalHallSolid;
     G4LogicalVolume* experimentalHallLogicalVolume;
@@ -132,6 +133,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double pvcThickness;
     G4double innerCornerRadius;
     G4double fiberRadius;
+    G4double fiberCladdingFraction;
     G4double fiber1X;
     G4double fiber1Y;
     G4double fiber2X;

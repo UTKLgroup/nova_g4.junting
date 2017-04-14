@@ -258,11 +258,60 @@ G4VPhysicalVolume* NovaDetectorConstruction::Construct()
 
 G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
 {
-  G4double expHall_x = getCellWidth() / 2.0  + 20.0*cm;
-  G4double expHall_y = getCellHeight() / 2.0  + 20.0*cm;
-  G4double expHall_z = getCellToPmtDistance() + 20.0*cm;
+  return constructSingleWlsFiber();
+}
 
-  experimentalHallSolid = new G4Box("experimentalHallSolid",expHall_x, expHall_y, expHall_z);
+G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
+{
+  G4double fiberLength = 1 * m;
+  G4double experimentalHallX = fiberRadius * 2.0;
+  G4double experimentalHallY = fiberRadius * 2.0;
+  G4double experimentalHallZ = fiberLength * 0.6;
+
+  experimentalHallSolid = new G4Box("experimentalHallSolid", experimentalHallX, experimentalHallY, experimentalHallZ);
+  experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
+                                                       G4Material::GetMaterial("G4_Galactic"),
+                                                       "experimentalHallLogicalVolume",
+                                                       0, 0, 0);
+  experimentalHallPhysicalVolume = new G4PVPlacement(0,
+                                                     G4ThreeVector(),
+                                                     experimentalHallLogicalVolume,
+                                                     "experimentalHallPhysicalVolume",
+                                                     0, false, 0);
+
+  G4double coreFraction = 1. - 2. * fiberCladdingFraction;
+  G4double coreRadius  = fiberRadius * coreFraction;
+  G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
+
+  G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
+  G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
+                                                                    G4Material::GetMaterial("fluorinatedPolymer"),
+                                                                    "outerCladdingLogicalVolume");
+
+  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
+  G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
+                                                                    G4Material::GetMaterial("pmma"),
+                                                                    "innerCladdingLogicalVolume");
+
+  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
+  G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
+                                                           G4Material::GetMaterial("fiberCore"),
+                                                           "coreLogicalVolume");
+
+  new G4PVPlacement(0, G4ThreeVector(), coreLogicalVolume, "core", innerCladdingLogicalVolume, false, 0);
+  new G4PVPlacement(0, G4ThreeVector(), innerCladdingLogicalVolume, "innerCladding", outerCladdingLogicalVolume, false, 0);
+  new G4PVPlacement(0, G4ThreeVector(), outerCladdingLogicalVolume, "wlsFiber", experimentalHallLogicalVolume, false, 0);
+
+  return experimentalHallPhysicalVolume;
+}
+
+G4VPhysicalVolume* NovaDetectorConstruction::constructLiquidScintillatorCell()
+{
+  G4double experimentalHallX = getCellWidth() / 2.0  + 20.0*cm;
+  G4double experimentalHallY = getCellHeight() / 2.0  + 20.0*cm;
+  G4double experimentalHallZ = getCellToPmtDistance() + 20.0*cm;
+
+  experimentalHallSolid = new G4Box("experimentalHallSolid",experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
                                                        G4Material::GetMaterial("G4_Galactic"),
                                                        "experimentalHallLogicalVolume",
@@ -509,6 +558,7 @@ void NovaDetectorConstruction::setDefaults()
   innerCornerRadius = 9.7 * mm;
   pvcThickness = 3.3 * mm;
   fiberRadius = 0.35 * mm;
+  fiberCladdingFraction = 0.03;
   cellLength = 120.0 * cm;
   fiber1X = 1.0 * cm;
   fiber1Y = 0.0;
