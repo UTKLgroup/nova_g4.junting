@@ -19,12 +19,12 @@
 class G4ParticleGun;
 class G4Event;
 
-class LXePrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class NovaPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
 
-    LXePrimaryGeneratorAction(const char *inputfile);
-    virtual ~LXePrimaryGeneratorAction();
+    NovaPrimaryGeneratorAction(const char *inputfile);
+    virtual ~NovaPrimaryGeneratorAction();
  
   public:
 

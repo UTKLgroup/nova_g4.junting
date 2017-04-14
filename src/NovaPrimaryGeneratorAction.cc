@@ -1,4 +1,4 @@
-#include "LXePrimaryGeneratorAction.hh"
+#include "NovaPrimaryGeneratorAction.hh"
 
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
@@ -11,8 +11,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePrimaryGeneratorAction::LXePrimaryGeneratorAction(const char *inputfile)
-  :fuseCRY(true)
+NovaPrimaryGeneratorAction::NovaPrimaryGeneratorAction(const char *inputfile)
+  :fuseCRY(false)
 {
 
   // define a particle gun
@@ -56,26 +56,26 @@ LXePrimaryGeneratorAction::LXePrimaryGeneratorAction(const char *inputfile)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePrimaryGeneratorAction::~LXePrimaryGeneratorAction(){
+NovaPrimaryGeneratorAction::~NovaPrimaryGeneratorAction(){
   delete particleGun;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePrimaryGeneratorAction::useCRY(G4bool usecry){
+void NovaPrimaryGeneratorAction::useCRY(G4bool usecry){
   fuseCRY = usecry;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePrimaryGeneratorAction::InputCRY()
+void NovaPrimaryGeneratorAction::InputCRY()
 {
   InputState=1;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePrimaryGeneratorAction::UpdateCRY(std::string* MessInput)
+void NovaPrimaryGeneratorAction::UpdateCRY(std::string* MessInput)
 {
   CRYSetup *setup=new CRYSetup(*MessInput,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
 
@@ -90,7 +90,7 @@ void LXePrimaryGeneratorAction::UpdateCRY(std::string* MessInput)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePrimaryGeneratorAction::CRYFromFile(G4String newValue)
+void NovaPrimaryGeneratorAction::CRYFromFile(G4String newValue)
 {
   // Read the cry input file
   std::ifstream inputFile;
@@ -121,7 +121,7 @@ void LXePrimaryGeneratorAction::CRYFromFile(G4String newValue)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
+void NovaPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
 
   //G4cout << "fuseCRY = " << fuseCRY << G4endl;
 

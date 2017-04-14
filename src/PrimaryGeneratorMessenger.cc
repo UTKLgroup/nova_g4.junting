@@ -1,6 +1,6 @@
 #include "PrimaryGeneratorMessenger.hh"
 
-#include "LXePrimaryGeneratorAction.hh"
+#include "NovaPrimaryGeneratorAction.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithoutParameter.hh"
@@ -9,7 +9,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(
-                                          LXePrimaryGeneratorAction* Gun)
+                                          NovaPrimaryGeneratorAction* Gun)
   :Action(Gun)
 {
   CRYDir = new G4UIdirectory("/CRY/");

@@ -4,7 +4,7 @@
 #include "G4UImessenger.hh"
 #include "globals.hh"
 
-class LXePrimaryGeneratorAction;
+class NovaPrimaryGeneratorAction;
 class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithoutParameter;
@@ -15,13 +15,13 @@ class G4UIcmdWithABool;
 class PrimaryGeneratorMessenger: public G4UImessenger
 {
   public:
-    PrimaryGeneratorMessenger(LXePrimaryGeneratorAction*);
+    PrimaryGeneratorMessenger(NovaPrimaryGeneratorAction*);
    ~PrimaryGeneratorMessenger();
     
     void SetNewValue(G4UIcommand*, G4String);
     
   private:
-    LXePrimaryGeneratorAction*   Action;
+    NovaPrimaryGeneratorAction*   Action;
     G4UIdirectory*               CRYDir;
     G4UIcmdWithAString*          FileCmd; 
     G4UIcmdWithAString*          InputCmd;

@@ -3,7 +3,7 @@
 
 #include "NovaDetectorConstruction.hh"
 #include "LXePhysicsList.hh"
-#include "LXePrimaryGeneratorAction.hh"
+#include "NovaPrimaryGeneratorAction.hh"
 #include "LXeEventAction.hh"
 #include "LXeStackingAction.hh"
 #include "LXeSteppingAction.hh"
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
   G4RunManager* runManager = new G4RunManager;
   runManager->SetUserInitialization(new NovaDetectorConstruction);
   runManager->SetUserInitialization(new LXePhysicsList);
-  runManager->SetUserAction(new LXePrimaryGeneratorAction(""));
+  runManager->SetUserAction(new NovaPrimaryGeneratorAction(""));
   runManager->SetUserAction(new LXeStackingAction);
   runManager->SetUserAction(new LXeRunAction(recorder));
   runManager->SetUserAction(new LXeEventAction(recorder));
