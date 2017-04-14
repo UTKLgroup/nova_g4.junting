@@ -29,7 +29,6 @@ target_link_libraries(nova ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CRY_LIBRARIES
 set(NOVA_SCRIPTS
         vis.mac
         gui.mac
-        run.mac
         run.png
         general_particle_source.mac
         )

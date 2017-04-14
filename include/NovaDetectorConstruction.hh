@@ -2,7 +2,7 @@
 #define LXeDetectorConstruction_H 1
 
 #include <G4NistManager.hh>
-#include <G4SIunits.hh>
+#include "G4SystemOfUnits.hh"
 #include <G4UnionSolid.hh>
 #include "G4Material.hh"
 #include "LXeDetectorMessenger.hh"

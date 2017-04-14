@@ -371,7 +371,7 @@ G4UnionSolid* NovaDetectorConstruction::makePvcCell()
                                  outerCornerRadius,
                                  cellLength / 2.0,
                                  0.0,
-                                 0.5 * pi * rad);
+                                 0.5 * CLHEP::pi * rad);
 
   G4RotationMatrix rotate90, rotate180, rotate270;
   rotate90.rotateZ(90 * deg);
@@ -448,7 +448,7 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
                                    innerCornerRadius,
                                    cellLength / 2.0,
                                    0.0,
-                                   pi / 2.0 * rad);
+                                   CLHEP::pi / 2.0 * rad);
 
   G4UnionSolid* unionBox1 = new G4UnionSolid("unionBox1",
                                               box1,

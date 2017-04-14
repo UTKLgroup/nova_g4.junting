@@ -1,4 +1,4 @@
-#include <G4SIunits.hh>
+#include <G4SystemOfUnits.hh>
 #include <G4NistManager.hh>
 #include "NovaMainVolume.hh"
 #include "G4SDManager.hh"
@@ -29,7 +29,7 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
     new G4PVPlacement(0, G4ThreeVector(0, -cellHeight / 2.0 + pvcThickness / 2.0), pvcLog, "pvc", housingLog, false, 0);
 
     G4UnionSolid* scintillatorSolid = makeCell(innerCornerRadius);
-    G4Tubs* fiberSolid = new G4Tubs("fiberSolid", 0, fiberRadius, cellLength/2, 0, twopi*rad);
+    G4Tubs* fiberSolid = new G4Tubs("fiberSolid", 0, fiberRadius, cellLength/2, 0, CLHEP::twopi * rad);
     G4SubtractionSolid* scintillatorSubtractOneFiber = new G4SubtractionSolid("scintillatorSubtractOneFiber",
                                                                               scintillatorSolid,
                                                                               fiberSolid,
@@ -247,7 +247,7 @@ G4UnionSolid* NovaMainVolume::makePvc(G4double innerRadius, G4double outerRadius
                                  outerRadius,
                                  cellLength / 2.0,
                                  0.0,
-                                 0.5 * pi * rad);
+                                 0.5 * CLHEP::pi * rad);
 
   G4RotationMatrix Rotate90, Rotate180, Rotate270;
   Rotate90.rotateZ(90 * deg);
@@ -319,7 +319,7 @@ G4UnionSolid* NovaMainVolume::makeCell(G4double radius){
                                               0,
                                               G4ThreeVector());
 
-  G4Tubs* innerCorner = new G4Tubs("innerCorner", 0.0*mm, radius, cellLength / 2.0, 0.0, twopi*rad);
+  G4Tubs* innerCorner = new G4Tubs("innerCorner", 0.0*mm, radius, cellLength / 2.0, 0.0, CLHEP::twopi * rad);
 
   G4UnionSolid* unionCorner1 = new G4UnionSolid("unionCorner1",
                                                 unionBoxes,
