@@ -263,7 +263,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
 
 G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
 {
-  G4double fiberLength = 1 * m;
+  G4double fiberLength = 0.1 * m;
   G4double experimentalHallX = fiberRadius * 2.0;
   G4double experimentalHallY = fiberRadius * 2.0;
   G4double experimentalHallZ = fiberLength * 0.6;
@@ -505,10 +505,9 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
 
 G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
 {
-  G4double claddingPercent = 0.03;
-  G4double corePercent = 1. - 2. * claddingPercent;
-  G4double coreRadius  = fiberRadius * corePercent;
-  G4double innerCladdingRadius = coreRadius + fiberRadius * claddingPercent;
+  G4double coreFraction = 1. - 2. * fiberCladdingFraction;
+  G4double coreRadius  = fiberRadius * coreFraction;
+  G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
 
   G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, cellLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
