@@ -15,6 +15,7 @@
 
 NovaDetectorConstruction::NovaDetectorConstruction()
 {
+  nistManager = G4NistManager::Instance();
   isUpdated = false;
   setDefaults();
 }
@@ -221,7 +222,7 @@ void NovaDetectorConstruction::definePvc(G4String materialName)
   tiO2->AddElement(O, 2);
   tiO2->AddElement(Ti, 1);
 
-  polystyrene = new G4Material("fiberCore",  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  polystyrene = new G4Material("polystyrene", 1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
   polystyrene->AddElement(H, 0.498);
   polystyrene->AddElement(C, 0.502);
 
@@ -230,15 +231,27 @@ void NovaDetectorConstruction::definePvc(G4String materialName)
   pvc->AddMaterial(polystyrene, 0.85);
 }
 
+void NovaDetectorConstruction::defineGalactic()
+{
+  nistManager->FindOrBuildMaterial("G4_Galactic");
+  const G4int energyCount = 2;
+  G4double energies[energyCount] = {convertWavelengthToEnergy(200.0), convertWavelengthToEnergy(700.0)};
+  G4double refractionIndices[energyCount] = {1.0, 1.0};
+  G4MaterialPropertiesTable* galacticMpt = new G4MaterialPropertiesTable();
+  galacticMpt->AddProperty("RINDEX",
+                           energies,
+                           refractionIndices,
+                           energyCount);
+  G4Material::GetMaterial("G4_Galactic")->SetMaterialPropertiesTable(galacticMpt);
+}
+
 void NovaDetectorConstruction::defineMaterials()
 {
-  nistManager = G4NistManager::Instance();
   H = nistManager->FindOrBuildElement("H");
   C = nistManager->FindOrBuildElement("C");
   O = nistManager->FindOrBuildElement("O");
   Ti = nistManager->FindOrBuildElement("Ti");
 
-  nistManager->FindOrBuildMaterial("G4_Galactic");
   nistManager->FindOrBuildMaterial("G4_Al");
 
   defineLiquidScintillator("liquidScintillator");
@@ -247,6 +260,7 @@ void NovaDetectorConstruction::defineMaterials()
   defineFluorinatedPolymer("fluorinatedPolymer");
   definePvc("pvc");
   defineGlass();
+  defineGalactic();
 }
 
 G4VPhysicalVolume* NovaDetectorConstruction::Construct()
