@@ -3,6 +3,7 @@
 /gps/pos/type Point
 /gps/position 0 0 6 cm
 /gps/direction 0.0 0.0 -1.0
-/gps/ang/sigma_x 5 deg
+/gps/ang/type beam1d
+/gps/ang/sigma_r 10 deg
 /gps/ene/mono 1 keV
 /run/beamOn 10
