@@ -5,3 +5,4 @@
 /gps/direction 0.0 0.0 -1.0
 /gps/ang/sigma_x 5 deg
 /gps/ene/mono 1 keV
+/run/beamOn 10
