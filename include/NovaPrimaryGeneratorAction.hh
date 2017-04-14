@@ -3,7 +3,6 @@
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 
-//from CRY
 #include "G4ThreeVector.hh"
 #include "G4DataVector.hh"
 #include "Randomize.hh"
@@ -23,30 +22,26 @@ class NovaPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
 
-    NovaPrimaryGeneratorAction(const char *inputfile);
+    NovaPrimaryGeneratorAction(const char *inputFilename);
     virtual ~NovaPrimaryGeneratorAction();
- 
-  public:
 
+  public:
     virtual void GeneratePrimaries(G4Event* anEvent);
 
-  //from CRY
   public:
-
-  void InputCRY();
-  void UpdateCRY(std::string* MessInput);
-  void CRYFromFile(G4String newValue);
-  void useCRY(G4bool usecry);
+    void InputCRY();
+    void UpdateCRY(std::string* MessInput);
+    void CRYFromFile(G4String newValue);
+    void useCRY(G4bool useCry);
 
   private:
-
-  std::vector<CRYParticle*> *vect; // vector of generated particles
-  G4ParticleTable* particleTable;
-  G4ParticleGun* particleGun;
-  CRYGenerator* gen;
-  G4int InputState;
-  PrimaryGeneratorMessenger* gunMessenger;
-  G4bool fuseCRY;
+    std::vector<CRYParticle*> *vect;
+    G4ParticleTable* particleTable;
+    G4ParticleGun* particleGun;
+    CRYGenerator* gen;
+    G4int InputState;
+    PrimaryGeneratorMessenger* gunMessenger;
+    G4bool fuseCRY;
 };
 
 #endif

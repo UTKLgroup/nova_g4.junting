@@ -2,97 +2,68 @@
 
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
-#include "globals.hh"
 
-#include "fstream"
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-NovaPrimaryGeneratorAction::NovaPrimaryGeneratorAction(const char *inputfile)
-  :fuseCRY(false)
+NovaPrimaryGeneratorAction::NovaPrimaryGeneratorAction(const char *inputFilename)
+    :fuseCRY(false)
 {
-
-  // define a particle gun
   particleGun = new G4ParticleGun();
-
-  // Create the table containing all particle names
   particleTable = G4ParticleTable::GetParticleTable();
 
-  // Read the cry input file
   std::ifstream inputFile;
-  inputFile.open(inputfile,std::ios::in);
+  inputFile.open(inputFilename, std::ios::in);
   char buffer[1000];
 
   if (inputFile.fail()) {
-    if( *inputfile !=0)  //....only complain if a filename was given
-      G4cout << "PrimaryGeneratorAction: Failed to open CRY input file= " << inputfile << G4endl;
-    InputState=-1;
-  }else{
+    if (*inputFilename !=0)
+      G4cout << "PrimaryGeneratorAction: Failed to open CRY input file= " << inputFilename << G4endl;
+    InputState = -1;
+  }
+  else {
     std::string setupString("");
-    while ( !inputFile.getline(buffer,1000).eof()) {
+    while (!inputFile.getline(buffer,1000).eof()) {
       setupString.append(buffer);
       setupString.append(" ");
     }
 
     CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
-
     gen = new CRYGenerator(setup);
-
-    // set random number generator
     RNGWrapper<CLHEP::HepRandomEngine>::set(CLHEP::HepRandom::getTheEngine(),&CLHEP::HepRandomEngine::flat);
     setup->setRandomFunction(RNGWrapper<CLHEP::HepRandomEngine>::rng);
-    InputState=0;
+    InputState = 0;
   }
 
-  // create a vector to store the CRY particle properties
   vect=new std::vector<CRYParticle*>;
-
-  // Create the messenger file
   gunMessenger = new PrimaryGeneratorMessenger(this);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-NovaPrimaryGeneratorAction::~NovaPrimaryGeneratorAction(){
+NovaPrimaryGeneratorAction::~NovaPrimaryGeneratorAction()
+{
   delete particleGun;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void NovaPrimaryGeneratorAction::useCRY(G4bool usecry){
-  fuseCRY = usecry;
+void NovaPrimaryGeneratorAction::useCRY(G4bool useCry)
+{
+  fuseCRY = useCry;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void NovaPrimaryGeneratorAction::InputCRY()
 {
-  InputState=1;
+  InputState = 1;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void NovaPrimaryGeneratorAction::UpdateCRY(std::string* MessInput)
 {
   CRYSetup *setup=new CRYSetup(*MessInput,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
-
   gen = new CRYGenerator(setup);
 
-  // set random number generator
   RNGWrapper<CLHEP::HepRandomEngine>::set(CLHEP::HepRandom::getTheEngine(),&CLHEP::HepRandomEngine::flat);
   setup->setRandomFunction(RNGWrapper<CLHEP::HepRandomEngine>::rng);
-  InputState=0;
-
+  InputState = 0;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void NovaPrimaryGeneratorAction::CRYFromFile(G4String newValue)
 {
-  // Read the cry input file
   std::ifstream inputFile;
   inputFile.open(newValue,std::ios::in);
   char buffer[1000];
@@ -100,8 +71,9 @@ void NovaPrimaryGeneratorAction::CRYFromFile(G4String newValue)
   if (inputFile.fail()) {
     G4cout << "Failed to open input file " << newValue << G4endl;
     G4cout << "Make sure to define the cry library on the command line" << G4endl;
-    InputState=-1;
-  }else{
+    InputState = -1;
+  }
+  else {
     std::string setupString("");
     while ( !inputFile.getline(buffer,1000).eof()) {
       setupString.append(buffer);
@@ -109,74 +81,26 @@ void NovaPrimaryGeneratorAction::CRYFromFile(G4String newValue)
     }
 
     CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
-
     gen = new CRYGenerator(setup);
-
-    // set random number generator
     RNGWrapper<CLHEP::HepRandomEngine>::set(CLHEP::HepRandom::getTheEngine(),&CLHEP::HepRandomEngine::flat);
     setup->setRandomFunction(RNGWrapper<CLHEP::HepRandomEngine>::rng);
-    InputState=0;
+    InputState = 0;
   }
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void NovaPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
-
-  //G4cout << "fuseCRY = " << fuseCRY << G4endl;
-
-  //if using CRY
   if(fuseCRY){
     if (InputState != 0) {
       G4String* str = new G4String("CRY library was not successfully initialized");
-      //G4Exception(*str);
-      G4Exception("PrimaryGeneratorAction", "1",
-		  RunMustBeAborted, *str);
+      G4Exception("PrimaryGeneratorAction", "1", RunMustBeAborted, *str);
     }
     G4String particleName;
     vect->clear();
     gen->genEvent(vect);
-    
-    //....debug output
-    /*
-    G4cout << "\nEvent=" << anEvent->GetEventID() << " "
-	   << "CRY generated nparticles=" << vect->size()
-	   << G4endl;
-    */
-        
+
     for ( unsigned j=0; j<vect->size(); j++) {
-      particleName=CRYUtils::partName((*vect)[j]->id());
-      
-      //....debug output
-      /*
-      G4cout << "  "          << particleName << " "
-	     << "charge="      << (*vect)[j]->charge() << " "
-	     << std::setprecision(4)
-	     << "energy (MeV)=" << (*vect)[j]->ke()*MeV << " "
-	     << "pos (m)"
-	     << G4ThreeVector((*vect)[j]->x(), (*vect)[j]->y(), (*vect)[j]->z())
-	     << " " << "direction cosines "
-	     << G4ThreeVector((*vect)[j]->u(), (*vect)[j]->v(), (*vect)[j]->w())
-	     << " " << G4endl;
-      */
-      
-      /*
-      std::ofstream fcosmic;
-      fcosmic.open("fcosmic.txt", std::ios::app);
-      fcosmic << particleName << " "
-	      <<  (*vect)[j]->charge() << " "
-	      << std::setprecision(4)
-	      << (*vect)[j]->ke()*MeV << " "
-	      << (*vect)[j]->x() << " "
-	      << (*vect)[j]->y() << " "
-	      << (*vect)[j]->z() << " "
-	      << (*vect)[j]->u() << " "
-	      << (*vect)[j]->v() << " "
-	      << (*vect)[j]->w() << " "
-	      << " " << G4endl;
-      fcosmic.close();
-      */
-      
+      particleName = CRYUtils::partName((*vect)[j]->id());
+
       particleGun->SetParticleDefinition(particleTable->FindParticle((*vect)[j]->PDGid()));
       particleGun->SetParticleEnergy((*vect)[j]->ke()*MeV);
       particleGun->SetParticlePosition(G4ThreeVector((*vect)[j]->x()*m, (*vect)[j]->y()*m, (*vect)[j]->z()*m));
@@ -186,9 +110,7 @@ void NovaPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
       delete (*vect)[j];
     }
   }
-  // if not using CRY
   else
     particleGun->GeneratePrimaryVertex(anEvent);
-  
-}
 
+}
