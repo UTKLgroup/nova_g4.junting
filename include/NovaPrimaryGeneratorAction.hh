@@ -1,6 +1,7 @@
 #ifndef LXePrimaryGeneratorAction_h
 #define LXePrimaryGeneratorAction_h 1
 
+#include <G4GeneralParticleSource.hh>
 #include "G4VUserPrimaryGeneratorAction.hh"
 
 #include "G4ThreeVector.hh"
@@ -35,11 +36,13 @@ class NovaPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     void useCRY(G4bool useCry);
 
   private:
-    std::vector<CRYParticle*> *vect;
+    std::vector<CRYParticle*> *cryParticles;
     G4ParticleTable* particleTable;
     G4ParticleGun* particleGun;
-    CRYGenerator* gen;
-    G4int InputState;
+    G4GeneralParticleSource* generalParticleSource;
+
+    CRYGenerator* cryGenerator;
+    G4int inputState;
     PrimaryGeneratorMessenger* gunMessenger;
     G4bool fuseCRY;
 };

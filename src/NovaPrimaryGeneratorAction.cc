@@ -1,14 +1,19 @@
+#include <G4UImanager.hh>
 #include "NovaPrimaryGeneratorAction.hh"
 
-#include "G4Event.hh"
 #include "G4ParticleGun.hh"
 #include "G4SystemOfUnits.hh"
+
 
 NovaPrimaryGeneratorAction::NovaPrimaryGeneratorAction(const char *inputFilename)
     :fuseCRY(false)
 {
   particleGun = new G4ParticleGun();
+  generalParticleSource = new G4GeneralParticleSource();
   particleTable = G4ParticleTable::GetParticleTable();
+
+  G4UImanager* ui = G4UImanager::GetUIpointer();
+  ui->ApplyCommand("/control/execute general_particle_source.mac");
 
   std::ifstream inputFile;
   inputFile.open(inputFilename, std::ios::in);
@@ -16,8 +21,8 @@ NovaPrimaryGeneratorAction::NovaPrimaryGeneratorAction(const char *inputFilename
 
   if (inputFile.fail()) {
     if (*inputFilename !=0)
-      G4cout << "PrimaryGeneratorAction: Failed to open CRY input file= " << inputFilename << G4endl;
-    InputState = -1;
+      G4cout << "PrimaryGeneratorAction: Failed to open CRY input filename = " << inputFilename << G4endl;
+    inputState = -1;
   }
   else {
     std::string setupString("");
@@ -26,20 +31,21 @@ NovaPrimaryGeneratorAction::NovaPrimaryGeneratorAction(const char *inputFilename
       setupString.append(" ");
     }
 
-    CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
-    gen = new CRYGenerator(setup);
-    RNGWrapper<CLHEP::HepRandomEngine>::set(CLHEP::HepRandom::getTheEngine(),&CLHEP::HepRandomEngine::flat);
-    setup->setRandomFunction(RNGWrapper<CLHEP::HepRandomEngine>::rng);
-    InputState = 0;
+    CRYSetup* crySetup = new CRYSetup(setupString,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
+    cryGenerator = new CRYGenerator(crySetup);
+    RNGWrapper<CLHEP::HepRandomEngine>::set(CLHEP::HepRandom::getTheEngine(), &CLHEP::HepRandomEngine::flat);
+    crySetup->setRandomFunction(RNGWrapper<CLHEP::HepRandomEngine>::rng);
+    inputState = 0;
   }
 
-  vect=new std::vector<CRYParticle*>;
+  cryParticles = new std::vector<CRYParticle*>;
   gunMessenger = new PrimaryGeneratorMessenger(this);
 }
 
 NovaPrimaryGeneratorAction::~NovaPrimaryGeneratorAction()
 {
   delete particleGun;
+  delete generalParticleSource;
 }
 
 void NovaPrimaryGeneratorAction::useCRY(G4bool useCry)
@@ -49,17 +55,17 @@ void NovaPrimaryGeneratorAction::useCRY(G4bool useCry)
 
 void NovaPrimaryGeneratorAction::InputCRY()
 {
-  InputState = 1;
+  inputState = 1;
 }
 
 void NovaPrimaryGeneratorAction::UpdateCRY(std::string* MessInput)
 {
   CRYSetup *setup=new CRYSetup(*MessInput,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
-  gen = new CRYGenerator(setup);
+  cryGenerator = new CRYGenerator(setup);
 
   RNGWrapper<CLHEP::HepRandomEngine>::set(CLHEP::HepRandom::getTheEngine(),&CLHEP::HepRandomEngine::flat);
   setup->setRandomFunction(RNGWrapper<CLHEP::HepRandomEngine>::rng);
-  InputState = 0;
+  inputState = 0;
 }
 
 void NovaPrimaryGeneratorAction::CRYFromFile(G4String newValue)
@@ -71,7 +77,7 @@ void NovaPrimaryGeneratorAction::CRYFromFile(G4String newValue)
   if (inputFile.fail()) {
     G4cout << "Failed to open input file " << newValue << G4endl;
     G4cout << "Make sure to define the cry library on the command line" << G4endl;
-    InputState = -1;
+    inputState = -1;
   }
   else {
     std::string setupString("");
@@ -81,36 +87,36 @@ void NovaPrimaryGeneratorAction::CRYFromFile(G4String newValue)
     }
 
     CRYSetup *setup=new CRYSetup(setupString,"/Users/juntinghuang/Desktop/nova/cry_v1.7/data");
-    gen = new CRYGenerator(setup);
+    cryGenerator = new CRYGenerator(setup);
     RNGWrapper<CLHEP::HepRandomEngine>::set(CLHEP::HepRandom::getTheEngine(),&CLHEP::HepRandomEngine::flat);
     setup->setRandomFunction(RNGWrapper<CLHEP::HepRandomEngine>::rng);
-    InputState = 0;
+    inputState = 0;
   }
 }
 
 void NovaPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
   if(fuseCRY){
-    if (InputState != 0) {
+    if (inputState != 0) {
       G4String* str = new G4String("CRY library was not successfully initialized");
       G4Exception("PrimaryGeneratorAction", "1", RunMustBeAborted, *str);
     }
     G4String particleName;
-    vect->clear();
-    gen->genEvent(vect);
+    cryParticles->clear();
+    cryGenerator->genEvent(cryParticles);
 
-    for ( unsigned j=0; j<vect->size(); j++) {
-      particleName = CRYUtils::partName((*vect)[j]->id());
+    for ( unsigned j=0; j<cryParticles->size(); j++) {
+      particleName = CRYUtils::partName((*cryParticles)[j]->id());
 
-      particleGun->SetParticleDefinition(particleTable->FindParticle((*vect)[j]->PDGid()));
-      particleGun->SetParticleEnergy((*vect)[j]->ke()*MeV);
-      particleGun->SetParticlePosition(G4ThreeVector((*vect)[j]->x()*m, (*vect)[j]->y()*m, (*vect)[j]->z()*m));
-      particleGun->SetParticleMomentumDirection(G4ThreeVector((*vect)[j]->u(), (*vect)[j]->v(), (*vect)[j]->w()));
-      particleGun->SetParticleTime((*vect)[j]->t());
+      particleGun->SetParticleDefinition(particleTable->FindParticle((*cryParticles)[j]->PDGid()));
+      particleGun->SetParticleEnergy((*cryParticles)[j]->ke()*MeV);
+      particleGun->SetParticlePosition(G4ThreeVector((*cryParticles)[j]->x()*m, (*cryParticles)[j]->y()*m, (*cryParticles)[j]->z()*m));
+      particleGun->SetParticleMomentumDirection(G4ThreeVector((*cryParticles)[j]->u(), (*cryParticles)[j]->v(), (*cryParticles)[j]->w()));
+      particleGun->SetParticleTime((*cryParticles)[j]->t());
       particleGun->GeneratePrimaryVertex(anEvent);
-      delete (*vect)[j];
+      delete (*cryParticles)[j];
     }
   }
-  else
-    particleGun->GeneratePrimaryVertex(anEvent);
-
+  else {
+    generalParticleSource->GeneratePrimaryVertex(anEvent);
+  }
 }
