@@ -96,6 +96,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4UnionSolid* makePvcCell();
     G4UnionSolid* makeLiquidScintillator();
     G4LogicalVolume* makeWlsFiber();
+    G4LogicalVolume* makePmt();
     G4VPhysicalVolume* constructDetector();
     G4VPhysicalVolume* constructLiquidScintillatorCell();
     G4VPhysicalVolume* constructSingleWlsFiber();
@@ -141,6 +142,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double fiber2Y;
     G4double cellToPmtDistance;
     G4double fiberTailLength;
+    G4double pmtThickness;
     G4double pmtQuantumEfficiency;
     bool usePmt;
 };

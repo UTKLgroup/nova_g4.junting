@@ -315,6 +315,9 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   new G4PVPlacement(0, G4ThreeVector(), innerCladdingLogicalVolume, "innerCladding", outerCladdingLogicalVolume, false, 0);
   new G4PVPlacement(0, G4ThreeVector(), outerCladdingLogicalVolume, "wlsFiber", experimentalHallLogicalVolume, false, 0);
 
+  G4LogicalVolume* pmtLogicalVolume = makePmt();
+  new G4PVPlacement(0, G4ThreeVector(0.0, 0.0, -fiberLength / 2.0 - pmtThickness / 2.0), pmtLogicalVolume, "pmt", experimentalHallLogicalVolume, false, 0);
+
   return experimentalHallPhysicalVolume;
 }
 
@@ -464,10 +467,10 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
                                    CLHEP::pi / 2.0 * rad);
 
   G4UnionSolid* unionBox1 = new G4UnionSolid("unionBox1",
-                                              box1,
-                                              box2,
-                                              0,
-                                              G4ThreeVector(rectangleWidth / 2. + innerCornerRadius / 2., 0, 0));
+                                             box1,
+                                             box2,
+                                             0,
+                                             G4ThreeVector(rectangleWidth / 2. + innerCornerRadius / 2., 0, 0));
 
   G4UnionSolid* unionBox2 = new G4UnionSolid("unionBox2",
                                              unionBox1,
@@ -529,8 +532,8 @@ G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
 
   G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, cellLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
-                                                          G4Material::GetMaterial("pmma"),
-                                                          "innerCladdingLogicalVolume");
+                                                                    G4Material::GetMaterial("pmma"),
+                                                                    "innerCladdingLogicalVolume");
 
   G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, cellLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
@@ -541,6 +544,38 @@ G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
   new G4PVPlacement(0, G4ThreeVector(), innerCladdingLogicalVolume, "innerCladding", outerCladdingLogicalVolume, false, 0);
 
   return outerCladdingLogicalVolume;
+}
+
+G4LogicalVolume* NovaDetectorConstruction::makePmt()
+{
+  G4Tubs* pmtSolid = new G4Tubs("pmtSolid",
+                                0.0,
+                                fiberRadius,
+                                pmtThickness / 2.0,
+                                0.0,
+                                CLHEP::twopi);
+  G4LogicalVolume* pmtLogicalVolume = new G4LogicalVolume(pmtSolid,
+                                                          G4Material::GetMaterial("G4_GLASS_PLATE"),
+                                                          "pmtLogicalVolume");
+
+  G4Tubs* photocathodeSolid = new G4Tubs("photocathodeSolid",
+                                         0.0,
+                                         fiberRadius,
+                                         pmtThickness / 4.0,
+                                         0.0,
+                                         CLHEP::twopi);
+  G4LogicalVolume* photocathodeLogicalVolume = new G4LogicalVolume(photocathodeSolid,
+                                                                   G4Material::GetMaterial("G4_Al"),
+                                                                   "photocathodeLogicalVolume");
+  new G4PVPlacement(0,
+                    G4ThreeVector(0.0, 0.0, pmtThickness / 4.0),
+                    photocathodeLogicalVolume,
+                    "photocathode",
+                    pmtLogicalVolume,
+                    false,
+                    0);
+
+  return pmtLogicalVolume;
 }
 
 void NovaDetectorConstruction::printSettings()
@@ -579,6 +614,7 @@ void NovaDetectorConstruction::setDefaults()
   cellToPmtDistance = 100.0 * cm;
   fiberTailLength = 10.0 * cm;
   usePmt = true;
+  pmtThickness = 1.0 * mm;
   G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
   isUpdated = true;
 }
