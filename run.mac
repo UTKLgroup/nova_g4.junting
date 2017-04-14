@@ -1,9 +1,9 @@
-/gps/particle gamma
-/gps/number 1
+/gps/particle opticalphoton
+/gps/number 10
 /gps/pos/type Point
-/gps/position 0 0 6 cm
+/gps/pos/centre 0 0 5 cm
 /gps/direction 0.0 0.0 -1.0
 /gps/ang/type beam1d
-/gps/ang/sigma_r 10 deg
-/gps/ene/mono 1 keV
-/run/beamOn 10
+/gps/ang/sigma_r 5 deg
+/gps/ene/mono 1 eV
+/run/beamOn 1

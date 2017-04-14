@@ -13,7 +13,6 @@
 #include "G4GeometryManager.hh"
 #include "G4UImanager.hh"
 
-
 NovaDetectorConstruction::NovaDetectorConstruction()
 {
   isUpdated = false;
