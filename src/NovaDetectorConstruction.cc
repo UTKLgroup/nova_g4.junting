@@ -1,6 +1,6 @@
 #include <TString.h>
 #include "NovaDetectorConstruction.hh"
-#include "LXePMTSD.hh"
+#include "NovaPmtSd.hh"
 #include "NovaMainVolume.hh"
 
 #include "G4SDManager.hh"
@@ -292,7 +292,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
                                                      "experimentalHallPhysicalVolume",
                                                      0, false, 0);
 
-  G4double coreFraction = 1. - 2. * fiberCladdingFraction;
+  G4double coreFraction = 1.0 - 2.0 * fiberCladdingFraction;
   G4double coreRadius  = fiberRadius * coreFraction;
   G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
 

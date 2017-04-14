@@ -1,5 +1,5 @@
-#include "LXePMTSD.hh"
-#include "LXePMTHit.hh"
+#include "NovaPmtSd.hh"
+#include "NovaPmtHit.hh"
 #include "NovaDetectorConstruction.hh"
 #include "LXeUserTrackInformation.hh"
 
@@ -17,7 +17,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePMTSD::LXePMTSD(G4String name)
+NovaPmtSd::NovaPmtSd(G4String name)
   : G4VSensitiveDetector(name),fPMTHitCollection(0),fPMTPositionsX(0)
   ,fPMTPositionsY(0),fPMTPositionsZ(0)
 {
@@ -26,11 +26,11 @@ LXePMTSD::LXePMTSD(G4String name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePMTSD::~LXePMTSD() {}
+NovaPmtSd::~NovaPmtSd() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePMTSD::Initialize(G4HCofThisEvent* hitsCE){
+void NovaPmtSd::Initialize(G4HCofThisEvent* hitsCE){
   fPMTHitCollection = new LXePMTHitsCollection
                       (SensitiveDetectorName,collectionName[0]);
   //Store collection with event and keep ID
@@ -43,7 +43,7 @@ void LXePMTSD::Initialize(G4HCofThisEvent* hitsCE){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool LXePMTSD::ProcessHits(G4Step* ,G4TouchableHistory* ){
+G4bool NovaPmtSd::ProcessHits(G4Step* ,G4TouchableHistory* ){
   return false;
 }
 
@@ -53,7 +53,7 @@ G4bool LXePMTSD::ProcessHits(G4Step* ,G4TouchableHistory* ){
 //PostStepPoint because the hit is generated manually when the photon is
 //absorbed by the photocathode
 
-G4bool LXePMTSD::ProcessHits_constStep(const G4Step* aStep,
+G4bool NovaPmtSd::ProcessHits_constStep(const G4Step* aStep,
                                        G4TouchableHistory* ){
 
   //need to know if this is an optical photon
@@ -69,7 +69,7 @@ G4bool LXePMTSD::ProcessHits_constStep(const G4Step* aStep,
 
   //Find the correct hit collection
   G4int n=fPMTHitCollection->entries();
-  LXePMTHit* hit=NULL;
+  NovaPmtHit* hit=NULL;
   for(G4int i=0;i<n;i++){
     if((*fPMTHitCollection)[i]->GetPMTNumber()==pmtNumber){
       hit=(*fPMTHitCollection)[i];
@@ -78,7 +78,7 @@ G4bool LXePMTSD::ProcessHits_constStep(const G4Step* aStep,
   }
  
   if(hit==NULL){//this pmt wasnt previously hit in this event
-    hit = new LXePMTHit(); //so create new hit
+    hit = new NovaPmtHit(); //so create new hit
     hit->SetPMTNumber(pmtNumber);
     hit->SetPMTPhysVol(physVol);
     fPMTHitCollection->insert(hit);
@@ -106,16 +106,16 @@ G4bool LXePMTSD::ProcessHits_constStep(const G4Step* aStep,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePMTSD::EndOfEvent(G4HCofThisEvent* ) {}
+void NovaPmtSd::EndOfEvent(G4HCofThisEvent* ) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePMTSD::clear() {}
+void NovaPmtSd::clear() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePMTSD::DrawAll() {}
+void NovaPmtSd::DrawAll() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePMTSD::PrintAll() {}
+void NovaPmtSd::PrintAll() {}

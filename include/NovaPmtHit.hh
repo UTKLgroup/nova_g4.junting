@@ -12,16 +12,16 @@
 
 class G4VTouchable;
 
-class LXePMTHit : public G4VHit
+class NovaPmtHit : public G4VHit
 {
   public:
  
-    LXePMTHit();
-    virtual ~LXePMTHit();
-    LXePMTHit(const LXePMTHit &right);
+    NovaPmtHit();
+    virtual ~NovaPmtHit();
+    NovaPmtHit(const NovaPmtHit &right);
 
-    const LXePMTHit& operator=(const LXePMTHit &right);
-    G4int operator==(const LXePMTHit &right) const;
+    const NovaPmtHit& operator=(const NovaPmtHit &right);
+    G4int operator==(const NovaPmtHit &right) const;
 
     inline void *operator new(size_t);
     inline void operator delete(void *aHit);
@@ -57,18 +57,18 @@ class LXePMTHit : public G4VHit
 
 };
 
-typedef G4THitsCollection<LXePMTHit> LXePMTHitsCollection;
+typedef G4THitsCollection<NovaPmtHit> LXePMTHitsCollection;
 
-extern G4Allocator<LXePMTHit> LXePMTHitAllocator;
+extern G4Allocator<NovaPmtHit> LXePMTHitAllocator;
 
-inline void* LXePMTHit::operator new(size_t){
+inline void* NovaPmtHit::operator new(size_t){
   void *aHit;
   aHit = (void *) LXePMTHitAllocator.MallocSingle();
   return aHit;
 }
 
-inline void LXePMTHit::operator delete(void *aHit){
-  LXePMTHitAllocator.FreeSingle((LXePMTHit*) aHit);
+inline void NovaPmtHit::operator delete(void *aHit){
+  LXePMTHitAllocator.FreeSingle((NovaPmtHit*) aHit);
 }
 
 #endif

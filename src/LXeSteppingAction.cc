@@ -2,7 +2,7 @@
 #include "LXeEventAction.hh"
 #include "LXeTrackingAction.hh"
 #include "LXeTrajectory.hh"
-#include "LXePMTSD.hh"
+#include "NovaPmtSd.hh"
 #include "LXeUserTrackInformation.hh"
 #include "LXeUserEventInformation.hh"
 #include "LXeSteppingMessenger.hh"
@@ -169,7 +169,7 @@ void LXeSteppingAction::UserSteppingAction(const G4Step * theStep){
 	  //absorbed but status was Detection
 	  G4SDManager* SDman = G4SDManager::GetSDMpointer();
 	  G4String sdName="/LXeDet/pmtSD";
-	  LXePMTSD* pmtSD = (LXePMTSD*)SDman->FindSensitiveDetector(sdName);
+	  NovaPmtSd* pmtSD = (NovaPmtSd*)SDman->FindSensitiveDetector(sdName);
 	  if(pmtSD)pmtSD->ProcessHits_constStep(theStep,NULL);
 	  
 	  trackInformation->AddTrackStatusFlag(hitPMT);

@@ -4,11 +4,11 @@
 #include "G4SDManager.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "G4LogicalBorderSurface.hh"
-#include "LXePMTSD.hh"
+#include "NovaPmtSd.hh"
 #include "LXeScintSD.hh"
 
 LXeScintSD* NovaMainVolume::scintSd=NULL;
-LXePMTSD* NovaMainVolume::pmtSd=NULL;
+NovaPmtSd* NovaMainVolume::pmtSd=NULL;
 G4LogicalVolume* NovaMainVolume::housingLog = NULL;
 
 NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlate, G4LogicalVolume *pMotherLogical, G4bool pMany, G4int pCopyNo, NovaDetectorConstruction* c)
@@ -86,7 +86,7 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
 
     G4SDManager* sdManager = G4SDManager::GetSDMpointer();
     if(!pmtSd){
-      pmtSd = new LXePMTSD("/LXeDet/pmtSD");
+      pmtSd = new NovaPmtSd("/LXeDet/pmtSD");
       sdManager->AddNewDetector(pmtSd);
     }
 

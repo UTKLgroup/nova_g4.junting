@@ -1,6 +1,6 @@
 #include "LXeEventAction.hh"
 #include "LXeScintHit.hh"
-#include "LXePMTHit.hh"
+#include "NovaPmtHit.hh"
 #include "LXeUserEventInformation.hh"
 #include "LXeTrajectory.hh"
 #include "LXeRecorderBase.hh"

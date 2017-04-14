@@ -3,18 +3,18 @@
 
 #include "G4DataVector.hh"
 #include "G4VSensitiveDetector.hh"
-#include "LXePMTHit.hh"
+#include "NovaPmtHit.hh"
 
 class G4Step;
 class G4HCofThisEvent;
 
-class LXePMTSD : public G4VSensitiveDetector
+class NovaPmtSd : public G4VSensitiveDetector
 {
 
   public:
 
-    LXePMTSD(G4String name);
-    virtual ~LXePMTSD();
+    NovaPmtSd(G4String name);
+    virtual ~NovaPmtSd();
  
     virtual void Initialize(G4HCofThisEvent* );
     virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* );

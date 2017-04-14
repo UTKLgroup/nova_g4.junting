@@ -14,7 +14,7 @@ class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Box;
 class G4Tubs;
-class LXePMTSD;
+class NovaPmtSd;
 class LXeScintSD;
 class G4Sphere;
 

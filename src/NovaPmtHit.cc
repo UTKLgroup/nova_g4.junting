@@ -1,4 +1,4 @@
-#include "LXePMTHit.hh"
+#include "NovaPmtHit.hh"
 #include "G4ios.hh"
 #include "G4VVisManager.hh"
 #include "G4Colour.hh"
@@ -6,20 +6,20 @@
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
-G4Allocator<LXePMTHit> LXePMTHitAllocator;
+G4Allocator<NovaPmtHit> LXePMTHitAllocator;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePMTHit::LXePMTHit()
+NovaPmtHit::NovaPmtHit()
   : fPmtNumber(-1),fPhotons(0),fPhysVol(0),fDrawit(false) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePMTHit::~LXePMTHit() {}
+NovaPmtHit::~NovaPmtHit() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePMTHit::LXePMTHit(const LXePMTHit &right) : G4VHit()
+NovaPmtHit::NovaPmtHit(const NovaPmtHit &right) : G4VHit()
 {
   fPmtNumber=right.fPmtNumber;
   fPhotons=right.fPhotons;
@@ -29,7 +29,7 @@ LXePMTHit::LXePMTHit(const LXePMTHit &right) : G4VHit()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-const LXePMTHit& LXePMTHit::operator=(const LXePMTHit &right){
+const NovaPmtHit& NovaPmtHit::operator=(const NovaPmtHit &right){
   fPmtNumber = right.fPmtNumber;
   fPhotons=right.fPhotons;
   fPhysVol=right.fPhysVol;
@@ -39,13 +39,13 @@ const LXePMTHit& LXePMTHit::operator=(const LXePMTHit &right){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4int LXePMTHit::operator==(const LXePMTHit &right) const{
+G4int NovaPmtHit::operator==(const NovaPmtHit &right) const{
   return (fPmtNumber==right.fPmtNumber);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePMTHit::Draw(){
+void NovaPmtHit::Draw(){
   if(fDrawit&&fPhysVol){ //ReDraw only the PMTs that have hit counts > 0
     //Also need a physical volume to be able to draw anything
     G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
@@ -63,6 +63,6 @@ void LXePMTHit::Draw(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePMTHit::Print() {
+void NovaPmtHit::Print() {
   G4cout << "hits" << G4endl;
 }
