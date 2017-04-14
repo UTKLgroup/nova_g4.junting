@@ -316,7 +316,13 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   new G4PVPlacement(0, G4ThreeVector(), outerCladdingLogicalVolume, "wlsFiber", experimentalHallLogicalVolume, false, 0);
 
   G4LogicalVolume* pmtLogicalVolume = makePmt();
-  new G4PVPlacement(0, G4ThreeVector(0.0, 0.0, -fiberLength / 2.0 - pmtThickness / 2.0), pmtLogicalVolume, "pmt", experimentalHallLogicalVolume, false, 0);
+  new G4PVPlacement(0,
+                    G4ThreeVector(0.0, 0.0, -fiberLength / 2.0 - pmtThickness / 2.0),
+                    pmtLogicalVolume,
+                    "pmt",
+                    experimentalHallLogicalVolume,
+                    false,
+                    0);
 
   return experimentalHallPhysicalVolume;
 }
