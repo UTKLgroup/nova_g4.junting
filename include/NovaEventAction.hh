@@ -1,7 +1,7 @@
 #ifndef NovaEventAction_h
 #define NovaEventAction_h 1
 
-#include "LXeEventMessenger.hh"
+#include "NovaEventMessenger.hh"
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 #include "G4ThreeVector.hh"
@@ -13,41 +13,41 @@ class NovaRecorderBase;
 struct EventStat{
   
   G4int eventId;
-  G4int numWLS;
-  G4int numRefl;
-  G4int numTIRefl;
+  G4int wlsCount;
+  G4int reflectionCount;
+  G4int totalInternalReflectionCount;
 
-  G4double BeginTime;
-  G4double BeginX;
-  G4double BeginY;
-  G4double BeginZ;
-  G4double BeginE;
-  G4double BeginPX;
-  G4double BeginPY;
-  G4double BeginPZ;
-  G4double BeginWL;
+  G4double beginTime;
+  G4double beginX;
+  G4double beginY;
+  G4double beginZ;
+  G4double beginE;
+  G4double beginPX;
+  G4double beginPY;
+  G4double beginPZ;
+  G4double beginWavelength;
 
-  G4double EnterTime;
-  G4double EnterX;
-  G4double EnterY;
-  G4double EnterZ;
-  G4double EnterE;
-  G4double EnterPX;
-  G4double EnterPY;
-  G4double EnterPZ;
-  G4double EnterWL;
+  G4double enterTime;
+  G4double enterX;
+  G4double enterY;
+  G4double enterZ;
+  G4double enterE;
+  G4double enterPX;
+  G4double enterPY;
+  G4double enterPZ;
+  G4double enterWavelength;
 
-  G4double HitTime;
-  G4double HitX;
-  G4double HitY;
-  G4double HitZ;
-  G4double HitE;
-  G4double HitPX;
-  G4double HitPY;
-  G4double HitPZ; 
-  G4double HitWL; 
+  G4double hitTime;
+  G4double hitX;
+  G4double hitY;
+  G4double hitZ;
+  G4double hitMomentum;
+  G4double hitMomentumX;
+  G4double hitMomentumY;
+  G4double hitMomentumZ;
+  G4double hitWavelength;
 
-  G4double TrkLength;
+  G4double trackLength;
 };
 
 struct RunStat {
@@ -127,12 +127,12 @@ class NovaEventAction : public G4UserEventAction
 
   private:
     NovaRecorderBase* recorder;
-    LXeEventMessenger* fEventMessenger;
-    G4int              fSaveThreshold;
-    G4int              scintCollectionId;
-    G4int              pmtCollectionId;
-    G4int              verbose;
-    G4int              pmtThreshold;
+    NovaEventMessenger* eventMessenger;
+    G4int saveThreshold;
+    G4int scintCollectionId;
+    G4int pmtCollectionId;
+    G4int verbose;
+    G4int pmtThreshold;
 
     RunStat runStat; 
     EventStat eventStat;

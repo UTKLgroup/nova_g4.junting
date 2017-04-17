@@ -45,14 +45,14 @@ extern G4DLLEXPORT G4Allocator<NovaTrajectoryPoint> aTrajPointAllocator;
 
 inline void* NovaTrajectoryPoint::operator new(size_t)
 {
-    void *aTrajectoryPoint = (void *) aTrajPointAllocator.MallocSingle();
-    return aTrajectoryPoint;
+  void *aTrajectoryPoint = (void*) aTrajPointAllocator.MallocSingle();
+  return aTrajectoryPoint;
 }
 
 inline void NovaTrajectoryPoint::operator delete(void *aTrajectoryPoint)
 {
-    aTrajPointAllocator.FreeSingle(
-        (NovaTrajectoryPoint *) aTrajectoryPoint);
+  aTrajPointAllocator.FreeSingle(
+      (NovaTrajectoryPoint *) aTrajectoryPoint);
 }
 
 #endif

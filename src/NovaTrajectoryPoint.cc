@@ -11,7 +11,6 @@
 
 #include "G4UnitsTable.hh"
 
-//#define G4ATTDEBUG
 #ifdef G4ATTDEBUG
 #include "G4AttCheck.hh"
 #endif

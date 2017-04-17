@@ -55,10 +55,10 @@ class NovaTrajectory : public G4VTrajectory
      inline G4String GetProcessName() const { return fProcessName; }
      inline void SetProcessName(G4String a) { fProcessName = a; }
 
-     inline G4int GetNumRefl() const { return fNumRefl; }
+     inline G4int getReflectionCount() const { return fNumRefl; }
      inline void SetNumRefl(G4int a) { fNumRefl = a; }
 
-     inline G4int GetNumTIRefl() const { return fNumTIRefl; }
+     inline G4int getTotalInternalReflectionCount() const { return fNumTIRefl; }
      inline void SetNumTIRefl(G4int a) { fNumTIRefl = a; }
 
 // Other member functions

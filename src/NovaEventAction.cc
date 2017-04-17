@@ -8,19 +8,9 @@
 #include "G4EventManager.hh"
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
-#include "G4Event.hh"
-#include "G4EventManager.hh"
-#include "G4TrajectoryContainer.hh"
-#include "G4Trajectory.hh"
 #include "G4VVisManager.hh"
-#include "G4ios.hh"
-#include "G4UImanager.hh"
 #include "G4SystemOfUnits.hh"
 
-#include "G4TransportationManager.hh"
-#include "G4Navigator.hh"
-
-#include "fstream"
 #include "NovaRunAction.hh"
 
 #include "NovaTrajectory.hh"
@@ -28,12 +18,12 @@
 
 
 NovaEventAction::NovaEventAction(NovaRecorderBase* r)
-  : recorder(r),fSaveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),verbose(0), pmtThreshold(1),
-    forceDrawPhotons(false),forceDrawNoPhotons(false)
+    : recorder(r),saveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),verbose(0), pmtThreshold(1),
+      forceDrawPhotons(false),forceDrawNoPhotons(false)
 {
-  fEventMessenger = new LXeEventMessenger(this);
+  eventMessenger = new NovaEventMessenger(this);
 }
- 
+
 NovaEventAction::~NovaEventAction(){}
 
 void NovaEventAction::BeginOfEventAction(const G4Event* anEvent)
@@ -48,7 +38,7 @@ void NovaEventAction::BeginOfEventAction(const G4Event* anEvent)
   if(recorder)
     recorder->RecordBeginOfEvent(anEvent);
 }
- 
+
 void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 
   NovaUserEventInformation* eventInformation = (NovaUserEventInformation*) anEvent->GetUserInformation();
@@ -91,8 +81,8 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     else {
       energyWeightedPosition /= eventInformation->getEnergyDeposition();
       eventInformation->setEnergyWeightedPosition(energyWeightedPosition);
-    }    
-  }   
+    }
+  }
 
   if(pmtHitsCollection){
     G4int pmtHitCount = pmtHitsCollection->entries();
@@ -106,7 +96,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     }
     pmtHitsCollection->DrawAllHits();
   }
-  
+
   NovaRunAction* runAction = (NovaRunAction*)(G4RunManager::GetRunManager()->GetUserRunAction());
 
   runStat.scintillationPhotonCount = eventInformation->getScintillationPhotonCount();
@@ -131,135 +121,105 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 
     if (trajectory->GetParentID() == 0) {
       NovaTrajectoryPoint* trajectoryPoint = (NovaTrajectoryPoint*) trajectory->GetPoint(0);
-      G4ThreeVector pt = trajectoryPoint->GetPosition();
+      G4ThreeVector position = trajectoryPoint->GetPosition();
       runStat.primaryPDG = trajectory->GetPDGEncoding();
-      runStat.primaryPX  = trajectory->GetInitialMomentum().getX();
-      runStat.primaryPY  = trajectory->GetInitialMomentum().getY();
-      runStat.primaryPZ  = trajectory->GetInitialMomentum().getZ();
-      runStat.primaryX   = pt.getX();
-      runStat.primaryY   = pt.getY();
-      runStat.primaryZ   = pt.getZ();     
+      runStat.primaryPX = trajectory->GetInitialMomentum().getX();
+      runStat.primaryPY = trajectory->GetInitialMomentum().getY();
+      runStat.primaryPZ = trajectory->GetInitialMomentum().getZ();
+      runStat.primaryX = position.getX();
+      runStat.primaryY = position.getY();
+      runStat.primaryZ = position.getZ();
     }
 
-    // get info of the photons that hit a PMT 
     if(trajectory->GetStatus() == 2){
+      eventStat.trackLength = 0.;
+      eventStat.wlsCount = 0;
+      eventStat.reflectionCount = 0;
+      eventStat.totalInternalReflectionCount = 0;
 
-      //G4cout << "had a hit on PMT" << G4endl;
-      eventStat.TrkLength = 0.;
-      eventStat.numWLS    = 0;
-      eventStat.numRefl   = 0;
-      eventStat.numTIRefl = 0;
+      NovaTrajectoryPoint* lastTrajectoryPoint = (NovaTrajectoryPoint*)trajectory->GetPoint(trajectory->GetPointEntries() - 1);
+      eventStat.hitTime = lastTrajectoryPoint->GetTime();
+      eventStat.hitX = lastTrajectoryPoint->GetPosition().getX();
+      eventStat.hitY = lastTrajectoryPoint->GetPosition().getY();
+      eventStat.hitZ = lastTrajectoryPoint->GetPosition().getZ();
+      eventStat.hitMomentum = lastTrajectoryPoint->GetMomentum().getR() / eV;
+      eventStat.hitMomentumX = lastTrajectoryPoint->GetMomentum().getX() / eV;
+      eventStat.hitMomentumY = lastTrajectoryPoint->GetMomentum().getY() / eV;
+      eventStat.hitMomentumZ = lastTrajectoryPoint->GetMomentum().getZ() / eV;
+      eventStat.hitWavelength = 1239.84 / (lastTrajectoryPoint->GetMomentum().getR() / eV);
 
-      // hit info      
-      NovaTrajectoryPoint* hitpt = (NovaTrajectoryPoint*)trajectory->GetPoint(trajectory->GetPointEntries() - 1);
-      eventStat.HitTime = hitpt->GetTime();
-      eventStat.HitX    = hitpt->GetPosition().getX();
-      eventStat.HitY    = hitpt->GetPosition().getY();
-      eventStat.HitZ    = hitpt->GetPosition().getZ();
-      eventStat.HitE    = hitpt->GetMomentum().getR() / eV;
-      eventStat.HitPX   = hitpt->GetMomentum().getX() / eV;
-      eventStat.HitPY   = hitpt->GetMomentum().getY() / eV;
-      eventStat.HitPZ   = hitpt->GetMomentum().getZ() / eV;
-      eventStat.HitWL   = 1239.84 / (hitpt->GetMomentum().getR() / eV);
+      NovaTrajectory* currentTrajectory = trajectory;
+      G4int parentTrackId;
+      NovaTrajectory* parentTrajectory;
+      while (currentTrajectory->GetParticleName() == "opticalphoton") {
+        G4double trkLength = currentTrajectory->GetTrkLength() / cm;
+        eventStat.trackLength += trkLength;
 
-      G4int CurrentID;
-      NovaTrajectory* CurrentTrj;
-      G4int ParentID;
-      NovaTrajectory* ParentTrj;
-      CurrentTrj = trajectory;
-      CurrentID = trajectory->GetTrackID();
-      while(CurrentTrj->GetParticleName() == "opticalphoton"){
+        G4String processName = currentTrajectory->GetProcessName();
+        if(processName == "OpWLS")
+          eventStat.wlsCount++;
+        eventStat.reflectionCount += currentTrajectory->getReflectionCount();
+        eventStat.totalInternalReflectionCount += currentTrajectory->getTotalInternalReflectionCount();
 
-	G4double trklength = CurrentTrj->GetTrkLength() / cm;
-	eventStat.TrkLength += trklength;
+        for(G4int j = currentTrajectory->GetPointEntries() - 1; j >= 0; j--){
+          NovaTrajectoryPoint* trajectoryPoint = (NovaTrajectoryPoint*) currentTrajectory->GetPoint(j);
+          G4ThreeVector position = trajectoryPoint->GetPosition();
+          G4ThreeVector momentum = trajectoryPoint->GetMomentum();
+          G4String vol = trajectoryPoint->GetVolumeName();
+          G4double time = trajectoryPoint->GetTime() / ns;
 
-	G4String processname = CurrentTrj->GetProcessName();
-	if(processname == "OpWLS")
-	  eventStat.numWLS++;
+          if (j == 0) {
+            eventStat.beginTime = time;
+            eventStat.beginX = position.getX();
+            eventStat.beginY = position.getY();
+            eventStat.beginZ = position.getZ();
+            eventStat.beginE = momentum.getR()  / eV;
+            eventStat.beginPX = momentum.getX()  / eV;
+            eventStat.beginPY = momentum.getY()  / eV;
+            eventStat.beginPZ = momentum.getZ()  / eV;
+            eventStat.beginWavelength = 1239.84 / (momentum.getR() / eV);
+          }
 
-	eventStat.numRefl   += CurrentTrj->GetNumRefl();
-	eventStat.numTIRefl += CurrentTrj->GetNumTIRefl();
+          if (j > 0) {
+            NovaTrajectoryPoint* previousTrajectoryPoint = (NovaTrajectoryPoint*)currentTrajectory->GetPoint(j-1);
+            G4String previousVolume = previousTrajectoryPoint->GetVolumeName();
+            if (vol == "wlsFiber" && previousVolume == "liquidScintillator") {
+              eventStat.enterTime = time;
+              eventStat.enterX = position.getX();
+              eventStat.enterY = position.getY();
+              eventStat.enterZ = position.getZ();
+              eventStat.enterE = momentum.getR();
+              eventStat.enterPX = momentum.getX();
+              eventStat.enterPY = momentum.getY();
+              eventStat.enterPZ = momentum.getZ();
+              eventStat.enterWavelength = 1239.84 / (momentum.getR() / eV);
+            }
+          }
+        }
 
-	//G4cout << CurrentID << "   " << CurrentTrj->GetParticleName() << "   " << trklength << " cm     " << processname << G4endl;
-
-	for(G4int j = CurrentTrj->GetPointEntries() - 1; j >= 0; j--){
-	  NovaTrajectoryPoint* trjpt = (NovaTrajectoryPoint*)CurrentTrj->GetPoint(j);
-	  G4ThreeVector position = trjpt->GetPosition();
-	  G4ThreeVector momentum = trjpt->GetMomentum();
-	  G4String vol = trjpt->GetVolumeName();
-	  G4double time = trjpt->GetTime() / ns;
-
-	  // begin info
-	  if(j == 0){
-	    eventStat.BeginTime = time;
-	    eventStat.BeginX    = position.getX();
-	    eventStat.BeginY    = position.getY();
-	    eventStat.BeginZ    = position.getZ();
-	    eventStat.BeginE    = momentum.getR()  / eV;
-	    eventStat.BeginPX   = momentum.getX()  / eV;
-	    eventStat.BeginPY   = momentum.getY()  / eV;
-	    eventStat.BeginPZ   = momentum.getZ()  / eV;
-	    eventStat.BeginWL    = 1239.84 / (momentum.getR()  / eV);
-	  }
-
-	  // enter info
-	  if(j > 0){
-	    NovaTrajectoryPoint* pretrjpt = (NovaTrajectoryPoint*)CurrentTrj->GetPoint(j-1);
-	    G4String prevol = pretrjpt->GetVolumeName();
-	    if(vol == "outer_clading" && prevol == "scnt"){
-	      eventStat.EnterTime = time;
-	      eventStat.EnterX    = position.getX();
-	      eventStat.EnterY    = position.getY();
-	      eventStat.EnterZ    = position.getZ();
-	      eventStat.EnterE    = momentum.getR();
-	      eventStat.EnterPX   = momentum.getX();
-	      eventStat.EnterPY   = momentum.getY();
-	      eventStat.EnterPZ   = momentum.getZ();
-	      eventStat.EnterWL   = 1239.84 / (momentum.getR()  / eV);
-	    }
-	  }
-	  
-	  //G4cout << position << "   " << time << "   " << vol << G4endl;   
-	}
-
-	// find parent trajectory
-	ParentID = CurrentTrj->GetParentID();
-	for(G4int j = 0; j < nTrajectories; j++){
-	  ParentTrj = (NovaTrajectory*) ((*(anEvent->GetTrajectoryContainer()))[j]);
-	  if(ParentTrj->GetTrackID() == ParentID)
-	    break;
-	}
-	CurrentTrj = ParentTrj;
-	CurrentID = ParentID;
+        parentTrackId = currentTrajectory->GetParentID();
+        for (G4int j = 0; j < nTrajectories; j++) {
+          parentTrajectory = (NovaTrajectory*) ((*(anEvent->GetTrajectoryContainer()))[j]);
+          if (parentTrajectory->GetTrackID() == parentTrackId) {
+            currentTrajectory = parentTrajectory;
+            break;
+          }
+        }
       }
-
       runAction->UpdateEvtStatistics(eventStat);
-
-    }      
+    }
   }
 
-  //-------------------------------------
-
   runAction->UpdateRunStatistics(runStat);
-    
-  //-------------
-  
-  //If we have set the flag to save 'special' events, save here
-  if(fSaveThreshold&& eventInformation->getPhotonCount() <= fSaveThreshold)
+  if (saveThreshold && eventInformation->getPhotonCount() <= saveThreshold)
     G4RunManager::GetRunManager()->rndmSaveThisEvent();
-  
+
   if(recorder)recorder->RecordEndOfEvent(anEvent);
-
-
 }
-  
-void NovaEventAction::SetSaveThreshold(G4int save){
-/*Sets the save threshold for the random number seed. If the number of photons
-generated in an event is lower than this, then save the seed for this event
-in a file called run###evt###.rndm
-*/
-  fSaveThreshold=save;
+
+void NovaEventAction::SetSaveThreshold(G4int save)
+{
+  saveThreshold=save;
   G4RunManager::GetRunManager()->SetRandomNumberStore(true);
   G4RunManager::GetRunManager()->SetRandomNumberStoreDir("random/");
-  //  G4UImanager::GetUIpointer()->ApplyCommand("/random/setSavingFlag 1");
 }

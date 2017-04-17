@@ -21,7 +21,7 @@ void NovaRunAction::BeginOfRunAction(const G4Run* aRun){
   eventTree   = new TTree("eventTree","Event Statistics");
   evtBranch = eventTree->Branch("eventStat",
                                 &eventStat.eventId,
-                                "eventId/I:wlsCount:reflectionCount:totalInternalReflectionCount:BeginTime/D:BeginX:BeginY:BeginZ:BeginE:BeginPX:BeginPY:BeginPZ:BeginWL:EnterTime:EnterX:EnterY:EnterZ:EnterE:EnterPX:EnterPY:EnterPZ:EnterWL:HitTime:HitX:HitY:HitZ:HitE:HitPX:HitPY:HitPZ:HitWL:TrkLength");
+                                "eventId/I:wlsCount:reflectionCount:totalInternalReflectionCount:beginTime/D:beginX:beginY:beginZ:beginE:beginPX:beginPY:beginPZ:beginWavelength:enterTime:enterX:enterY:enterZ:enterE:enterPX:enterPY:enterPZ:enterWavelength:hitTime:hitX:hitY:hitZ:hitMomentum:hitMomentumX:hitMomentumY:hitMomentumZ:hitWavelength:trackLength");
 
 }
 

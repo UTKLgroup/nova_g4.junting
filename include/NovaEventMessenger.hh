@@ -1,5 +1,5 @@
-#ifndef LXeEventMessenger_h
-#define LXeEventMessenger_h 1
+#ifndef NovaEventMessenger_h
+#define NovaEventMessenger_h 1
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -8,12 +8,12 @@ class NovaEventAction;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithABool;
 
-class LXeEventMessenger: public G4UImessenger
+class NovaEventMessenger: public G4UImessenger
 {
   public:
 
-    LXeEventMessenger(NovaEventAction*);
-    virtual ~LXeEventMessenger();
+    NovaEventMessenger(NovaEventAction*);
+    virtual ~NovaEventMessenger();
  
     virtual void SetNewValue(G4UIcommand*, G4String);
  

@@ -1,4 +1,4 @@
-#include "LXeEventMessenger.hh"
+#include "NovaEventMessenger.hh"
 #include "NovaEventAction.hh"
 
 #include "G4UIcmdWithABool.hh"
@@ -6,7 +6,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEventMessenger::LXeEventMessenger(NovaEventAction* event)
+NovaEventMessenger::NovaEventMessenger(NovaEventAction* event)
  : fLXeEvent(event)
 {
   fSaveThresholdCmd = new G4UIcmdWithAnInteger("/LXe/saveThreshold",this);
@@ -36,7 +36,7 @@ LXeEventMessenger::LXeEventMessenger(NovaEventAction* event)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEventMessenger::~LXeEventMessenger(){
+NovaEventMessenger::~NovaEventMessenger(){
   delete fSaveThresholdCmd;
   delete fVerboseCmd;
   delete fPmtThresholdCmd;
@@ -46,7 +46,7 @@ LXeEventMessenger::~LXeEventMessenger(){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeEventMessenger::SetNewValue(G4UIcommand* command, G4String newValue){
+void NovaEventMessenger::SetNewValue(G4UIcommand* command, G4String newValue){
   if( command == fSaveThresholdCmd ){
     fLXeEvent->SetSaveThreshold(fSaveThresholdCmd->GetNewIntValue(newValue));
   }
