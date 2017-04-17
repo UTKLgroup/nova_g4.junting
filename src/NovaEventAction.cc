@@ -31,16 +31,16 @@ void NovaEventAction::BeginOfEventAction(const G4Event* anEvent)
   G4EventManager::GetEventManager()->SetUserInformation(new NovaUserEventInformation);
 
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-  if(scintCollectionId<0)
+  if (scintCollectionId < 0)
     scintCollectionId = sdManager->GetCollectionID("scintCollection");
-  if(pmtCollectionId<0)
+  if (pmtCollectionId < 0)
     pmtCollectionId = sdManager->GetCollectionID("pmtHitCollection");
-  if(recorder)
+  if (recorder)
     recorder->RecordBeginOfEvent(anEvent);
 }
 
-void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
-
+void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
+{
   NovaUserEventInformation* eventInformation = (NovaUserEventInformation*) anEvent->GetUserInformation();
   G4TrajectoryContainer* trajectoryContainer = anEvent->GetTrajectoryContainer();
   G4int nTrajectories = 0;
@@ -58,7 +58,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
       pmtHitsCollection = (NovaPmtHitsCollection*)(hcOfThisEvent->GetHC(pmtCollectionId));
   }
 
-  if(scintHitsCollection){
+  if (scintHitsCollection) {
     int nHit = scintHitsCollection->entries();
     G4ThreeVector energyWeightedPosition(0.0);
     G4double energyDeposition;
@@ -75,8 +75,9 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
       }
     }
 
-    if (eventInformation->getEnergyDeposition()==0.) {
-      if(verbose>0)G4cout<<"No hits in the scintillator this event."<<G4endl;
+    if (eventInformation->getEnergyDeposition()==0.0) {
+      if(verbose>0)
+        G4cout << "No hits in the scintillator this event." << G4endl;
     }
     else {
       energyWeightedPosition /= eventInformation->getEnergyDeposition();
@@ -122,7 +123,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     if (trajectory->GetParentID() == 0) {
       NovaTrajectoryPoint* trajectoryPoint = (NovaTrajectoryPoint*) trajectory->GetPoint(0);
       G4ThreeVector position = trajectoryPoint->GetPosition();
-      runStat.primaryPDG = trajectory->GetPDGEncoding();
+      runStat.primaryPdg = trajectory->GetPDGEncoding();
       runStat.primaryPX = trajectory->GetInitialMomentum().getX();
       runStat.primaryPY = trajectory->GetInitialMomentum().getY();
       runStat.primaryPZ = trajectory->GetInitialMomentum().getZ();
@@ -142,10 +143,10 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
       eventStat.hitX = lastTrajectoryPoint->GetPosition().getX();
       eventStat.hitY = lastTrajectoryPoint->GetPosition().getY();
       eventStat.hitZ = lastTrajectoryPoint->GetPosition().getZ();
-      eventStat.hitMomentum = lastTrajectoryPoint->GetMomentum().getR() / eV;
-      eventStat.hitMomentumX = lastTrajectoryPoint->GetMomentum().getX() / eV;
-      eventStat.hitMomentumY = lastTrajectoryPoint->GetMomentum().getY() / eV;
-      eventStat.hitMomentumZ = lastTrajectoryPoint->GetMomentum().getZ() / eV;
+      eventStat.hitE = lastTrajectoryPoint->GetMomentum().getR() / eV;
+      eventStat.hitPX = lastTrajectoryPoint->GetMomentum().getX() / eV;
+      eventStat.hitPY = lastTrajectoryPoint->GetMomentum().getY() / eV;
+      eventStat.hitPZ = lastTrajectoryPoint->GetMomentum().getZ() / eV;
       eventStat.hitWavelength = 1239.84 / (lastTrajectoryPoint->GetMomentum().getR() / eV);
 
       NovaTrajectory* currentTrajectory = trajectory;
@@ -173,10 +174,10 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
             eventStat.beginX = position.getX();
             eventStat.beginY = position.getY();
             eventStat.beginZ = position.getZ();
-            eventStat.beginE = momentum.getR()  / eV;
-            eventStat.beginPX = momentum.getX()  / eV;
-            eventStat.beginPY = momentum.getY()  / eV;
-            eventStat.beginPZ = momentum.getZ()  / eV;
+            eventStat.beginE = momentum.getR() / eV;
+            eventStat.beginPX = momentum.getX() / eV;
+            eventStat.beginPY = momentum.getY() / eV;
+            eventStat.beginPZ = momentum.getZ() / eV;
             eventStat.beginWavelength = 1239.84 / (momentum.getR() / eV);
           }
 
@@ -206,7 +207,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
           }
         }
       }
-      runAction->UpdateEvtStatistics(eventStat);
+      runAction->UpdateEventStatistics(eventStat);
     }
   }
 
@@ -214,12 +215,13 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
   if (saveThreshold && eventInformation->getPhotonCount() <= saveThreshold)
     G4RunManager::GetRunManager()->rndmSaveThisEvent();
 
-  if(recorder)recorder->RecordEndOfEvent(anEvent);
+  if(recorder)
+    recorder->RecordEndOfEvent(anEvent);
 }
 
 void NovaEventAction::SetSaveThreshold(G4int save)
 {
-  saveThreshold=save;
+  saveThreshold = save;
   G4RunManager::GetRunManager()->SetRandomNumberStore(true);
   G4RunManager::GetRunManager()->SetRandomNumberStoreDir("random/");
 }

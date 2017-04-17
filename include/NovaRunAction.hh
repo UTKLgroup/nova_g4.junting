@@ -13,7 +13,6 @@ class NovaRecorderBase;
 class NovaRunAction : public G4UserRunAction
 {
   public:
-
     NovaRunAction(NovaRecorderBase*);
     virtual ~NovaRunAction();
 
@@ -21,20 +20,16 @@ class NovaRunAction : public G4UserRunAction
     virtual void EndOfRunAction(const G4Run*);
 
     virtual void UpdateRunStatistics(RunStat stat);
-    virtual void UpdateEvtStatistics(EventStat stat);
+    virtual void UpdateEventStatistics(EventStat stat);
 
   private:
-
     NovaRecorderBase* recorder;
     TFile* outputFilename;
     RunStat  runStat;
     TTree*   runTree;
-    TBranch* runBranch;
 
     EventStat  eventStat;
     TTree*   eventTree;
-    TBranch* evtBranch;
-
 };
 
 #endif

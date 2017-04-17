@@ -12,20 +12,20 @@ void NovaRunAction::BeginOfRunAction(const G4Run* aRun){
 
   outputFilename=new TFile("nova.root", "update");
 
-  runTree   = new TTree("runTree", "Run Statistics");
-  runBranch = runTree->Branch("runStat",
-                              &runStat.scintillationPhotonCount,
-                              "scintillationPhotonCount/I:cherenkovPhotonCount:hitCount:pmtAboveThresholdCount:absorptionCount:boundaryAbsorptionCount:UnAccounted:primaryPDG:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:energyDeposition:energyDepositionX:energyDepositionY:energyDepositionZ");
+  runTree = new TTree("runTree", "Run Statistics");
+  runTree->Branch("runStat",
+                  &runStat.scintillationPhotonCount,
+                  "scintillationPhotonCount/I:cherenkovPhotonCount:hitCount:pmtAboveThresholdCount:absorptionCount:boundaryAbsorptionCount:unacountedCount:primaryPdg:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:energyDeposition:energyDepositionX:energyDepositionY:energyDepositionZ");
 
-
-  eventTree   = new TTree("eventTree","Event Statistics");
-  evtBranch = eventTree->Branch("eventStat",
-                                &eventStat.eventId,
-                                "eventId/I:wlsCount:reflectionCount:totalInternalReflectionCount:beginTime/D:beginX:beginY:beginZ:beginE:beginPX:beginPY:beginPZ:beginWavelength:enterTime:enterX:enterY:enterZ:enterE:enterPX:enterPY:enterPZ:enterWavelength:hitTime:hitX:hitY:hitZ:hitMomentum:hitMomentumX:hitMomentumY:hitMomentumZ:hitWavelength:trackLength");
+  eventTree = new TTree("eventTree","Event Statistics");
+  eventTree->Branch("eventStat",
+                    &eventStat.eventId,
+                    "eventId/I:wlsCount:reflectionCount:totalInternalReflectionCount:beginTime/D:beginX:beginY:beginZ:beginE:beginPX:beginPY:beginPZ:beginWavelength:enterTime:enterX:enterY:enterZ:enterE:enterPX:enterPY:enterPZ:enterWavelength:hitTime:hitX:hitY:hitZ:hitE:hitPX:hitPY:hitPZ:hitWavelength:trackLength");
 
 }
 
-void NovaRunAction::EndOfRunAction(const G4Run* aRun){
+void NovaRunAction::EndOfRunAction(const G4Run* aRun)
+{
   if(recorder)
     recorder->RecordEndOfRun(aRun);
 
@@ -34,12 +34,14 @@ void NovaRunAction::EndOfRunAction(const G4Run* aRun){
   outputFilename->Close();
 }
 
-void NovaRunAction::UpdateRunStatistics(RunStat stat){
+void NovaRunAction::UpdateRunStatistics(RunStat stat)
+{
   runStat = stat;
   runTree->Fill();
 }
 
-void NovaRunAction::UpdateEvtStatistics(EventStat stat){
+void NovaRunAction::UpdateEventStatistics(EventStat stat)
+{
   eventStat = stat;
   eventTree->Fill();
 }  

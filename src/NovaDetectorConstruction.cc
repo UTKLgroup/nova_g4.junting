@@ -328,7 +328,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
   NovaPmtSd* pmtSd = new NovaPmtSd("/NovaDet/pmtSD");
   sdManager->AddNewDetector(pmtSd);
-  pmtSd->initPmts(2);
+  pmtSd->initPmts(1);
   pmtSd->setPmtPosition(0, 0.0, 0.0, pmtZ);
 
   return experimentalHallPhysicalVolume;

@@ -10,8 +10,8 @@ class G4Event;
 class NovaRecorderBase;
 
 
-struct EventStat{
-  
+struct EventStat
+{
   G4int eventId;
   G4int wlsCount;
   G4int reflectionCount;
@@ -41,16 +41,17 @@ struct EventStat{
   G4double hitX;
   G4double hitY;
   G4double hitZ;
-  G4double hitMomentum;
-  G4double hitMomentumX;
-  G4double hitMomentumY;
-  G4double hitMomentumZ;
+  G4double hitE;
+  G4double hitPX;
+  G4double hitPY;
+  G4double hitPZ;
   G4double hitWavelength;
 
   G4double trackLength;
 };
 
-struct RunStat {
+struct RunStat
+{
   G4int scintillationPhotonCount;
 
   G4int cherenkovPhotonCount;
@@ -61,7 +62,7 @@ struct RunStat {
   G4int boundaryAbsorptionCount;
   G4int unacountedCount;
 
-  G4int primaryPDG;
+  G4int primaryPdg;
   G4double primaryX;
   G4double primaryY;
   G4double primaryZ;
@@ -73,37 +74,7 @@ struct RunStat {
   G4double energyDepositionX;
   G4double energyDepositionY;
   G4double energyDepositionZ;
-
-
-  /*
-  G4int VetoPhotonCount_Ceren;
-  G4int VetoHitCount;
-  G4int VetoPMTsAboveThreshold;
-  G4int VetoAbsorptionCount;
-  G4int VetoBoundaryAbsorptionCount;
-  G4int VetoUnacounted;
-  */
-
-  /*
-  G4double inX;
-  G4double inY;
-  G4double inZ;
-
-  G4double outX;
-  G4double outY;
-  G4double outZ;
-
-  G4double VetoinX;
-  G4double VetoinY;
-  G4double VetoinZ;
-
-  G4double VetooutX;
-  G4double VetooutY;
-  G4double VetooutZ;
-  */
-
-};  
-
+};
 
 class NovaEventAction : public G4UserEventAction
 {
