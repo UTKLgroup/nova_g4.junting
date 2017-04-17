@@ -1,5 +1,5 @@
-#ifndef LXeDetectorConstruction_H
-#define LXeDetectorConstruction_H 1
+#ifndef NovaDetectorConstruction_H
+#define NovaDetectorConstruction_H 1
 
 #include <G4NistManager.hh>
 #include "G4SystemOfUnits.hh"

@@ -10,7 +10,7 @@ class G4Event;
 class LXeRecorderBase;
 
 
-struct EvtStat{
+struct EventStat{
   
   G4int EvtNum;
   G4int numWLS;
@@ -121,7 +121,7 @@ class NovaEventAction : public G4UserEventAction
 
     void SetEventVerbose(G4int v){fVerbose=v;}
 
-    void SetPMTThreshold(G4int t){fPMTThreshold=t;}
+    void SetPMTThreshold(G4int t){pmtThreshold=t;}
 
     void SetForceDrawPhotons(G4bool b){fForcedrawphotons=b;}
     void SetForceDrawNoPhotons(G4bool b){fForcenophotons=b;}
@@ -134,10 +134,10 @@ class NovaEventAction : public G4UserEventAction
     G4int              scintCollectionId;
     G4int              pmtCollectionId;
     G4int              fVerbose;
-    G4int              fPMTThreshold;
+    G4int              pmtThreshold;
 
     RunStat runStat; 
-    EvtStat evtStat;
+    EventStat evtStat;
 
     G4bool fForcedrawphotons;
     G4bool fForcenophotons;

@@ -2,8 +2,8 @@
 #include "G4ThreeVector.hh"
 #include "globals.hh"
 
-#ifndef LXeUserEventInformation_h
-#define LXeUserEventInformation_h 1
+#ifndef NovaUserEventInformation_h
+#define NovaUserEventInformation_h 1
 
 class NovaUserEventInformation : public G4VUserEventInformation
 {

@@ -99,7 +99,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
       theTrack->SetTrackStatus(fStopAndKill);
   }
 
-  if(!thePostPV){//out of world
+  if(!thePostPV){//outputFilename of world
     return;
   }
 

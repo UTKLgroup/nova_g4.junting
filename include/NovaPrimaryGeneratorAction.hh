@@ -1,5 +1,5 @@
-#ifndef LXePrimaryGeneratorAction_h
-#define LXePrimaryGeneratorAction_h 1
+#ifndef NovaPrimaryGeneratorAction_h
+#define NovaPrimaryGeneratorAction_h 1
 
 #include <G4GeneralParticleSource.hh>
 #include "G4VUserPrimaryGeneratorAction.hh"

@@ -5,36 +5,36 @@
 #include "TTree.h"
 #include "TBranch.h"
 
-#ifndef LXeRunAction_h
-#define LXeRunAction_h 1
+#ifndef NovaRunAction_h
+#define NovaRunAction_h 1
 
 class LXeRecorderBase;
 
-class LXeRunAction : public G4UserRunAction
+class NovaRunAction : public G4UserRunAction
 {
   public:
 
-    LXeRunAction(LXeRecorderBase*);
-    virtual ~LXeRunAction();
+    NovaRunAction(LXeRecorderBase*);
+    virtual ~NovaRunAction();
 
     virtual void BeginOfRunAction(const G4Run*);
     virtual void EndOfRunAction(const G4Run*);
 
     virtual void UpdateRunStatistics(RunStat stat);
-    virtual void UpdateEvtStatistics(EvtStat stat);
+    virtual void UpdateEvtStatistics(EventStat stat);
 
   private:
 
     LXeRecorderBase* fRecorder;
 
-    TFile *out;
+    TFile *outputFilename;
 
     RunStat  runStat;
     TTree*   runTree;
     TBranch* runBranch;
 
-    EvtStat  evtStat;
-    TTree*   evtTree;
+    EventStat  eventStat;
+    TTree*   eventTree;
     TBranch* evtBranch;
 
 };

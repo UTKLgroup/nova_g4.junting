@@ -8,7 +8,7 @@
 #include "NovaStackingAction.hh"
 #include "NovaSteppingAction.hh"
 #include "LXeTrackingAction.hh"
-#include "LXeRunAction.hh"
+#include "NovaRunAction.hh"
 #include "LXeSteppingVerbose.hh"
 
 #include "LXeRecorderBase.hh"
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
   runManager->SetUserInitialization(new LXePhysicsList);
   runManager->SetUserAction(new NovaPrimaryGeneratorAction(""));
   runManager->SetUserAction(new NovaStackingAction);
-  runManager->SetUserAction(new LXeRunAction(recorder));
+  runManager->SetUserAction(new NovaRunAction(recorder));
   runManager->SetUserAction(new NovaEventAction(recorder));
   runManager->SetUserAction(new LXeTrackingAction(recorder));
   runManager->SetUserAction(new NovaSteppingAction(recorder));

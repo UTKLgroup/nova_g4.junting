@@ -2,7 +2,7 @@
 /gui/addIcon "Save viewer state" save /vis/viewer/save
 /gui/addIcon "Move" move 
 /gui/addIcon "Pick" pick 
-/gui/addIcon "Zoom out" zoom_out 
+/gui/addIcon "Zoom outputFilename" zoom_out
 /gui/addIcon "Zoom in" zoom_in 
 /gui/addIcon "Rotate" rotate 
 /gui/addIcon "Hidden line removal" hidden_line_removal 

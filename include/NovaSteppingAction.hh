@@ -1,5 +1,5 @@
 #ifndef NovaSteppingAction_H
-#define LXeSteppingACtion_H 1
+#define NovaSteppingACtion_H 1
 
 #include "globals.hh"
 #include "G4UserSteppingAction.hh"

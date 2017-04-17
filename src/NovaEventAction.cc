@@ -21,14 +21,14 @@
 #include "G4Navigator.hh"
 
 #include "fstream"
-#include "LXeRunAction.hh"
+#include "NovaRunAction.hh"
 
 #include "F04Trajectory.hh"
 #include "F04TrajectoryPoint.hh"
 
 
 NovaEventAction::NovaEventAction(LXeRecorderBase* r)
-  : recorder(r),fSaveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),fVerbose(0), fPMTThreshold(1),
+  : recorder(r),fSaveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),fVerbose(0), pmtThreshold(1),
     fForcedrawphotons(false),fForcenophotons(false)
 {
   fEventMessenger = new LXeEventMessenger(this);
@@ -85,21 +85,20 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
       }
     }
 
-    if(eventInformation->getEnergyDeposition()==0.){
+    if (eventInformation->getEnergyDeposition()==0.) {
       if(fVerbose>0)G4cout<<"No hits in the scintillator this event."<<G4endl;
     }
-    else{
-      //Finish calculation of energy weighted position
+    else {
       energyWeightedPosition /= eventInformation->getEnergyDeposition();
       eventInformation->setEnergyWeightedPosition(energyWeightedPosition);
     }    
   }   
 
   if(pmtHitsCollection){
-    G4int pmts = pmtHitsCollection->entries();
-    for(G4int i=0;i<pmts;i++){
+    G4int pmtHitCount = pmtHitsCollection->entries();
+    for (G4int i = 0; i < pmtHitCount; i++) {
       eventInformation->incrementHitCount((*pmtHitsCollection)[i]->getPhotonCount());
-      if((*pmtHitsCollection)[i]->getPhotonCount()>=fPMTThreshold){
+      if ((*pmtHitsCollection)[i]->getPhotonCount() >= pmtThreshold) {
         eventInformation->incrementPmtCountAboveThreshold();
       }
       else
@@ -108,11 +107,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     pmtHitsCollection->DrawAllHits();
   }
   
-  //-------------------------------------
-
-  LXeRunAction* runact = (LXeRunAction*)(G4RunManager::GetRunManager()->GetUserRunAction());
-
-  //-------------------------------------
+  NovaRunAction* runact = (NovaRunAction*)(G4RunManager::GetRunManager()->GetUserRunAction());
 
   if(fVerbose>0){
 
@@ -133,7 +128,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     G4cout << "\tNumber of photons that hit PMTs : "
 	   << eventInformation->getHitCount() << G4endl;
 
-    G4cout << "\tNumber of PMTs above threshold("<<fPMTThreshold<<") : "
+    G4cout << "\tNumber of PMTs above threshold("<<pmtThreshold<<") : "
 	   << eventInformation->getPmtCountAboveThreshold() << G4endl;
 
     G4cout << "\tNumber of photons absorbed (OpAbsorption) : "
