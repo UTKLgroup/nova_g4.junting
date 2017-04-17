@@ -580,13 +580,6 @@ G4LogicalVolume* NovaDetectorConstruction::makePmt()
   G4LogicalVolume* photocathodeLogicalVolume = new G4LogicalVolume(photocathodeSolid,
                                                                    G4Material::GetMaterial("G4_Al"),
                                                                    "photocathodeLogicalVolume");
-  new G4PVPlacement(0,
-                    G4ThreeVector(0.0, 0.0, pmtThickness / 4.0),
-                    photocathodeLogicalVolume,
-                    "photocathode",
-                    pmtLogicalVolume,
-                    false,
-                    0);
 
   std::vector<G4double> energies;
   std::vector<G4double> quantumEfficiencies;
@@ -611,6 +604,14 @@ G4LogicalVolume* NovaDetectorConstruction::makePmt()
   opticalSurface->SetType(dielectric_metal);
   opticalSurface->SetMaterialPropertiesTable(opticalSurfaceMpt);
   new G4LogicalSkinSurface("pmtLogicalSkinSurface", photocathodeLogicalVolume, opticalSurface);
+
+  new G4PVPlacement(0,
+                    G4ThreeVector(0.0, 0.0, pmtThickness / 4.0),
+                    photocathodeLogicalVolume,
+                    "photocathode",
+                    pmtLogicalVolume,
+                    false,
+                    0);
 
   return pmtLogicalVolume;
 }
