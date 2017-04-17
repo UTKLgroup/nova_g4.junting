@@ -12,7 +12,7 @@ class NovaRecorderBase;
 
 struct EventStat{
   
-  G4int EvtNum;
+  G4int eventId;
   G4int numWLS;
   G4int numRefl;
   G4int numTIRefl;
@@ -51,15 +51,15 @@ struct EventStat{
 };
 
 struct RunStat {
-  G4int PhotonCount_Scint;
+  G4int scintillationPhotonCount;
 
-  G4int PhotonCount_Ceren;
+  G4int cherenkovPhotonCount;
 
-  G4int HitCount;
-  G4int PMTsAboveThreshold;
-  G4int AbsorptionCount;
-  G4int BoundaryAbsorptionCount;
-  G4int Unacounted;
+  G4int hitCount;
+  G4int pmtAboveThresholdCount;
+  G4int absorptionCount;
+  G4int boundaryAbsorptionCount;
+  G4int unacountedCount;
 
   G4int primaryPDG;
   G4double primaryX;
@@ -69,10 +69,10 @@ struct RunStat {
   G4double primaryPY;
   G4double primaryPZ;
 
-  G4double EDep;
-  G4double EDepX;
-  G4double EDepY;
-  G4double EDepZ;
+  G4double energyDeposition;
+  G4double energyDepositionX;
+  G4double energyDepositionY;
+  G4double energyDepositionZ;
 
 
   /*
@@ -113,35 +113,32 @@ class NovaEventAction : public G4UserEventAction
     virtual ~NovaEventAction();
 
   public:
-
     virtual void BeginOfEventAction(const G4Event*);
     virtual void EndOfEventAction(const G4Event*);
 
     void SetSaveThreshold(G4int );
 
-    void SetEventVerbose(G4int v){fVerbose=v;}
+    void SetEventVerbose(G4int v){verbose=v;}
 
     void SetPMTThreshold(G4int t){pmtThreshold=t;}
 
-    void SetForceDrawPhotons(G4bool b){fForcedrawphotons=b;}
-    void SetForceDrawNoPhotons(G4bool b){fForcenophotons=b;}
+    void SetForceDrawPhotons(G4bool b){forceDrawPhotons=b;}
+    void SetForceDrawNoPhotons(G4bool b){forceDrawNoPhotons=b;}
 
   private:
-
     NovaRecorderBase* recorder;
     LXeEventMessenger* fEventMessenger;
     G4int              fSaveThreshold;
     G4int              scintCollectionId;
     G4int              pmtCollectionId;
-    G4int              fVerbose;
+    G4int              verbose;
     G4int              pmtThreshold;
 
     RunStat runStat; 
-    EventStat evtStat;
+    EventStat eventStat;
 
-    G4bool fForcedrawphotons;
-    G4bool fForcenophotons;
-
+    G4bool forceDrawPhotons;
+    G4bool forceDrawNoPhotons;
 };
 
 #endif

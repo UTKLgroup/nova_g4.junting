@@ -24,8 +24,8 @@ class NovaUserEventInformation : public G4VUserEventInformation
     void setConversionPosition(const G4ThreeVector &p){conversionPos = p; conversionPositionSet = true;}
     void setPositionMax(const G4ThreeVector &p, G4double eDep){positionMax = p; energyDepositionMax = eDep;}
 
-    G4int getPhotonCountScintillation()const {return photonCountScintillation;}
-    G4int getPhotonCountCerenkov()const {return photonCountCherenkov;}
+    G4int getScintillationPhotonCount()const {return photonCountScintillation;}
+    G4int getCherenkovPhotonCount()const {return photonCountCherenkov;}
     G4int getHitCount()const {return hitCount;}
 
     G4double getEnergyDeposition()const {return totalEnergyDeposition;}
@@ -36,7 +36,7 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4double isConversionPositionSet(){return conversionPositionSet;}
     G4int getPhotonCount(){return photonCountScintillation+photonCountCherenkov;}
     void incrementPmtCountAboveThreshold(){pmtCountAboveThreshold++;}
-    G4int getPmtCountAboveThreshold(){return pmtCountAboveThreshold;}
+    G4int getPmtAboveThresholdCount(){return pmtCountAboveThreshold;}
 
   private:
     G4int hitCount;

@@ -25,7 +25,7 @@ class NovaRunAction : public G4UserRunAction
 
   private:
 
-    NovaRecorderBase* fRecorder;
+    NovaRecorderBase* recorder;
     TFile* outputFilename;
     RunStat  runStat;
     TTree*   runTree;

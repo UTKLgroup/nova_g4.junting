@@ -5,8 +5,8 @@
 #include "G4UIcommand.hh"
 #include "G4UnitsTable.hh"
 
-#include "F04Trajectory.hh"
-#include "F04TrajectoryPoint.hh"
+#include "NovaTrajectory.hh"
+#include "NovaTrajectoryPoint.hh"
 #include "G4ParticleTable.hh"
 
 #include "LXeUserTrackInformation.hh"
@@ -16,18 +16,18 @@
 #include "G4AttCheck.hh"
 #endif
 
-G4Allocator<F04Trajectory> myTrajectoryAllocator;
+G4Allocator<NovaTrajectory> myTrajectoryAllocator;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04Trajectory::F04Trajectory()
+NovaTrajectory::NovaTrajectory()
     : fpPointsContainer(0), fTrackID(0), fParentID(0),
       fPDGCharge(0.0), fPDGEncoding(0), fParticleName(""),
       fInitialMomentum(G4ThreeVector()) {;}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04Trajectory::F04Trajectory(const G4Track* aTrack)
+NovaTrajectory::NovaTrajectory(const G4Track* aTrack)
 {
     G4ParticleDefinition * particleDefinition = aTrack->GetDefinition();
     fParticleName = particleDefinition->GetParticleName();
@@ -38,12 +38,12 @@ F04Trajectory::F04Trajectory(const G4Track* aTrack)
     fInitialMomentum = aTrack->GetMomentum();
     fpPointsContainer = new TrajectoryPointContainer();
     // Following is for the first trajectory point
-    fpPointsContainer->push_back(new F04TrajectoryPoint(aTrack));
+    fpPointsContainer->push_back(new NovaTrajectoryPoint(aTrack));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04Trajectory::F04Trajectory(F04Trajectory & right) : G4VTrajectory()
+NovaTrajectory::NovaTrajectory(NovaTrajectory & right) : G4VTrajectory()
 {
     fParticleName = right.fParticleName;
     fPDGCharge = right.fPDGCharge;
@@ -54,15 +54,15 @@ F04Trajectory::F04Trajectory(F04Trajectory & right) : G4VTrajectory()
     fpPointsContainer = new TrajectoryPointContainer();
 
     for(size_t i=0;i<right.fpPointsContainer->size();++i) {
-        F04TrajectoryPoint* rightPoint
-            = (F04TrajectoryPoint*)((*(right.fpPointsContainer))[i]);
-        fpPointsContainer->push_back(new F04TrajectoryPoint(*rightPoint));
+        NovaTrajectoryPoint* rightPoint
+            = (NovaTrajectoryPoint*)((*(right.fpPointsContainer))[i]);
+        fpPointsContainer->push_back(new NovaTrajectoryPoint(*rightPoint));
     }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04Trajectory::~F04Trajectory()
+NovaTrajectory::~NovaTrajectory()
 {
     for(size_t i=0;i<fpPointsContainer->size();++i){
         delete  (*fpPointsContainer)[i];
@@ -74,7 +74,7 @@ F04Trajectory::~F04Trajectory()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F04Trajectory::ShowTrajectory(std::ostream& os) const
+void NovaTrajectory::ShowTrajectory(std::ostream& os) const
 {
     // Invoke the default implementation in G4VTrajectory...
     G4VTrajectory::ShowTrajectory(os);
@@ -83,7 +83,7 @@ void F04Trajectory::ShowTrajectory(std::ostream& os) const
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F04Trajectory::DrawTrajectory() const
+void NovaTrajectory::DrawTrajectory() const
 {
     // Invoke the default implementation in G4VTrajectory...
     G4VTrajectory::DrawTrajectory();
@@ -92,25 +92,25 @@ void F04Trajectory::DrawTrajectory() const
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F04Trajectory::AppendStep(const G4Step* aStep)
+void NovaTrajectory::AppendStep(const G4Step* aStep)
 {
-    fpPointsContainer->push_back(new F04TrajectoryPoint(aStep));
+    fpPointsContainer->push_back(new NovaTrajectoryPoint(aStep));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4ParticleDefinition* F04Trajectory::GetParticleDefinition()
+G4ParticleDefinition* NovaTrajectory::GetParticleDefinition()
 {
     return (G4ParticleTable::GetParticleTable()->FindParticle(fParticleName));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void F04Trajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
+void NovaTrajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
 {
     if(!secondTrajectory) return;
 
-    F04Trajectory* second = (F04Trajectory*)secondTrajectory;
+    NovaTrajectory* second = (NovaTrajectory*)secondTrajectory;
     G4int ent = second->GetPointEntries();
     // initial point of the second trajectory should not be merged
     for(G4int i=1; i<ent; ++i) {
@@ -122,7 +122,7 @@ void F04Trajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-const std::map<G4String,G4AttDef>* F04Trajectory::GetAttDefs() const
+const std::map<G4String,G4AttDef>* NovaTrajectory::GetAttDefs() const
 {
     G4bool isNew;
     std::map<G4String,G4AttDef>* store
@@ -167,7 +167,7 @@ const std::map<G4String,G4AttDef>* F04Trajectory::GetAttDefs() const
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-std::vector<G4AttValue>* F04Trajectory::CreateAttValues() const
+std::vector<G4AttValue>* NovaTrajectory::CreateAttValues() const
 {
   std::vector<G4AttValue>* values = new std::vector<G4AttValue>;
 

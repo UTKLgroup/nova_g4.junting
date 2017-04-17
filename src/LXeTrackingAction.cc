@@ -8,7 +8,7 @@
 #include "G4Track.hh"
 #include "G4ParticleTypes.hh"
 
-#include "F04Trajectory.hh"
+#include "NovaTrajectory.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -24,7 +24,7 @@ void LXeTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
   //Use custom trajectory class
   //fpTrackingManager->SetTrajectory(new LXeTrajectory(aTrack));
-  fpTrackingManager->SetTrajectory(new F04Trajectory(aTrack));
+  fpTrackingManager->SetTrajectory(new NovaTrajectory(aTrack));
 
   //This user track information is only relevant to the photons
   fpTrackingManager->SetUserTrackInformation(new LXeUserTrackInformation);
@@ -39,7 +39,7 @@ void LXeTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
 void LXeTrackingAction::PostUserTrackingAction(const G4Track* aTrack){
 
-  F04Trajectory* trajectory=(F04Trajectory*)fpTrackingManager->GimmeTrajectory();
+  NovaTrajectory* trajectory=(NovaTrajectory*)fpTrackingManager->GimmeTrajectory();
   //LXeTrajectory* trajectory=(LXeTrajectory*)fpTrackingManager->GimmeTrajectory();
   LXeUserTrackInformation*
     trackInformation=(LXeUserTrackInformation*)aTrack->GetUserInformation();

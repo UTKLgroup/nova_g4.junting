@@ -23,13 +23,13 @@
 #include "fstream"
 #include "NovaRunAction.hh"
 
-#include "F04Trajectory.hh"
-#include "F04TrajectoryPoint.hh"
+#include "NovaTrajectory.hh"
+#include "NovaTrajectoryPoint.hh"
 
 
 NovaEventAction::NovaEventAction(NovaRecorderBase* r)
-  : recorder(r),fSaveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),fVerbose(0), pmtThreshold(1),
-    fForcedrawphotons(false),fForcenophotons(false)
+  : recorder(r),fSaveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),verbose(0), pmtThreshold(1),
+    forceDrawPhotons(false),forceDrawNoPhotons(false)
 {
   fEventMessenger = new LXeEventMessenger(this);
 }
@@ -86,7 +86,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     }
 
     if (eventInformation->getEnergyDeposition()==0.) {
-      if(fVerbose>0)G4cout<<"No hits in the scintillator this event."<<G4endl;
+      if(verbose>0)G4cout<<"No hits in the scintillator this event."<<G4endl;
     }
     else {
       energyWeightedPosition /= eventInformation->getEnergyDeposition();
@@ -107,125 +107,83 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     pmtHitsCollection->DrawAllHits();
   }
   
-  NovaRunAction* runact = (NovaRunAction*)(G4RunManager::GetRunManager()->GetUserRunAction());
+  NovaRunAction* runAction = (NovaRunAction*)(G4RunManager::GetRunManager()->GetUserRunAction());
 
-  if(fVerbose>0){
+  runStat.scintillationPhotonCount = eventInformation->getScintillationPhotonCount();
+  runStat.cherenkovPhotonCount = eventInformation->getCherenkovPhotonCount();
+  runStat.hitCount = eventInformation->getHitCount();
+  runStat.pmtAboveThresholdCount = eventInformation->getPmtAboveThresholdCount();
+  runStat.absorptionCount = eventInformation->getAbsorptionCount();
+  runStat.boundaryAbsorptionCount = eventInformation->getBoundaryAbsorptionCount();
+  runStat.unacountedCount = eventInformation->getCherenkovPhotonCount()
+                            - eventInformation->getAbsorptionCount()
+                            - eventInformation->getHitCount()
+                            - eventInformation->getBoundaryAbsorptionCount();
+  runStat.energyDeposition  = eventInformation->getEnergyDeposition() / MeV;
+  runStat.energyDepositionX = eventInformation->getEnergyWeightedPosition().getX();
+  runStat.energyDepositionY = eventInformation->getEnergyWeightedPosition().getY();
+  runStat.energyDepositionZ = eventInformation->getEnergyWeightedPosition().getZ();
 
-    G4cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << G4endl << G4endl;
+  eventStat.eventId = anEvent->GetEventID();
+  NovaTrajectory* trajectory;
+  for (G4int i = 0; i < nTrajectories; i++) {
+    trajectory = (NovaTrajectory*) ((*(anEvent->GetTrajectoryContainer()))[i]);
 
-    G4cout << "\tTotal energy deposition in scintillator : "
-	   << eventInformation->getEnergyDeposition() / MeV << " (MeV)" << G4endl;
-
-    G4cout << "\tEnergy weighted position of hits in LXe : "
-	   << eventInformation->getEnergyWeightedPosition() / cm << " (cm)" << G4endl;
-
-    G4cout << "\tNumber of photons produced by scintillation in this event : "
-	   << eventInformation->getPhotonCountScintillation() << G4endl;
-
-    G4cout << "\tNumber of photons produced by cerenkov in ID in this event : "
-	   << eventInformation->getPhotonCountCerenkov() << G4endl;
-
-    G4cout << "\tNumber of photons that hit PMTs : "
-	   << eventInformation->getHitCount() << G4endl;
-
-    G4cout << "\tNumber of PMTs above threshold("<<pmtThreshold<<") : "
-	   << eventInformation->getPmtCountAboveThreshold() << G4endl;
-
-    G4cout << "\tNumber of photons absorbed (OpAbsorption) : "
-	   << eventInformation->getAbsorptionCount() << G4endl;
-
-    G4cout << "\tNumber of photons absorbed at boundaries (OpBoundary) : "
-	   << "this event : " << eventInformation->getBoundaryAbsorptionCount() << G4endl;
-
-    G4cout << "\tUnacounted for photons in this event : "
-	   << (eventInformation->getPhotonCountScintillation() -
-         eventInformation->getHitCount() -
-         eventInformation->getBoundaryAbsorptionCount() -
-         eventInformation->getAbsorptionCount())
-	   << G4endl;
-  }    
-
-  //-------------------------------------
-  
-  runStat.PhotonCount_Scint       = eventInformation->getPhotonCountScintillation();
-  runStat.PhotonCount_Ceren       = eventInformation->getPhotonCountCerenkov();
-  runStat.HitCount                = eventInformation->getHitCount();
-  runStat.PMTsAboveThreshold      = eventInformation->getPmtCountAboveThreshold();
-  runStat.AbsorptionCount         = eventInformation->getAbsorptionCount();
-  runStat.BoundaryAbsorptionCount = eventInformation->getBoundaryAbsorptionCount();
-  runStat.Unacounted              = (eventInformation->getPhotonCountCerenkov() -
-      eventInformation->getAbsorptionCount() -
-      eventInformation->getHitCount() -
-      eventInformation->getBoundaryAbsorptionCount());
-  
-  runStat.EDep  = eventInformation->getEnergyDeposition() / MeV;
-  runStat.EDepX = eventInformation->getEnergyWeightedPosition().getX();
-  runStat.EDepY = eventInformation->getEnergyWeightedPosition().getY();
-  runStat.EDepZ = eventInformation->getEnergyWeightedPosition().getZ();
-
-  //-------------------------------------
-
-  evtStat.EvtNum = anEvent->GetEventID();
-  F04Trajectory* trj;
-  for(G4int i = 0; i < nTrajectories; i++){
-    trj = (F04Trajectory*) ((*(anEvent->GetTrajectoryContainer()))[i]);
-
-    // get info of the primary
-    if(trj->GetParentID() == 0){
-      F04TrajectoryPoint* trjpt = (F04TrajectoryPoint*)trj->GetPoint(0);
-      G4ThreeVector pt = trjpt->GetPosition(); 
-      runStat.primaryPDG = trj->GetPDGEncoding();
-      runStat.primaryPX  = trj->GetInitialMomentum().getX();
-      runStat.primaryPY  = trj->GetInitialMomentum().getY();
-      runStat.primaryPZ  = trj->GetInitialMomentum().getZ();   
+    if (trajectory->GetParentID() == 0) {
+      NovaTrajectoryPoint* trajectoryPoint = (NovaTrajectoryPoint*) trajectory->GetPoint(0);
+      G4ThreeVector pt = trajectoryPoint->GetPosition();
+      runStat.primaryPDG = trajectory->GetPDGEncoding();
+      runStat.primaryPX  = trajectory->GetInitialMomentum().getX();
+      runStat.primaryPY  = trajectory->GetInitialMomentum().getY();
+      runStat.primaryPZ  = trajectory->GetInitialMomentum().getZ();
       runStat.primaryX   = pt.getX();
       runStat.primaryY   = pt.getY();
       runStat.primaryZ   = pt.getZ();     
     }
 
     // get info of the photons that hit a PMT 
-    if(trj->GetStatus() == 2){
+    if(trajectory->GetStatus() == 2){
 
       //G4cout << "had a hit on PMT" << G4endl;
-      evtStat.TrkLength = 0.;
-      evtStat.numWLS    = 0;
-      evtStat.numRefl   = 0;
-      evtStat.numTIRefl = 0;
+      eventStat.TrkLength = 0.;
+      eventStat.numWLS    = 0;
+      eventStat.numRefl   = 0;
+      eventStat.numTIRefl = 0;
 
       // hit info      
-      F04TrajectoryPoint* hitpt = (F04TrajectoryPoint*)trj->GetPoint(trj->GetPointEntries() - 1);
-      evtStat.HitTime = hitpt->GetTime();
-      evtStat.HitX    = hitpt->GetPosition().getX();
-      evtStat.HitY    = hitpt->GetPosition().getY();
-      evtStat.HitZ    = hitpt->GetPosition().getZ();
-      evtStat.HitE    = hitpt->GetMomentum().getR() / eV;
-      evtStat.HitPX   = hitpt->GetMomentum().getX() / eV;
-      evtStat.HitPY   = hitpt->GetMomentum().getY() / eV;
-      evtStat.HitPZ   = hitpt->GetMomentum().getZ() / eV;
-      evtStat.HitWL   = 1239.84 / (hitpt->GetMomentum().getR() / eV);
+      NovaTrajectoryPoint* hitpt = (NovaTrajectoryPoint*)trajectory->GetPoint(trajectory->GetPointEntries() - 1);
+      eventStat.HitTime = hitpt->GetTime();
+      eventStat.HitX    = hitpt->GetPosition().getX();
+      eventStat.HitY    = hitpt->GetPosition().getY();
+      eventStat.HitZ    = hitpt->GetPosition().getZ();
+      eventStat.HitE    = hitpt->GetMomentum().getR() / eV;
+      eventStat.HitPX   = hitpt->GetMomentum().getX() / eV;
+      eventStat.HitPY   = hitpt->GetMomentum().getY() / eV;
+      eventStat.HitPZ   = hitpt->GetMomentum().getZ() / eV;
+      eventStat.HitWL   = 1239.84 / (hitpt->GetMomentum().getR() / eV);
 
       G4int CurrentID;
-      F04Trajectory* CurrentTrj;
+      NovaTrajectory* CurrentTrj;
       G4int ParentID;
-      F04Trajectory* ParentTrj;
-      CurrentTrj = trj;
-      CurrentID = trj->GetTrackID();
+      NovaTrajectory* ParentTrj;
+      CurrentTrj = trajectory;
+      CurrentID = trajectory->GetTrackID();
       while(CurrentTrj->GetParticleName() == "opticalphoton"){
 
 	G4double trklength = CurrentTrj->GetTrkLength() / cm;
-	evtStat.TrkLength += trklength;
+	eventStat.TrkLength += trklength;
 
 	G4String processname = CurrentTrj->GetProcessName();
 	if(processname == "OpWLS")
-	  evtStat.numWLS++;
+	  eventStat.numWLS++;
 
-	evtStat.numRefl   += CurrentTrj->GetNumRefl();
-	evtStat.numTIRefl += CurrentTrj->GetNumTIRefl();
+	eventStat.numRefl   += CurrentTrj->GetNumRefl();
+	eventStat.numTIRefl += CurrentTrj->GetNumTIRefl();
 
 	//G4cout << CurrentID << "   " << CurrentTrj->GetParticleName() << "   " << trklength << " cm     " << processname << G4endl;
 
 	for(G4int j = CurrentTrj->GetPointEntries() - 1; j >= 0; j--){
-	  F04TrajectoryPoint* trjpt = (F04TrajectoryPoint*)CurrentTrj->GetPoint(j);
+	  NovaTrajectoryPoint* trjpt = (NovaTrajectoryPoint*)CurrentTrj->GetPoint(j);
 	  G4ThreeVector position = trjpt->GetPosition();
 	  G4ThreeVector momentum = trjpt->GetMomentum();
 	  G4String vol = trjpt->GetVolumeName();
@@ -233,31 +191,31 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 
 	  // begin info
 	  if(j == 0){
-	    evtStat.BeginTime = time;
-	    evtStat.BeginX    = position.getX();
-	    evtStat.BeginY    = position.getY();
-	    evtStat.BeginZ    = position.getZ();
-	    evtStat.BeginE    = momentum.getR()  / eV;
-	    evtStat.BeginPX   = momentum.getX()  / eV;
-	    evtStat.BeginPY   = momentum.getY()  / eV;
-	    evtStat.BeginPZ   = momentum.getZ()  / eV;
-	    evtStat.BeginWL    = 1239.84 / (momentum.getR()  / eV);
+	    eventStat.BeginTime = time;
+	    eventStat.BeginX    = position.getX();
+	    eventStat.BeginY    = position.getY();
+	    eventStat.BeginZ    = position.getZ();
+	    eventStat.BeginE    = momentum.getR()  / eV;
+	    eventStat.BeginPX   = momentum.getX()  / eV;
+	    eventStat.BeginPY   = momentum.getY()  / eV;
+	    eventStat.BeginPZ   = momentum.getZ()  / eV;
+	    eventStat.BeginWL    = 1239.84 / (momentum.getR()  / eV);
 	  }
 
 	  // enter info
 	  if(j > 0){
-	    F04TrajectoryPoint* pretrjpt = (F04TrajectoryPoint*)CurrentTrj->GetPoint(j-1);
+	    NovaTrajectoryPoint* pretrjpt = (NovaTrajectoryPoint*)CurrentTrj->GetPoint(j-1);
 	    G4String prevol = pretrjpt->GetVolumeName();
 	    if(vol == "outer_clading" && prevol == "scnt"){
-	      evtStat.EnterTime = time;
-	      evtStat.EnterX    = position.getX();
-	      evtStat.EnterY    = position.getY();
-	      evtStat.EnterZ    = position.getZ();
-	      evtStat.EnterE    = momentum.getR();
-	      evtStat.EnterPX   = momentum.getX();
-	      evtStat.EnterPY   = momentum.getY();
-	      evtStat.EnterPZ   = momentum.getZ();
-	      evtStat.EnterWL   = 1239.84 / (momentum.getR()  / eV);
+	      eventStat.EnterTime = time;
+	      eventStat.EnterX    = position.getX();
+	      eventStat.EnterY    = position.getY();
+	      eventStat.EnterZ    = position.getZ();
+	      eventStat.EnterE    = momentum.getR();
+	      eventStat.EnterPX   = momentum.getX();
+	      eventStat.EnterPY   = momentum.getY();
+	      eventStat.EnterPZ   = momentum.getZ();
+	      eventStat.EnterWL   = 1239.84 / (momentum.getR()  / eV);
 	    }
 	  }
 	  
@@ -267,7 +225,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 	// find parent trajectory
 	ParentID = CurrentTrj->GetParentID();
 	for(G4int j = 0; j < nTrajectories; j++){
-	  ParentTrj = (F04Trajectory*) ((*(anEvent->GetTrajectoryContainer()))[j]);  
+	  ParentTrj = (NovaTrajectory*) ((*(anEvent->GetTrajectoryContainer()))[j]);
 	  if(ParentTrj->GetTrackID() == ParentID)
 	    break;
 	}
@@ -275,14 +233,14 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 	CurrentID = ParentID;
       }
 
-      runact->UpdateEvtStatistics(evtStat);
+      runAction->UpdateEvtStatistics(eventStat);
 
     }      
   }
 
   //-------------------------------------
 
-  runact->UpdateRunStatistics(runStat);
+  runAction->UpdateRunStatistics(runStat);
     
   //-------------
   

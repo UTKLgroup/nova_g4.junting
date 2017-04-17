@@ -1,5 +1,5 @@
-#ifndef F04Trajectory_h
-#define F04Trajectory_h 1
+#ifndef NovaTrajectory_h
+#define NovaTrajectory_h 1
 
 #include <vector>
 #include <stdlib.h>
@@ -16,7 +16,7 @@
 
 typedef std::vector<G4VTrajectoryPoint*> TrajectoryPointContainer;
 
-class F04Trajectory : public G4VTrajectory
+class NovaTrajectory : public G4VTrajectory
 {
 
 //--------
@@ -25,16 +25,16 @@ class F04Trajectory : public G4VTrajectory
 
 // Constructor/Destructor
 
-     F04Trajectory();
-     F04Trajectory(const G4Track* aTrack);
-     F04Trajectory(F04Trajectory&);
-     virtual ~F04Trajectory();
+     NovaTrajectory();
+     NovaTrajectory(const G4Track* aTrack);
+     NovaTrajectory(NovaTrajectory&);
+     virtual ~NovaTrajectory();
 
 // Operators
 
      inline void* operator new(size_t);
      inline void  operator delete(void*);
-     inline int operator == (const F04Trajectory& right) const
+     inline int operator == (const NovaTrajectory& right) const
      { return (this==&right); }
 
 // Get/Set functions
@@ -100,15 +100,15 @@ class F04Trajectory : public G4VTrajectory
      G4int fNumTIRefl;
 };
 
-extern G4Allocator<F04Trajectory> myTrajectoryAllocator;
+extern G4Allocator<NovaTrajectory> myTrajectoryAllocator;
 
-inline void* F04Trajectory::operator new(size_t) {
+inline void* NovaTrajectory::operator new(size_t) {
     void* aTrajectory = (void*) myTrajectoryAllocator.MallocSingle();
     return aTrajectory;
 }
 
-inline void F04Trajectory::operator delete(void* aTrajectory) {
-    myTrajectoryAllocator.FreeSingle((F04Trajectory*)aTrajectory);
+inline void NovaTrajectory::operator delete(void* aTrajectory) {
+    myTrajectoryAllocator.FreeSingle((NovaTrajectory*)aTrajectory);
 }
 
 #endif

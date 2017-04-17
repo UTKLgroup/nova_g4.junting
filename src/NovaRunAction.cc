@@ -2,31 +2,32 @@
 #include "NovaRecorderBase.hh"
 
 
-NovaRunAction::NovaRunAction(NovaRecorderBase* r) : fRecorder(r) {}
+NovaRunAction::NovaRunAction(NovaRecorderBase* r) : recorder(r) {}
 
 NovaRunAction::~NovaRunAction() {}
 
 void NovaRunAction::BeginOfRunAction(const G4Run* aRun){
-  if(fRecorder)fRecorder->RecordBeginOfRun(aRun);
+  if(recorder)
+    recorder->RecordBeginOfRun(aRun);
 
   outputFilename=new TFile("nova.root", "update");
 
   runTree   = new TTree("runTree", "Run Statistics");
   runBranch = runTree->Branch("runStat",
-                              &runStat.PhotonCount_Scint,
-                              "PhotonCountScintillation/I:PhotonCountCherenkov:HitCount:PMTsAboveThreshold:AbsorptionCount:BoundaryAbsorptionCount:UnAccounted:primaryPDG:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:EDep:EDepX:EDepY:EDepZ");
+                              &runStat.scintillationPhotonCount,
+                              "scintillationPhotonCount/I:cherenkovPhotonCount:hitCount:pmtAboveThresholdCount:absorptionCount:boundaryAbsorptionCount:UnAccounted:primaryPDG:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:energyDeposition:energyDepositionX:energyDepositionY:energyDepositionZ");
 
 
   eventTree   = new TTree("eventTree","Event Statistics");
   evtBranch = eventTree->Branch("eventStat",
-                                &eventStat.EvtNum,
-                                "EvtNum/I:wlsCount:reflectionCount:totalInternalReflectionCount:BeginTime/D:BeginX:BeginY:BeginZ:BeginE:BeginPX:BeginPY:BeginPZ:BeginWL:EnterTime:EnterX:EnterY:EnterZ:EnterE:EnterPX:EnterPY:EnterPZ:EnterWL:HitTime:HitX:HitY:HitZ:HitE:HitPX:HitPY:HitPZ:HitWL:TrkLength");
+                                &eventStat.eventId,
+                                "eventId/I:wlsCount:reflectionCount:totalInternalReflectionCount:BeginTime/D:BeginX:BeginY:BeginZ:BeginE:BeginPX:BeginPY:BeginPZ:BeginWL:EnterTime:EnterX:EnterY:EnterZ:EnterE:EnterPX:EnterPY:EnterPZ:EnterWL:HitTime:HitX:HitY:HitZ:HitE:HitPX:HitPY:HitPZ:HitWL:TrkLength");
 
 }
 
 void NovaRunAction::EndOfRunAction(const G4Run* aRun){
-  if(fRecorder)
-    fRecorder->RecordEndOfRun(aRun);
+  if(recorder)
+    recorder->RecordEndOfRun(aRun);
 
   runTree->Write();
   eventTree->Write();

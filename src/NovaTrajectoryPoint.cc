@@ -1,4 +1,4 @@
-#include "F04TrajectoryPoint.hh"
+#include "NovaTrajectoryPoint.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -16,17 +16,17 @@
 #include "G4AttCheck.hh"
 #endif
 
-G4Allocator<F04TrajectoryPoint> aTrajPointAllocator;
+G4Allocator<NovaTrajectoryPoint> aTrajPointAllocator;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04TrajectoryPoint::F04TrajectoryPoint()
+NovaTrajectoryPoint::NovaTrajectoryPoint()
       : fTime(0.), fMomentum(0.,0.,0.),
         fStepStatus(fUndefined), fVolumeName("") {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04TrajectoryPoint::F04TrajectoryPoint(const G4Step* aStep)
+NovaTrajectoryPoint::NovaTrajectoryPoint(const G4Step* aStep)
     : G4TrajectoryPoint(aStep->GetPostStepPoint()->GetPosition())
 {
       fTime = aStep->GetPostStepPoint()->GetGlobalTime();
@@ -43,7 +43,7 @@ F04TrajectoryPoint::F04TrajectoryPoint(const G4Step* aStep)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04TrajectoryPoint::F04TrajectoryPoint(const G4Track* aTrack)
+NovaTrajectoryPoint::NovaTrajectoryPoint(const G4Track* aTrack)
     : G4TrajectoryPoint(aTrack->GetPosition())
 {
       fTime = aTrack->GetGlobalTime();
@@ -54,7 +54,7 @@ F04TrajectoryPoint::F04TrajectoryPoint(const G4Track* aTrack)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04TrajectoryPoint::F04TrajectoryPoint(const F04TrajectoryPoint &right)
+NovaTrajectoryPoint::NovaTrajectoryPoint(const NovaTrajectoryPoint &right)
     : G4TrajectoryPoint(right)
 {
       fTime = right.fTime;
@@ -65,11 +65,11 @@ F04TrajectoryPoint::F04TrajectoryPoint(const F04TrajectoryPoint &right)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-F04TrajectoryPoint::~F04TrajectoryPoint() {}
+NovaTrajectoryPoint::~NovaTrajectoryPoint() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-const std::map<G4String,G4AttDef>* F04TrajectoryPoint::GetAttDefs() const
+const std::map<G4String,G4AttDef>* NovaTrajectoryPoint::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String,G4AttDef>* store
@@ -101,7 +101,7 @@ const std::map<G4String,G4AttDef>* F04TrajectoryPoint::GetAttDefs() const
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-std::vector<G4AttValue>* F04TrajectoryPoint::CreateAttValues() const
+std::vector<G4AttValue>* NovaTrajectoryPoint::CreateAttValues() const
 {
   std::vector<G4AttValue>* values = new std::vector<G4AttValue>;
 
