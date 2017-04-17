@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     ui->SessionStart();
     delete ui;
   }
-  else{
+  else {
     G4String filename = argv[1];
     G4String randomSeed = argv[2];
     uiManager->ApplyCommand("/random/setSeeds " + randomSeed + " 1");

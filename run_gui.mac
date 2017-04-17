@@ -1,10 +1,5 @@
-/control/verbose 2
-/control/saveHistory
-/run/verbose 2
-/run/initialize
-
 /gps/particle opticalphoton
-/gps/number 1
+/gps/number 10
 /gps/pos/type Plane
 /gps/pos/shape Circle
 /gps/pos/radius 0.35 mm
@@ -13,4 +8,4 @@
 /gps/ang/type beam1d
 /gps/ang/sigma_r 5 deg
 /gps/ene/mono 1 eV
-/run/beamOn 10
+/run/beamOn 1
