@@ -1,5 +1,5 @@
-#ifndef LXePMTHit_h
-#define LXePMTHit_h 1
+#ifndef NovaPmtHit_h
+#define NovaPmtHit_h 1
 
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
@@ -15,7 +15,6 @@ class G4VTouchable;
 class NovaPmtHit : public G4VHit
 {
   public:
- 
     NovaPmtHit();
     virtual ~NovaPmtHit();
     NovaPmtHit(const NovaPmtHit &right);
@@ -29,32 +28,30 @@ class NovaPmtHit : public G4VHit
     virtual void Draw();
     virtual void Print();
 
-    inline void SetDrawit(G4bool b){fDrawit=b;}
-    inline G4bool GetDrawit(){return fDrawit;}
+    inline void SetDrawit(G4bool b){drawIt=b;}
+    inline G4bool GetDrawit(){return drawIt;}
 
-    inline void IncPhotonCount(){fPhotons++;}
-    inline G4int GetPhotonCount(){return fPhotons;}
+    inline void IncPhotonCount(){photons++;}
+    inline G4int GetPhotonCount(){return photons;}
 
-    inline void SetPMTNumber(G4int n) { fPmtNumber = n; }
-    inline G4int GetPMTNumber() { return fPmtNumber; }
+    inline void SetPMTNumber(G4int n) { pmtNumber = n; }
+    inline G4int GetPMTNumber() { return pmtNumber; }
 
-    inline void SetPMTPhysVol(G4VPhysicalVolume* physVol){this->fPhysVol=physVol;}
-    inline G4VPhysicalVolume* GetPMTPhysVol(){return fPhysVol;}
+    inline void SetPMTPhysVol(G4VPhysicalVolume* physVol){this->physicalVolume=physVol;}
+    inline G4VPhysicalVolume* GetPMTPhysVol(){return physicalVolume;}
 
     inline void SetPMTPos(G4double x,G4double y,G4double z){
-      fPos=G4ThreeVector(x,y,z);
+      position=G4ThreeVector(x,y,z);
     }
  
-    inline G4ThreeVector GetPMTPos(){return fPos;}
+    inline G4ThreeVector GetPMTPos(){return position;}
 
   private:
-
-    G4int fPmtNumber;
-    G4int fPhotons;
-    G4ThreeVector fPos;
-    G4VPhysicalVolume* fPhysVol;
-    G4bool fDrawit;
-
+    G4int pmtNumber;
+    G4int photons;
+    G4ThreeVector position;
+    G4VPhysicalVolume* physicalVolume;
+    G4bool drawIt;
 };
 
 typedef G4THitsCollection<NovaPmtHit> NovaPmtHitsCollection;

@@ -1,4 +1,4 @@
-#ifndef LXeSteppingAction_H
+#ifndef NovaSteppingAction_H
 #define LXeSteppingACtion_H 1
 
 #include "globals.hh"

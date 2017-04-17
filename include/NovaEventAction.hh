@@ -1,5 +1,5 @@
-#ifndef LXeEventAction_h
-#define LXeEventAction_h 1
+#ifndef NovaEventAction_h
+#define NovaEventAction_h 1
 
 #include "LXeEventMessenger.hh"
 #include "G4UserEventAction.hh"
