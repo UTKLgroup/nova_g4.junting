@@ -1,7 +1,7 @@
 #include "NovaEventAction.hh"
 #include "LXeScintHit.hh"
 #include "NovaPmtHit.hh"
-#include "LXeUserEventInformation.hh"
+#include "NovaUserEventInformation.hh"
 #include "LXeTrajectory.hh"
 #include "LXeRecorderBase.hh"
 
@@ -27,115 +27,85 @@
 #include "F04TrajectoryPoint.hh"
 
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 NovaEventAction::NovaEventAction(LXeRecorderBase* r)
-  : fRecorder(r),fSaveThreshold(0),fScintCollID(-1),fPMTCollID(-1),fVerbose(0),
-   fPMTThreshold(1),fForcedrawphotons(false),fForcenophotons(false)
+  : recorder(r),fSaveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),fVerbose(0), fPMTThreshold(1),
+    fForcedrawphotons(false),fForcenophotons(false)
 {
   fEventMessenger = new LXeEventMessenger(this);
 }
  
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 NovaEventAction::~NovaEventAction(){}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void NovaEventAction::BeginOfEventAction(const G4Event* anEvent)
+{
+  G4EventManager::GetEventManager()->SetUserInformation(new NovaUserEventInformation);
 
-void NovaEventAction::BeginOfEventAction(const G4Event* anEvent){
- 
-  //New event, add the user information object
-  G4EventManager::
-    GetEventManager()->SetUserInformation(new LXeUserEventInformation);
-
-  G4SDManager* SDman = G4SDManager::GetSDMpointer();
-  if(fScintCollID<0)
-    fScintCollID=SDman->GetCollectionID("scintCollection");
-  if(fPMTCollID<0)
-    fPMTCollID=SDman->GetCollectionID("pmtHitCollection");
-
-  if(fRecorder)fRecorder->RecordBeginOfEvent(anEvent);
-
+  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
+  if(scintCollectionId<0)
+    scintCollectionId = sdManager->GetCollectionID("scintCollection");
+  if(pmtCollectionId<0)
+    pmtCollectionId = sdManager->GetCollectionID("pmtHitCollection");
+  if(recorder)
+    recorder->RecordBeginOfEvent(anEvent);
 }
  
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 
-  LXeUserEventInformation* eventInformation
-    =(LXeUserEventInformation*)anEvent->GetUserInformation();
-  
-  G4TrajectoryContainer* trajectoryContainer=anEvent->GetTrajectoryContainer();
-  
-  G4int n_trajectories = 0;
-  if (trajectoryContainer) n_trajectories = trajectoryContainer->entries();
+  NovaUserEventInformation* eventInformation = (NovaUserEventInformation*) anEvent->GetUserInformation();
+  G4TrajectoryContainer* trajectoryContainer = anEvent->GetTrajectoryContainer();
+  G4int nTrajectories = 0;
+  if (trajectoryContainer)
+    nTrajectories = trajectoryContainer->entries();
 
-  // extract the trajectories and draw them
-  /*
-  if (G4VVisManager::GetConcreteInstance()){
-    for (G4int i=0; i<n_trajectories; i++){
-      LXeTrajectory* trj = (LXeTrajectory*)
-        ((*(anEvent->GetTrajectoryContainer()))[i]);
+  NovaScintHitsCollection* scintHitsCollection = 0;
+  NovaPmtHitsCollection* pmtHitsCollection = 0;
+  G4HCofThisEvent* hcOfThisEvent = anEvent->GetHCofThisEvent();
 
-      if(trj->GetParticleName()=="opticalphoton"){
-        trj->SetForceDrawTrajectory(fForcedrawphotons);
-        trj->SetForceNoDrawTrajectory(fForcenophotons);
-      }
-      trj->DrawTrajectory(50);
-    }
-  }
-  */
- 
-  NovaScintHitsCollection* scintHC = 0;
-  NovaPmtHitsCollection* pmtHC = 0;
-
-  G4HCofThisEvent* hitsCE = anEvent->GetHCofThisEvent();
- 
-  //Get the hit collections
-  if(hitsCE){
-    if(fScintCollID>=0)scintHC = (NovaScintHitsCollection*)(hitsCE->GetHC(fScintCollID));
-    if(fPMTCollID>=0)pmtHC = (NovaPmtHitsCollection*)(hitsCE->GetHC(fPMTCollID));
+  if (hcOfThisEvent) {
+    if (scintCollectionId >= 0)
+      scintHitsCollection = (NovaScintHitsCollection*)(hcOfThisEvent->GetHC(scintCollectionId));
+    if (pmtCollectionId >= 0)
+      pmtHitsCollection = (NovaPmtHitsCollection*)(hcOfThisEvent->GetHC(pmtCollectionId));
   }
 
-  //Hits in scintillator
-  if(scintHC){
-    int n_hit = scintHC->entries();
-    G4ThreeVector  eWeightPos(0.);
-    G4double edep;
-    G4double edepMax=0;
+  if(scintHitsCollection){
+    int nHit = scintHitsCollection->entries();
+    G4ThreeVector energyWeightedPosition(0.0);
+    G4double energyDeposition;
+    G4double energyDepositionMax = 0;
 
-    for(int i=0;i<n_hit;i++){ //gather info on hits in scintillator
-      edep=(*scintHC)[i]->GetEdep();
-      eventInformation->IncEDep(edep); //sum up the edep
-      eWeightPos += (*scintHC)[i]->GetPos()*edep;//calculate energy weighted pos
-      if(edep>edepMax){
-	edepMax=edep;//store max energy deposit
-	G4ThreeVector posMax=(*scintHC)[i]->GetPos();
-	eventInformation->SetPosMax(posMax,edep);
+    for(int i = 0; i < nHit; i++) {
+      energyDeposition = (*scintHitsCollection)[i]->GetEdep();
+      eventInformation->addEnergyDeposition(energyDeposition);
+      energyWeightedPosition += (*scintHitsCollection)[i]->GetPos() * energyDeposition;
+      if (energyDeposition > energyDepositionMax) {
+        energyDepositionMax = energyDeposition;
+        G4ThreeVector positionMax = (*scintHitsCollection)[i]->GetPos();
+        eventInformation->setPositionMax(positionMax, energyDeposition);
       }
     }
 
-    if(eventInformation->GetEDep()==0.){
+    if(eventInformation->getEnergyDeposition()==0.){
       if(fVerbose>0)G4cout<<"No hits in the scintillator this event."<<G4endl;
     }
     else{
       //Finish calculation of energy weighted position
-      eWeightPos /= eventInformation->GetEDep();
-      eventInformation->SetEWeightPos(eWeightPos);
+      energyWeightedPosition /= eventInformation->getEnergyDeposition();
+      eventInformation->setEnergyWeightedPosition(energyWeightedPosition);
     }    
   }   
 
-  if(pmtHC){
-    G4int pmts = pmtHC->entries();
+  if(pmtHitsCollection){
+    G4int pmts = pmtHitsCollection->entries();
     for(G4int i=0;i<pmts;i++){
-      eventInformation->IncHitCount((*pmtHC)[i]->GetPhotonCount());
-      if((*pmtHC)[i]->GetPhotonCount()>=fPMTThreshold){
-	eventInformation->IncPMTSAboveThreshold();
+      eventInformation->incrementHitCount((*pmtHitsCollection)[i]->getPhotonCount());
+      if((*pmtHitsCollection)[i]->getPhotonCount()>=fPMTThreshold){
+        eventInformation->incrementPmtCountAboveThreshold();
       }
       else
-        (*pmtHC)[i]->SetDrawit(false);
+        (*pmtHitsCollection)[i]->setDrawIt(false);
     }
-    pmtHC->DrawAllHits();
+    pmtHitsCollection->DrawAllHits();
   }
   
   //-------------------------------------
@@ -149,60 +119,60 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
     G4cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << G4endl << G4endl;
 
     G4cout << "\tTotal energy deposition in scintillator : "
-	   << eventInformation->GetEDep() / MeV << " (MeV)" << G4endl;    
+	   << eventInformation->getEnergyDeposition() / MeV << " (MeV)" << G4endl;
 
     G4cout << "\tEnergy weighted position of hits in LXe : "
-	   << eventInformation->GetEWeightPos() / cm << " (cm)" << G4endl;    
+	   << eventInformation->getEnergyWeightedPosition() / cm << " (cm)" << G4endl;
 
     G4cout << "\tNumber of photons produced by scintillation in this event : "
-	   << eventInformation->GetPhotonCount_Scint() << G4endl;
+	   << eventInformation->getPhotonCountScintillation() << G4endl;
 
     G4cout << "\tNumber of photons produced by cerenkov in ID in this event : "
-	   << eventInformation->GetPhotonCount_Ceren() << G4endl;
+	   << eventInformation->getPhotonCountCerenkov() << G4endl;
 
     G4cout << "\tNumber of photons that hit PMTs : "
-	   << eventInformation->GetHitCount() << G4endl;
+	   << eventInformation->getHitCount() << G4endl;
 
     G4cout << "\tNumber of PMTs above threshold("<<fPMTThreshold<<") : "
-	   << eventInformation->GetPMTSAboveThreshold() << G4endl;
+	   << eventInformation->getPmtCountAboveThreshold() << G4endl;
 
     G4cout << "\tNumber of photons absorbed (OpAbsorption) : "
-	   << eventInformation->GetAbsorptionCount() << G4endl;
+	   << eventInformation->getAbsorptionCount() << G4endl;
 
     G4cout << "\tNumber of photons absorbed at boundaries (OpBoundary) : "
-	   << "this event : " << eventInformation->GetBoundaryAbsorptionCount() << G4endl;
+	   << "this event : " << eventInformation->getBoundaryAbsorptionCount() << G4endl;
 
     G4cout << "\tUnacounted for photons in this event : "
-	   << (eventInformation->GetPhotonCount_Scint() -
-	       eventInformation->GetHitCount() -
-	       eventInformation->GetBoundaryAbsorptionCount() -
-	       eventInformation->GetAbsorptionCount())
+	   << (eventInformation->getPhotonCountScintillation() -
+         eventInformation->getHitCount() -
+         eventInformation->getBoundaryAbsorptionCount() -
+         eventInformation->getAbsorptionCount())
 	   << G4endl;
   }    
 
   //-------------------------------------
   
-  runStat.PhotonCount_Scint       = eventInformation->GetPhotonCount_Scint();
-  runStat.PhotonCount_Ceren       = eventInformation->GetPhotonCount_Ceren();
-  runStat.HitCount                = eventInformation->GetHitCount();
-  runStat.PMTsAboveThreshold      = eventInformation->GetPMTSAboveThreshold();
-  runStat.AbsorptionCount         = eventInformation->GetAbsorptionCount();
-  runStat.BoundaryAbsorptionCount = eventInformation->GetBoundaryAbsorptionCount();
-  runStat.Unacounted              = (eventInformation->GetPhotonCount_Ceren() -
-				  eventInformation->GetAbsorptionCount() -
-				  eventInformation->GetHitCount() -
-				  eventInformation->GetBoundaryAbsorptionCount());
+  runStat.PhotonCount_Scint       = eventInformation->getPhotonCountScintillation();
+  runStat.PhotonCount_Ceren       = eventInformation->getPhotonCountCerenkov();
+  runStat.HitCount                = eventInformation->getHitCount();
+  runStat.PMTsAboveThreshold      = eventInformation->getPmtCountAboveThreshold();
+  runStat.AbsorptionCount         = eventInformation->getAbsorptionCount();
+  runStat.BoundaryAbsorptionCount = eventInformation->getBoundaryAbsorptionCount();
+  runStat.Unacounted              = (eventInformation->getPhotonCountCerenkov() -
+      eventInformation->getAbsorptionCount() -
+      eventInformation->getHitCount() -
+      eventInformation->getBoundaryAbsorptionCount());
   
-  runStat.EDep  = eventInformation->GetEDep() / MeV;
-  runStat.EDepX = eventInformation->GetEWeightPos().getX();
-  runStat.EDepY = eventInformation->GetEWeightPos().getY();
-  runStat.EDepZ = eventInformation->GetEWeightPos().getZ();
+  runStat.EDep  = eventInformation->getEnergyDeposition() / MeV;
+  runStat.EDepX = eventInformation->getEnergyWeightedPosition().getX();
+  runStat.EDepY = eventInformation->getEnergyWeightedPosition().getY();
+  runStat.EDepZ = eventInformation->getEnergyWeightedPosition().getZ();
 
   //-------------------------------------
 
   evtStat.EvtNum = anEvent->GetEventID();
   F04Trajectory* trj;
-  for(G4int i = 0; i < n_trajectories; i++){
+  for(G4int i = 0; i < nTrajectories; i++){
     trj = (F04Trajectory*) ((*(anEvent->GetTrajectoryContainer()))[i]);
 
     // get info of the primary
@@ -301,7 +271,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 
 	// find parent trajectory
 	ParentID = CurrentTrj->GetParentID();
-	for(G4int j = 0; j < n_trajectories; j++){
+	for(G4int j = 0; j < nTrajectories; j++){
 	  ParentTrj = (F04Trajectory*) ((*(anEvent->GetTrajectoryContainer()))[j]);  
 	  if(ParentTrj->GetTrackID() == ParentID)
 	    break;
@@ -322,15 +292,13 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
   //-------------
   
   //If we have set the flag to save 'special' events, save here
-  if(fSaveThreshold&&eventInformation->GetPhotonCount() <= fSaveThreshold)
+  if(fSaveThreshold&& eventInformation->getPhotonCount() <= fSaveThreshold)
     G4RunManager::GetRunManager()->rndmSaveThisEvent();
   
-  if(fRecorder)fRecorder->RecordEndOfEvent(anEvent);
+  if(recorder)recorder->RecordEndOfEvent(anEvent);
 
 
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
   
 void NovaEventAction::SetSaveThreshold(G4int save){
 /*Sets the save threshold for the random number seed. If the number of photons

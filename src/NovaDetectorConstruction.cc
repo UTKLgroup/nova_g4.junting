@@ -316,13 +316,20 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   new G4PVPlacement(0, G4ThreeVector(), outerCladdingLogicalVolume, "wlsFiber", experimentalHallLogicalVolume, false, 0);
 
   G4LogicalVolume* pmtLogicalVolume = makePmt();
+  G4double pmtZ = -fiberLength / 2.0 - pmtThickness / 2.0;
   new G4PVPlacement(0,
-                    G4ThreeVector(0.0, 0.0, -fiberLength / 2.0 - pmtThickness / 2.0),
+                    G4ThreeVector(0.0, 0.0, pmtZ),
                     pmtLogicalVolume,
                     "pmt",
                     experimentalHallLogicalVolume,
                     false,
                     0);
+
+  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
+  NovaPmtSd* pmtSd = new NovaPmtSd("/NovaDet/pmtSD");
+  sdManager->AddNewDetector(pmtSd);
+  pmtSd->initPmts(2);
+  pmtSd->setPmtPosition(0, 0.0, 0.0, pmtZ);
 
   return experimentalHallPhysicalVolume;
 }

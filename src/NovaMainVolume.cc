@@ -90,11 +90,11 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
       sdManager->AddNewDetector(pmtSd);
     }
 
-    pmtSd->InitPMTs(2);
+    pmtSd->initPmts(2);
     new G4PVPlacement(0, G4ThreeVector(fiber1X, fiber1Y, pmtZ), pmtLog, "pmt", housingLog, false, 0);
     new G4PVPlacement(0, G4ThreeVector(fiber2X, fiber2Y, pmtZ), pmtLog, "pmt", housingLog, false, 1);
-    pmtSd->SetPMTPos(0, fiber1X, fiber1Y, pmtZ);
-    pmtSd->SetPMTPos(1, fiber2X, fiber2Y, pmtZ);
+    pmtSd->setPmtPosition(0, fiber1X, fiber1Y, pmtZ);
+    pmtSd->setPmtPosition(1, fiber2X, fiber2Y, pmtZ);
 
     if(!scintSd){
       scintSd = new LXeScintSD("/LXeDet/scintSD");

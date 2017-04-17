@@ -28,23 +28,19 @@ class NovaPmtHit : public G4VHit
     virtual void Draw();
     virtual void Print();
 
-    inline void SetDrawit(G4bool b){drawIt=b;}
-    inline G4bool GetDrawit(){return drawIt;}
+    inline void setDrawIt(G4bool b){drawIt=b;}
+    inline G4bool getDrawIt(){return drawIt;}
 
-    inline void IncPhotonCount(){photons++;}
-    inline G4int GetPhotonCount(){return photons;}
+    inline void incrementPhotonCount(){photons++;}
+    inline G4int getPhotonCount(){return photons;}
 
-    inline void SetPMTNumber(G4int n) { pmtNumber = n; }
-    inline G4int GetPMTNumber() { return pmtNumber; }
+    inline void SetPmtNumber(G4int n) { pmtNumber = n; }
+    inline G4int getPmtNumber() { return pmtNumber; }
 
-    inline void SetPMTPhysVol(G4VPhysicalVolume* physVol){this->physicalVolume=physVol;}
-    inline G4VPhysicalVolume* GetPMTPhysVol(){return physicalVolume;}
-
-    inline void SetPMTPos(G4double x,G4double y,G4double z){
-      position=G4ThreeVector(x,y,z);
-    }
- 
-    inline G4ThreeVector GetPMTPos(){return position;}
+    inline void setPmtPhysicalVolume(G4VPhysicalVolume *physVol){this->physicalVolume = physVol;}
+    inline G4VPhysicalVolume* getPmtPhysicalVolume() {return physicalVolume;}
+    inline void setPmtPosition(G4double x, G4double y, G4double z) {position = G4ThreeVector(x, y, z);}
+    inline G4ThreeVector getPmtPosition() {return position;}
 
   private:
     G4int pmtNumber;

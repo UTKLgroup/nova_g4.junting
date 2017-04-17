@@ -4,7 +4,7 @@
 #include "LXeTrajectory.hh"
 #include "NovaPmtSd.hh"
 #include "LXeUserTrackInformation.hh"
-#include "LXeUserEventInformation.hh"
+#include "NovaUserEventInformation.hh"
 #include "LXeSteppingMessenger.hh"
 #include "LXeRecorderBase.hh"
 
@@ -42,8 +42,8 @@ void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
  
   LXeUserTrackInformation* trackInformation
     =(LXeUserTrackInformation*)theTrack->GetUserInformation();
-  LXeUserEventInformation* eventInformation
-    =(LXeUserEventInformation*)G4EventManager::GetEventManager()
+  NovaUserEventInformation* eventInformation
+    =(NovaUserEventInformation*)G4EventManager::GetEventManager()
     ->GetConstCurrentEvent()->GetUserInformation();
 
   G4StepPoint* thePrePoint = theStep->GetPreStepPoint();
@@ -80,7 +80,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
 
     //If we havent already found the conversion position and there were
     //secondaries generated, then search for it
-    if(!eventInformation->IsConvPosSet() && tN2ndariesTot>0 ){
+    if(!eventInformation->isConversionPositionSet() && tN2ndariesTot>0 ){
       for(size_t lp1=(*fSecondary).size()-tN2ndariesTot;
           lp1<(*fSecondary).size(); lp1++){
         const G4VProcess* creator=(*fSecondary)[lp1]->GetCreatorProcess();
@@ -89,7 +89,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
           if(creatorName=="phot"||creatorName=="compt"||creatorName=="conv"){
             //since this is happening before the secondary is being tracked
             //the Vertex position has not been set yet(set in initial step)
-            eventInformation->SetConvPos((*fSecondary)[lp1]->GetPosition());
+            eventInformation->setConversionPosition((*fSecondary)[lp1]->GetPosition());
           }
         }
       }
@@ -123,7 +123,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
        =="OpAbsorption"){
 
       //if(thePostPoint->GetPhysicalVolume()->GetName() == "scintillator")
-      eventInformation->IncAbsorption();
+      eventInformation->incrementAbsorption();
       //else if(thePostPoint->GetPhysicalVolume()->GetName() == "veto")
       //eventInformation->IncVetoAbsorption();
       
@@ -158,7 +158,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
 	//if(thePostPoint->GetPhysicalVolume()->GetName() == "idout" || thePostPoint->GetPhysicalVolume()->GetName() == "housing")
 	//eventInformation->IncVetoBoundaryAbsorption();
 	//if(thePostPoint->GetPhysicalVolume()->GetName() == "idin")
-	eventInformation->IncBoundaryAbsorption();
+          eventInformation->incrementBoundaryAbsorption();
 	//G4cout << thePostPoint->GetPhysicalVolume()->GetName() << G4endl;
         break;
       case Detection: //Note, this assumes that the volume causing detection

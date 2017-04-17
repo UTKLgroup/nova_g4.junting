@@ -128,11 +128,11 @@ class NovaEventAction : public G4UserEventAction
 
   private:
 
-    LXeRecorderBase* fRecorder;
+    LXeRecorderBase* recorder;
     LXeEventMessenger* fEventMessenger;
     G4int              fSaveThreshold;
-    G4int              fScintCollID;
-    G4int              fPMTCollID;
+    G4int              scintCollectionId;
+    G4int              pmtCollectionId;
     G4int              fVerbose;
     G4int              fPMTThreshold;
 

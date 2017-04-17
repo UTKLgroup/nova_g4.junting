@@ -5,7 +5,7 @@
 #include "LXePhysicsList.hh"
 #include "NovaPrimaryGeneratorAction.hh"
 #include "NovaEventAction.hh"
-#include "LXeStackingAction.hh"
+#include "NovaStackingAction.hh"
 #include "NovaSteppingAction.hh"
 #include "LXeTrackingAction.hh"
 #include "LXeRunAction.hh"
@@ -25,7 +25,7 @@ int main(int argc, char** argv)
   runManager->SetUserInitialization(new NovaDetectorConstruction);
   runManager->SetUserInitialization(new LXePhysicsList);
   runManager->SetUserAction(new NovaPrimaryGeneratorAction(""));
-  runManager->SetUserAction(new LXeStackingAction);
+  runManager->SetUserAction(new NovaStackingAction);
   runManager->SetUserAction(new LXeRunAction(recorder));
   runManager->SetUserAction(new NovaEventAction(recorder));
   runManager->SetUserAction(new LXeTrackingAction(recorder));

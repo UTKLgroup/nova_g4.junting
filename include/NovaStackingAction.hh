@@ -4,18 +4,15 @@
 #include "globals.hh"
 #include "G4UserStackingAction.hh"
 
-class LXeStackingAction : public G4UserStackingAction
+class NovaStackingAction : public G4UserStackingAction
 {
   public:
-
-    LXeStackingAction();
-    virtual ~LXeStackingAction();
+    NovaStackingAction();
+    virtual ~NovaStackingAction();
  
     virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track* aTrack);
     virtual void NewStage();
     virtual void PrepareNewEvent();
- 
-  private:
-};
+ };
 
 #endif

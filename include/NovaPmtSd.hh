@@ -24,26 +24,34 @@ class NovaPmtSd : public G4VSensitiveDetector
     void DrawAll();
     void PrintAll();
 
-    inline void InitPMTs(G4int nPMTs){
-      if(fPMTPositionsX)delete fPMTPositionsX;
-      if(fPMTPositionsY)delete fPMTPositionsY;
-      if(fPMTPositionsZ)delete fPMTPositionsZ;
-      fPMTPositionsX=new G4DataVector(nPMTs);
-      fPMTPositionsY=new G4DataVector(nPMTs);
-      fPMTPositionsZ=new G4DataVector(nPMTs);
+    inline void initPmts(G4int nPmt)
+    {
+      if(pmtPositionXs)
+        delete pmtPositionXs;
+      if(pmtPositionYs)
+        delete pmtPositionYs;
+      if(pmtPositionZs)
+        delete pmtPositionZs;
+      pmtPositionXs = new G4DataVector((size_t) nPmt);
+      pmtPositionYs = new G4DataVector((size_t) nPmt);
+      pmtPositionZs = new G4DataVector((size_t) nPmt);
     }
 
-    inline void SetPMTPos(G4int n,G4double x,G4double y,G4double z){
-      if(fPMTPositionsX)fPMTPositionsX->insertAt(n,x);
-      if(fPMTPositionsY)fPMTPositionsY->insertAt(n,y);
-      if(fPMTPositionsZ)fPMTPositionsZ->insertAt(n,z);
+    inline void setPmtPosition(G4int n, G4double x, G4double y, G4double z)
+    {
+      if(pmtPositionXs)
+        pmtPositionXs->insertAt((size_t) n, x);
+      if(pmtPositionYs)
+        pmtPositionYs->insertAt((size_t) n, y);
+      if(pmtPositionZs)
+        pmtPositionZs->insertAt((size_t) n, z);
     }
 
   private:
-    NovaPmtHitsCollection* fPMTHitCollection;
-    G4DataVector* fPMTPositionsX;
-    G4DataVector* fPMTPositionsY;
-    G4DataVector* fPMTPositionsZ;
+    NovaPmtHitsCollection* pmtHitsCollection;
+    G4DataVector* pmtPositionXs;
+    G4DataVector* pmtPositionYs;
+    G4DataVector* pmtPositionZs;
 };
 
 #endif
