@@ -7,7 +7,7 @@
 #include "G4ThreeVector.hh"
 
 class G4Event;
-class LXeRecorderBase;
+class NovaRecorderBase;
 
 
 struct EventStat{
@@ -109,7 +109,7 @@ class NovaEventAction : public G4UserEventAction
 {
   public:
 
-    NovaEventAction(LXeRecorderBase*);
+    NovaEventAction(NovaRecorderBase*);
     virtual ~NovaEventAction();
 
   public:
@@ -128,7 +128,7 @@ class NovaEventAction : public G4UserEventAction
 
   private:
 
-    LXeRecorderBase* recorder;
+    NovaRecorderBase* recorder;
     LXeEventMessenger* fEventMessenger;
     G4int              fSaveThreshold;
     G4int              scintCollectionId;

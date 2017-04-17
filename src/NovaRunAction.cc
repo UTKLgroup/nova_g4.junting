@@ -1,8 +1,8 @@
 #include "NovaRunAction.hh"
-#include "LXeRecorderBase.hh"
+#include "NovaRecorderBase.hh"
 
 
-NovaRunAction::NovaRunAction(LXeRecorderBase* r) : fRecorder(r) {}
+NovaRunAction::NovaRunAction(NovaRecorderBase* r) : fRecorder(r) {}
 
 NovaRunAction::~NovaRunAction() {}
 

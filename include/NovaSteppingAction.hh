@@ -6,7 +6,7 @@
 
 #include "G4OpBoundaryProcess.hh"
 
-class LXeRecorderBase;
+class NovaRecorderBase;
 class NovaEventAction;
 class LXeTrackingAction;
 class LXeSteppingMessenger;
@@ -15,7 +15,7 @@ class NovaSteppingAction : public G4UserSteppingAction
 {
   public:
 
-    NovaSteppingAction(LXeRecorderBase*);
+    NovaSteppingAction(NovaRecorderBase*);
     virtual ~NovaSteppingAction();
     virtual void UserSteppingAction(const G4Step*);
 
@@ -24,7 +24,7 @@ class NovaSteppingAction : public G4UserSteppingAction
  
   private:
 
-    LXeRecorderBase* fRecorder;
+    NovaRecorderBase* fRecorder;
     G4bool fOneStepPrimaries;
     LXeSteppingMessenger* fSteppingMessenger;
 

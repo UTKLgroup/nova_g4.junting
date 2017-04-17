@@ -6,7 +6,7 @@
 #include "LXeUserTrackInformation.hh"
 #include "NovaUserEventInformation.hh"
 #include "LXeSteppingMessenger.hh"
-#include "LXeRecorderBase.hh"
+#include "NovaRecorderBase.hh"
 
 #include "G4SteppingManager.hh"
 #include "G4SDManager.hh"
@@ -23,7 +23,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-NovaSteppingAction::NovaSteppingAction(LXeRecorderBase* r)
+NovaSteppingAction::NovaSteppingAction(NovaRecorderBase* r)
   : fRecorder(r),fOneStepPrimaries(false)
 {
   fSteppingMessenger = new LXeSteppingMessenger(this);

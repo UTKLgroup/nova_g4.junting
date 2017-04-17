@@ -4,22 +4,19 @@
 #include "G4UserTrackingAction.hh"
 #include "globals.hh"
 
-class LXeRecorderBase;
+class NovaRecorderBase;
 
 class LXeTrackingAction : public G4UserTrackingAction {
 
   public:
-
-    LXeTrackingAction(LXeRecorderBase*);
+    LXeTrackingAction(NovaRecorderBase*);
     virtual ~LXeTrackingAction() {};
 
     virtual void PreUserTrackingAction(const G4Track*);
     virtual void PostUserTrackingAction(const G4Track*);
 
   private:
-
-    LXeRecorderBase* fRecorder;
-
+    NovaRecorderBase* fRecorder;
 };
 
 #endif

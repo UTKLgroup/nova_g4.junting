@@ -6,11 +6,10 @@
 #include "G4Track.hh"
 #include "G4Step.hh"
 
-class LXeRecorderBase {
+class NovaRecorderBase {
 
   public:
-
-    virtual ~LXeRecorderBase() {};
+    virtual ~NovaRecorderBase() {};
 
     virtual void RecordBeginOfRun(const G4Run*) = 0;
     virtual void RecordEndOfRun(const G4Run*) = 0;
@@ -18,7 +17,6 @@ class LXeRecorderBase {
     virtual void RecordEndOfEvent(const G4Event*) {};
     virtual void RecordTrack(const G4Track*) {};
     virtual void RecordStep(const G4Step*) {};
-
 };
 
 #endif

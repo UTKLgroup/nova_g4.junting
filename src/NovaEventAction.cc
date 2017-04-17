@@ -3,7 +3,7 @@
 #include "NovaPmtHit.hh"
 #include "NovaUserEventInformation.hh"
 #include "LXeTrajectory.hh"
-#include "LXeRecorderBase.hh"
+#include "NovaRecorderBase.hh"
 
 #include "G4EventManager.hh"
 #include "G4SDManager.hh"
@@ -27,7 +27,7 @@
 #include "F04TrajectoryPoint.hh"
 
 
-NovaEventAction::NovaEventAction(LXeRecorderBase* r)
+NovaEventAction::NovaEventAction(NovaRecorderBase* r)
   : recorder(r),fSaveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),fVerbose(0), pmtThreshold(1),
     fForcedrawphotons(false),fForcenophotons(false)
 {

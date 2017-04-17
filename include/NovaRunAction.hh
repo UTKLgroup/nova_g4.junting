@@ -8,13 +8,13 @@
 #ifndef NovaRunAction_h
 #define NovaRunAction_h 1
 
-class LXeRecorderBase;
+class NovaRecorderBase;
 
 class NovaRunAction : public G4UserRunAction
 {
   public:
 
-    NovaRunAction(LXeRecorderBase*);
+    NovaRunAction(NovaRecorderBase*);
     virtual ~NovaRunAction();
 
     virtual void BeginOfRunAction(const G4Run*);
@@ -25,10 +25,8 @@ class NovaRunAction : public G4UserRunAction
 
   private:
 
-    LXeRecorderBase* fRecorder;
-
-    TFile *outputFilename;
-
+    NovaRecorderBase* fRecorder;
+    TFile* outputFilename;
     RunStat  runStat;
     TTree*   runTree;
     TBranch* runBranch;

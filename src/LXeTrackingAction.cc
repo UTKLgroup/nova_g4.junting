@@ -2,7 +2,7 @@
 #include "LXeTrackingAction.hh"
 #include "LXeUserTrackInformation.hh"
 #include "NovaDetectorConstruction.hh"
-#include "LXeRecorderBase.hh"
+#include "NovaRecorderBase.hh"
 
 #include "G4TrackingManager.hh"
 #include "G4Track.hh"
@@ -12,7 +12,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeTrackingAction::LXeTrackingAction(LXeRecorderBase* r)
+LXeTrackingAction::LXeTrackingAction(NovaRecorderBase* r)
   : fRecorder(r) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

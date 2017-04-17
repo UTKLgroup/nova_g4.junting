@@ -11,7 +11,7 @@
 #include "NovaRunAction.hh"
 #include "LXeSteppingVerbose.hh"
 
-#include "LXeRecorderBase.hh"
+#include "NovaRecorderBase.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 
@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 {
   G4VSteppingVerbose::SetInstance(new LXeSteppingVerbose);
 
-  LXeRecorderBase* recorder = NULL;
+  NovaRecorderBase* recorder = NULL;
   G4RunManager* runManager = new G4RunManager;
   runManager->SetUserInitialization(new NovaDetectorConstruction);
   runManager->SetUserInitialization(new LXePhysicsList);
