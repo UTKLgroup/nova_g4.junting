@@ -76,7 +76,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
     }
 
     if (eventInformation->getEnergyDeposition()==0.0) {
-      if(verbose>0)
+      if(verbose > 0)
         G4cout << "No hits in the scintillator this event." << G4endl;
     }
     else {
@@ -98,7 +98,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
     pmtHitsCollection->DrawAllHits();
   }
 
-  NovaRunAction* runAction = (NovaRunAction*)(G4RunManager::GetRunManager()->GetUserRunAction());
+  NovaRunAction* runAction = (NovaRunAction*) G4RunManager::GetRunManager()->GetUserRunAction();
 
   runStat.scintillationPhotonCount = eventInformation->getScintillationPhotonCount();
   runStat.cherenkovPhotonCount = eventInformation->getCherenkovPhotonCount();

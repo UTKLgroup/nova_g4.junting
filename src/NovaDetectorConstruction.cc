@@ -588,6 +588,30 @@ G4LogicalVolume* NovaDetectorConstruction::makePmt()
                     false,
                     0);
 
+  std::vector<G4double> energies;
+  std::vector<G4double> quantumEfficiencies;
+  std::ifstream fQuantumEfficiency(getFilePath(APD_QUANTUM_EFFICIENCY));
+  if (fQuantumEfficiency.is_open()) {
+    while (!fQuantumEfficiency.eof()) {
+      fQuantumEfficiency >> inputWavelength >> filler >> inputVariable;
+      energies.push_back(convertWavelengthToEnergy(inputWavelength));
+      quantumEfficiencies.push_back(inputVariable);
+    }
+  }
+  std::vector<G4double> refractionIndices(energies.size(), 1.49);
+  std::vector<G4double> reflectivities(energies.size(), 0.0);
+
+  G4OpticalSurface* opticalSurface = new G4OpticalSurface("opticalSurface");
+  G4MaterialPropertiesTable* opticalSurfaceMpt = new G4MaterialPropertiesTable();
+  opticalSurfaceMpt->AddProperty("EFFICIENCY", &energies[0], &quantumEfficiencies[0], (G4int) energies.size());
+  opticalSurfaceMpt->AddProperty("REFLECTIVITY", &energies[0], &reflectivities[0], (G4int) energies.size());
+  opticalSurfaceMpt->AddProperty("RINDEX", &energies[0], &refractionIndices[0], (G4int) energies.size());
+  opticalSurface->SetModel(glisur);
+  opticalSurface->SetFinish(polished);
+  opticalSurface->SetType(dielectric_metal);
+  opticalSurface->SetMaterialPropertiesTable(opticalSurfaceMpt);
+  new G4LogicalSkinSurface("pmtLogicalSkinSurface", photocathodeLogicalVolume, opticalSurface);
+
   return pmtLogicalVolume;
 }
 

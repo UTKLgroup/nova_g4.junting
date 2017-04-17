@@ -71,7 +71,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
       return PLANK_CONSTANT / wavelength * eV;
     }
 
-
   private:
     G4double PLANK_CONSTANT = 1239.84193;
     G4String INPUT_DIR = "input";
@@ -83,6 +82,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4String FIBER_CORE_WLS_ABSORPTION_LENGTH_FILENAME = "y11_abs_length.dat";
     G4String FIBER_CORE_WLS_EMISSION_FILENAME = "WLSemit.cfg";
     G4String FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME = "PMMABulkAbsorb.dat";
+    G4String APD_QUANTUM_EFFICIENCY = "apd_qe_1.dat";
+    G4String PMT_QUANTUM_EFFICIENCY = "qe_file_2.dat";
 
     G4String getFilePath(G4String filename) {return INPUT_DIR + "/" + filename;}
     void defineMaterials();
