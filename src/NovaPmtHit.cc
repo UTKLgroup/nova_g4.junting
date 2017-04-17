@@ -6,7 +6,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
-G4Allocator<NovaPmtHit> LXePMTHitAllocator;
+G4Allocator<NovaPmtHit> NovaPmtHitAllocator;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

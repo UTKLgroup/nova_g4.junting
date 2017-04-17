@@ -46,7 +46,7 @@ class NovaPmtSd : public G4VSensitiveDetector
 
   private:
 
-    LXePMTHitsCollection* fPMTHitCollection;
+    NovaPmtHitsCollection* fPMTHitCollection;
 
     G4DataVector* fPMTPositionsX;
     G4DataVector* fPMTPositionsY;

@@ -4,20 +4,20 @@
 #include "G4UImessenger.hh"
 #include "globals.hh"
 
-class LXeSteppingAction;
+class NovaSteppingAction;
 class G4UIcmdWithABool;
 
 class LXeSteppingMessenger: public G4UImessenger
 {
   public:
-    LXeSteppingMessenger(LXeSteppingAction*);
+    LXeSteppingMessenger(NovaSteppingAction*);
     virtual ~LXeSteppingMessenger();
  
     virtual void SetNewValue(G4UIcommand*, G4String);
 
   private:
 
-    LXeSteppingAction*        fStepping;
+    NovaSteppingAction*        fStepping;
     G4UIcmdWithABool*  fOneStepPrimariesCmd;
  
 };

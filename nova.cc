@@ -4,9 +4,9 @@
 #include "NovaDetectorConstruction.hh"
 #include "LXePhysicsList.hh"
 #include "NovaPrimaryGeneratorAction.hh"
-#include "LXeEventAction.hh"
+#include "NovaEventAction.hh"
 #include "LXeStackingAction.hh"
-#include "LXeSteppingAction.hh"
+#include "NovaSteppingAction.hh"
 #include "LXeTrackingAction.hh"
 #include "LXeRunAction.hh"
 #include "LXeSteppingVerbose.hh"
@@ -27,9 +27,9 @@ int main(int argc, char** argv)
   runManager->SetUserAction(new NovaPrimaryGeneratorAction(""));
   runManager->SetUserAction(new LXeStackingAction);
   runManager->SetUserAction(new LXeRunAction(recorder));
-  runManager->SetUserAction(new LXeEventAction(recorder));
+  runManager->SetUserAction(new NovaEventAction(recorder));
   runManager->SetUserAction(new LXeTrackingAction(recorder));
-  runManager->SetUserAction(new LXeSteppingAction(recorder));
+  runManager->SetUserAction(new NovaSteppingAction(recorder));
 
   G4UImanager* uiManager = G4UImanager::GetUIpointer();
   G4VisManager* visManager = new G4VisExecutive;

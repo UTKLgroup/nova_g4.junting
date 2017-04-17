@@ -24,7 +24,7 @@ class LXeScintSD : public G4VSensitiveDetector
  
   private:
 
-    LXeScintHitsCollection* fScintCollection;
+    NovaScintHitsCollection* fScintCollection;
  
 };
 

@@ -6,7 +6,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
-G4Allocator<LXeScintHit> LXeScintHitAllocator;
+G4Allocator<LXeScintHit> NovaScintHitAllocator;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

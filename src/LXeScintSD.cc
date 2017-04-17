@@ -26,7 +26,7 @@ LXeScintSD::~LXeScintSD() {}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeScintSD::Initialize(G4HCofThisEvent* hitsCE){
-  fScintCollection = new LXeScintHitsCollection
+  fScintCollection = new NovaScintHitsCollection
                       (SensitiveDetectorName,collectionName[0]);
   //A way to keep all the hits of this event in one place if needed
   static G4int hitsCID = -1;

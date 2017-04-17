@@ -4,7 +4,7 @@
 #include "G4UImessenger.hh"
 #include "globals.hh"
 
-class LXeEventAction;
+class NovaEventAction;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithABool;
 
@@ -12,14 +12,14 @@ class LXeEventMessenger: public G4UImessenger
 {
   public:
 
-    LXeEventMessenger(LXeEventAction*);
+    LXeEventMessenger(NovaEventAction*);
     virtual ~LXeEventMessenger();
  
     virtual void SetNewValue(G4UIcommand*, G4String);
  
   private:
 
-    LXeEventAction*        fLXeEvent;
+    NovaEventAction*        fLXeEvent;
     G4UIcmdWithAnInteger*  fSaveThresholdCmd;
     G4UIcmdWithAnInteger*  fVerboseCmd;
     G4UIcmdWithAnInteger*  fPmtThresholdCmd;

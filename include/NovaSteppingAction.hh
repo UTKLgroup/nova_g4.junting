@@ -7,16 +7,16 @@
 #include "G4OpBoundaryProcess.hh"
 
 class LXeRecorderBase;
-class LXeEventAction;
+class NovaEventAction;
 class LXeTrackingAction;
 class LXeSteppingMessenger;
 
-class LXeSteppingAction : public G4UserSteppingAction
+class NovaSteppingAction : public G4UserSteppingAction
 {
   public:
 
-    LXeSteppingAction(LXeRecorderBase*);
-    virtual ~LXeSteppingAction();
+    NovaSteppingAction(LXeRecorderBase*);
+    virtual ~NovaSteppingAction();
     virtual void UserSteppingAction(const G4Step*);
 
     void SetOneStepPrimaries(G4bool b){fOneStepPrimaries=b;}

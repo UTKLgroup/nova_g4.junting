@@ -1,6 +1,6 @@
 #include "LXeStackingAction.hh"
 #include "LXeUserEventInformation.hh"
-#include "LXeSteppingAction.hh"
+#include "NovaSteppingAction.hh"
 
 #include "G4ios.hh"
 #include "G4ParticleDefinition.hh"

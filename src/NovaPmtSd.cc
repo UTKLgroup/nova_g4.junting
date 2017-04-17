@@ -1,37 +1,24 @@
 #include "NovaPmtSd.hh"
-#include "NovaPmtHit.hh"
 #include "NovaDetectorConstruction.hh"
-#include "LXeUserTrackInformation.hh"
 
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
-#include "G4VTouchable.hh"
-#include "G4TouchableHistory.hh"
-#include "G4ios.hh"
 #include "G4ParticleTypes.hh"
-#include "G4ParticleDefinition.hh"
 
-#include <fstream>
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 NovaPmtSd::NovaPmtSd(G4String name)
-  : G4VSensitiveDetector(name),fPMTHitCollection(0),fPMTPositionsX(0)
-  ,fPMTPositionsY(0),fPMTPositionsZ(0)
+  : G4VSensitiveDetector(name),
+    fPMTHitCollection(0),
+    fPMTPositionsX(0),
+    fPMTPositionsY(0),
+    fPMTPositionsZ(0)
 {
   collectionName.insert("pmtHitCollection");
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 NovaPmtSd::~NovaPmtSd() {}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void NovaPmtSd::Initialize(G4HCofThisEvent* hitsCE){
-  fPMTHitCollection = new LXePMTHitsCollection
+void NovaPmtSd::Initialize(G4HCofThisEvent* hitsCE)
+{
+  fPMTHitCollection = new NovaPmtHitsCollection
                       (SensitiveDetectorName,collectionName[0]);
   //Store collection with event and keep ID
   static G4int hitCID = -1;
@@ -41,13 +28,9 @@ void NovaPmtSd::Initialize(G4HCofThisEvent* hitsCE){
   hitsCE->AddHitsCollection( hitCID, fPMTHitCollection );
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 G4bool NovaPmtSd::ProcessHits(G4Step* ,G4TouchableHistory* ){
   return false;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 //Generates a hit and uses the postStepPoint's mother volume replica number
 //PostStepPoint because the hit is generated manually when the photon is
@@ -104,18 +87,10 @@ G4bool NovaPmtSd::ProcessHits_constStep(const G4Step* aStep,
   return true;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void NovaPmtSd::EndOfEvent(G4HCofThisEvent* ) {}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void NovaPmtSd::clear() {}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void NovaPmtSd::DrawAll() {}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void NovaPmtSd::PrintAll() {}

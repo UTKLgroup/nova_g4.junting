@@ -1,5 +1,5 @@
-#include "LXeSteppingAction.hh"
-#include "LXeEventAction.hh"
+#include "NovaSteppingAction.hh"
+#include "NovaEventAction.hh"
 #include "LXeTrackingAction.hh"
 #include "LXeTrajectory.hh"
 #include "NovaPmtSd.hh"
@@ -23,7 +23,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeSteppingAction::LXeSteppingAction(LXeRecorderBase* r)
+NovaSteppingAction::NovaSteppingAction(LXeRecorderBase* r)
   : fRecorder(r),fOneStepPrimaries(false)
 {
   fSteppingMessenger = new LXeSteppingMessenger(this);
@@ -33,11 +33,11 @@ LXeSteppingAction::LXeSteppingAction(LXeRecorderBase* r)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeSteppingAction::~LXeSteppingAction() {}
+NovaSteppingAction::~NovaSteppingAction() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeSteppingAction::UserSteppingAction(const G4Step * theStep){
+void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
   G4Track* theTrack = theStep->GetTrack();
  
   LXeUserTrackInformation* trackInformation
@@ -141,10 +141,10 @@ void LXeSteppingAction::UserSteppingAction(const G4Step * theStep){
       if(fExpectedNextStatus==StepTooSmall){
         if(boundaryStatus!=StepTooSmall){
           G4ExceptionDescription ed;
-          ed << "LXeSteppingAction::UserSteppingAction(): "
+          ed << "NovaSteppingAction::UserSteppingAction(): "
                 << "No reallocation step after reflection!"
                 << G4endl;
-          G4Exception("LXeSteppingAction::UserSteppingAction()", "LXeExpl01",
+          G4Exception("NovaSteppingAction::UserSteppingAction()", "LXeExpl01",
           FatalException,ed,
           "Something is wrong with the surface normal or geometry");
         }

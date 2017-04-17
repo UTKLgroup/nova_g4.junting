@@ -1,12 +1,12 @@
 #include "LXeSteppingMessenger.hh"
-#include "LXeSteppingAction.hh"
+#include "NovaSteppingAction.hh"
 
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithABool.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeSteppingMessenger::LXeSteppingMessenger(LXeSteppingAction* step)
+LXeSteppingMessenger::LXeSteppingMessenger(NovaSteppingAction* step)
  : fStepping(step)
 {
   fOneStepPrimariesCmd = new G4UIcmdWithABool("/LXe/oneStepPrimaries",this);

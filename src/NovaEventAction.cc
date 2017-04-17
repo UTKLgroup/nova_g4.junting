@@ -1,4 +1,4 @@
-#include "LXeEventAction.hh"
+#include "NovaEventAction.hh"
 #include "LXeScintHit.hh"
 #include "NovaPmtHit.hh"
 #include "LXeUserEventInformation.hh"
@@ -29,7 +29,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEventAction::LXeEventAction(LXeRecorderBase* r)
+NovaEventAction::NovaEventAction(LXeRecorderBase* r)
   : fRecorder(r),fSaveThreshold(0),fScintCollID(-1),fPMTCollID(-1),fVerbose(0),
    fPMTThreshold(1),fForcedrawphotons(false),fForcenophotons(false)
 {
@@ -38,11 +38,11 @@ LXeEventAction::LXeEventAction(LXeRecorderBase* r)
  
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEventAction::~LXeEventAction(){}
+NovaEventAction::~NovaEventAction(){}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeEventAction::BeginOfEventAction(const G4Event* anEvent){
+void NovaEventAction::BeginOfEventAction(const G4Event* anEvent){
  
   //New event, add the user information object
   G4EventManager::
@@ -60,7 +60,7 @@ void LXeEventAction::BeginOfEventAction(const G4Event* anEvent){
  
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
+void NovaEventAction::EndOfEventAction(const G4Event* anEvent){
 
   LXeUserEventInformation* eventInformation
     =(LXeUserEventInformation*)anEvent->GetUserInformation();
@@ -86,15 +86,15 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
   }
   */
  
-  LXeScintHitsCollection* scintHC = 0;
-  LXePMTHitsCollection* pmtHC = 0;
+  NovaScintHitsCollection* scintHC = 0;
+  NovaPmtHitsCollection* pmtHC = 0;
 
   G4HCofThisEvent* hitsCE = anEvent->GetHCofThisEvent();
  
   //Get the hit collections
   if(hitsCE){
-    if(fScintCollID>=0)scintHC = (LXeScintHitsCollection*)(hitsCE->GetHC(fScintCollID));
-    if(fPMTCollID>=0)pmtHC = (LXePMTHitsCollection*)(hitsCE->GetHC(fPMTCollID));
+    if(fScintCollID>=0)scintHC = (NovaScintHitsCollection*)(hitsCE->GetHC(fScintCollID));
+    if(fPMTCollID>=0)pmtHC = (NovaPmtHitsCollection*)(hitsCE->GetHC(fPMTCollID));
   }
 
   //Hits in scintillator
@@ -332,7 +332,7 @@ void LXeEventAction::EndOfEventAction(const G4Event* anEvent){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
   
-void LXeEventAction::SetSaveThreshold(G4int save){
+void NovaEventAction::SetSaveThreshold(G4int save){
 /*Sets the save threshold for the random number seed. If the number of photons
 generated in an event is lower than this, then save the seed for this event
 in a file called run###evt###.rndm

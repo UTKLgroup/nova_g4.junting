@@ -1,5 +1,5 @@
 #include "G4UserRunAction.hh"
-#include "LXeEventAction.hh"
+#include "NovaEventAction.hh"
 
 #include "TFile.h"
 #include "TTree.h"

@@ -1,12 +1,12 @@
 #include "LXeEventMessenger.hh"
-#include "LXeEventAction.hh"
+#include "NovaEventAction.hh"
 
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAnInteger.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEventMessenger::LXeEventMessenger(LXeEventAction* event)
+LXeEventMessenger::LXeEventMessenger(NovaEventAction* event)
  : fLXeEvent(event)
 {
   fSaveThresholdCmd = new G4UIcmdWithAnInteger("/LXe/saveThreshold",this);

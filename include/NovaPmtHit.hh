@@ -57,18 +57,18 @@ class NovaPmtHit : public G4VHit
 
 };
 
-typedef G4THitsCollection<NovaPmtHit> LXePMTHitsCollection;
+typedef G4THitsCollection<NovaPmtHit> NovaPmtHitsCollection;
 
-extern G4Allocator<NovaPmtHit> LXePMTHitAllocator;
+extern G4Allocator<NovaPmtHit> NovaPmtHitAllocator;
 
 inline void* NovaPmtHit::operator new(size_t){
   void *aHit;
-  aHit = (void *) LXePMTHitAllocator.MallocSingle();
+  aHit = (void *) NovaPmtHitAllocator.MallocSingle();
   return aHit;
 }
 
 inline void NovaPmtHit::operator delete(void *aHit){
-  LXePMTHitAllocator.FreeSingle((NovaPmtHit*) aHit);
+  NovaPmtHitAllocator.FreeSingle((NovaPmtHit*) aHit);
 }
 
 #endif

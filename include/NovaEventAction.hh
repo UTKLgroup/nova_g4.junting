@@ -105,12 +105,12 @@ struct RunStat {
 };  
 
 
-class LXeEventAction : public G4UserEventAction
+class NovaEventAction : public G4UserEventAction
 {
   public:
 
-    LXeEventAction(LXeRecorderBase*);
-    virtual ~LXeEventAction();
+    NovaEventAction(LXeRecorderBase*);
+    virtual ~NovaEventAction();
 
   public:
 

@@ -43,20 +43,20 @@ class LXeScintHit : public G4VHit
 
 };
 
-typedef G4THitsCollection<LXeScintHit> LXeScintHitsCollection;
+typedef G4THitsCollection<LXeScintHit> NovaScintHitsCollection;
 
-extern G4Allocator<LXeScintHit> LXeScintHitAllocator;
+extern G4Allocator<LXeScintHit> NovaScintHitAllocator;
 
 inline void* LXeScintHit::operator new(size_t)
 {
   void *aHit;
-  aHit = (void *) LXeScintHitAllocator.MallocSingle();
+  aHit = (void *) NovaScintHitAllocator.MallocSingle();
   return aHit;
 }
 
 inline void LXeScintHit::operator delete(void *aHit)
 {
-  LXeScintHitAllocator.FreeSingle((LXeScintHit*) aHit);
+  NovaScintHitAllocator.FreeSingle((LXeScintHit*) aHit);
 }
 
 #endif
