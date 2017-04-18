@@ -9,12 +9,10 @@
 class NovaRecorderBase;
 class NovaEventAction;
 class NovaTrackingAction;
-class LXeSteppingMessenger;
 
 class NovaSteppingAction : public G4UserSteppingAction
 {
   public:
-
     NovaSteppingAction(NovaRecorderBase*);
     virtual ~NovaSteppingAction();
     virtual void UserSteppingAction(const G4Step*);
@@ -23,11 +21,8 @@ class NovaSteppingAction : public G4UserSteppingAction
     G4bool GetOneStepPrimaries(){return fOneStepPrimaries;}
  
   private:
-
     NovaRecorderBase* fRecorder;
     G4bool fOneStepPrimaries;
-    LXeSteppingMessenger* fSteppingMessenger;
-
     G4OpBoundaryProcessStatus fExpectedNextStatus;
 };
 

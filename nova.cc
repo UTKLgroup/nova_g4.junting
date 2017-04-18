@@ -9,8 +9,6 @@
 #include "NovaSteppingAction.hh"
 #include "NovaTrackingAction.hh"
 #include "NovaRunAction.hh"
-#include "LXeSteppingVerbose.hh"
-
 #include "NovaRecorderBase.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -18,8 +16,6 @@
 
 int main(int argc, char** argv)
 {
-  G4VSteppingVerbose::SetInstance(new LXeSteppingVerbose);
-
   NovaRecorderBase* recorder = NULL;
   G4RunManager* runManager = new G4RunManager;
   runManager->SetUserInitialization(new NovaDetectorConstruction);
@@ -35,7 +31,7 @@ int main(int argc, char** argv)
   G4VisManager* visManager = new G4VisExecutive;
   visManager->Initialize();
 
-  if (argc==1) {
+  if (argc == 1) {
     G4UIExecutive* ui = new G4UIExecutive(argc, argv);
     uiManager->ApplyCommand("/control/execute vis.mac");
     uiManager->ApplyCommand("/control/execute gui.mac");

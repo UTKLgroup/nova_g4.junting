@@ -4,7 +4,6 @@
 #include "NovaPmtSd.hh"
 #include "NovaUserTrackInformation.hh"
 #include "NovaUserEventInformation.hh"
-#include "LXeSteppingMessenger.hh"
 #include "NovaRecorderBase.hh"
 
 #include "G4SteppingManager.hh"
@@ -14,7 +13,6 @@
 NovaSteppingAction::NovaSteppingAction(NovaRecorderBase* r)
     : fRecorder(r),fOneStepPrimaries(false)
 {
-  fSteppingMessenger = new LXeSteppingMessenger(this);
   fExpectedNextStatus = Undefined;
 }
 
