@@ -13,7 +13,7 @@
 #include "CRYUtils.h"
 #include "vector"
 #include "RNGWrapper.hh"
-#include "PrimaryGeneratorMessenger.hh"
+#include "NovaPrimaryGeneratorMessenger.hh"
 #include "G4ParticleTable.hh"
 
 class G4ParticleGun;
@@ -43,7 +43,7 @@ class NovaPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
     CRYGenerator* cryGenerator;
     G4int inputState;
-    PrimaryGeneratorMessenger* gunMessenger;
+    NovaPrimaryGeneratorMessenger* gunMessenger;
     G4bool fuseCRY;
 };
 

@@ -39,7 +39,7 @@ NovaPrimaryGeneratorAction::NovaPrimaryGeneratorAction(const char *inputFilename
   }
 
   cryParticles = new std::vector<CRYParticle*>;
-  gunMessenger = new PrimaryGeneratorMessenger(this);
+  gunMessenger = new NovaPrimaryGeneratorMessenger(this);
 }
 
 NovaPrimaryGeneratorAction::~NovaPrimaryGeneratorAction()
