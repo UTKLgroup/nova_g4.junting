@@ -328,6 +328,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
   NovaPmtSd* pmtSd = new NovaPmtSd("/NovaDet/pmtSd");
   sdManager->AddNewDetector(pmtSd);
+  pmtLogicalVolume->SetSensitiveDetector(pmtSd);
   pmtSd->initPmts(1);
   pmtSd->setPmtPosition(0, 0.0, 0.0, pmtZ);
 
