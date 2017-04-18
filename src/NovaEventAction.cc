@@ -2,7 +2,6 @@
 #include "LXeScintHit.hh"
 #include "NovaPmtHit.hh"
 #include "NovaUserEventInformation.hh"
-#include "LXeTrajectory.hh"
 #include "NovaRecorderBase.hh"
 
 #include "G4EventManager.hh"

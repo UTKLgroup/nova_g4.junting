@@ -1,7 +1,6 @@
 #include "NovaSteppingAction.hh"
 #include "NovaEventAction.hh"
 #include "NovaTrackingAction.hh"
-#include "LXeTrajectory.hh"
 #include "NovaPmtSd.hh"
 #include "NovaUserTrackInformation.hh"
 #include "NovaUserEventInformation.hh"

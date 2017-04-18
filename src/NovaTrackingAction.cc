@@ -1,4 +1,3 @@
-#include "LXeTrajectory.hh"
 #include "NovaTrackingAction.hh"
 #include "NovaUserTrackInformation.hh"
 #include "NovaRecorderBase.hh"
