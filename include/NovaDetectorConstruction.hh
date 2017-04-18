@@ -5,7 +5,7 @@
 #include "G4SystemOfUnits.hh"
 #include <G4UnionSolid.hh>
 #include "G4Material.hh"
-#include "LXeDetectorMessenger.hh"
+#include "NovaDetectorMessenger.hh"
 #include "G4VisAttributes.hh"
 #include "G4RotationMatrix.hh"
 #include "G4VUserDetectorConstruction.hh"
