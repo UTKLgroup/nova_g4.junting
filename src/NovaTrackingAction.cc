@@ -21,11 +21,11 @@ void NovaTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   NovaUserTrackInformation* trackInformation =(NovaUserTrackInformation*) aTrack->GetUserInformation();
 
   trajectory->SetStatus(trackInformation->getTrackStatus());
-  trajectory->SetTrkLength(aTrack->GetTrackLength());
+  trajectory->setTrackLength(aTrack->GetTrackLength());
   if(aTrack->GetParentID()>0)
     trajectory->SetProcessName(aTrack->GetCreatorProcess()->GetProcessName());
-  trajectory->SetNumRefl(trackInformation->getReflectionCount());
-  trajectory->SetNumTIRefl(trackInformation->getTotalInternalReflectionCount());
+  trajectory->setReflectionCount(trackInformation->getReflectionCount());
+  trajectory->setTotalInternalReflectionCount(trackInformation->getTotalInternalReflectionCount());
 
   if(fRecorder)
     fRecorder->RecordTrack(aTrack);
