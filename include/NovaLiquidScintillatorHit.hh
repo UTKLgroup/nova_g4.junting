@@ -10,16 +10,16 @@
 #include "G4RotationMatrix.hh"
 #include "G4VPhysicalVolume.hh"
 
-class LXeScintHit : public G4VHit
+class NovaLiquidScintillatorHit : public G4VHit
 {
   public:
  
-    LXeScintHit();
-    LXeScintHit(G4VPhysicalVolume* pVol);
-    virtual ~LXeScintHit();
-    LXeScintHit(const LXeScintHit &right);
-    const LXeScintHit& operator=(const LXeScintHit &right);
-    G4int operator==(const LXeScintHit &right) const;
+    NovaLiquidScintillatorHit();
+    NovaLiquidScintillatorHit(G4VPhysicalVolume* pVol);
+    virtual ~NovaLiquidScintillatorHit();
+    NovaLiquidScintillatorHit(const NovaLiquidScintillatorHit &right);
+    const NovaLiquidScintillatorHit& operator=(const NovaLiquidScintillatorHit &right);
+    G4int operator==(const NovaLiquidScintillatorHit &right) const;
 
     inline void *operator new(size_t);
     inline void operator delete(void *aHit);
@@ -43,20 +43,20 @@ class LXeScintHit : public G4VHit
 
 };
 
-typedef G4THitsCollection<LXeScintHit> NovaScintHitsCollection;
+typedef G4THitsCollection<NovaLiquidScintillatorHit> NovaScintHitsCollection;
 
-extern G4Allocator<LXeScintHit> NovaScintHitAllocator;
+extern G4Allocator<NovaLiquidScintillatorHit> NovaScintHitAllocator;
 
-inline void* LXeScintHit::operator new(size_t)
+inline void* NovaLiquidScintillatorHit::operator new(size_t)
 {
   void *aHit;
   aHit = (void *) NovaScintHitAllocator.MallocSingle();
   return aHit;
 }
 
-inline void LXeScintHit::operator delete(void *aHit)
+inline void NovaLiquidScintillatorHit::operator delete(void *aHit)
 {
-  NovaScintHitAllocator.FreeSingle((LXeScintHit*) aHit);
+  NovaScintHitAllocator.FreeSingle((NovaLiquidScintillatorHit*) aHit);
 }
 
 #endif

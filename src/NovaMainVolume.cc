@@ -5,9 +5,9 @@
 #include "G4LogicalSkinSurface.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "NovaPmtSd.hh"
-#include "LXeScintSD.hh"
+#include "NovaLiquidScintillatorSd.hh"
 
-LXeScintSD* NovaMainVolume::scintSd=NULL;
+NovaLiquidScintillatorSd* NovaMainVolume::scintSd=NULL;
 NovaPmtSd* NovaMainVolume::pmtSd=NULL;
 G4LogicalVolume* NovaMainVolume::housingLog = NULL;
 
@@ -97,7 +97,7 @@ NovaMainVolume::NovaMainVolume(G4RotationMatrix* pRot, const G4ThreeVector &tlat
     pmtSd->setPmtPosition(1, fiber2X, fiber2Y, pmtZ);
 
     if(!scintSd){
-      scintSd = new LXeScintSD("/LXeDet/scintSD");
+      scintSd = new NovaLiquidScintillatorSd("/LXeDet/scintSD");
       sdManager->AddNewDetector(scintSd);
     }
 

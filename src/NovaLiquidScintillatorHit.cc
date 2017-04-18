@@ -1,4 +1,4 @@
-#include "LXeScintHit.hh"
+#include "NovaLiquidScintillatorHit.hh"
 #include "G4ios.hh"
 #include "G4VVisManager.hh"
 #include "G4Colour.hh"
@@ -6,23 +6,23 @@
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
-G4Allocator<LXeScintHit> NovaScintHitAllocator;
+G4Allocator<NovaLiquidScintillatorHit> NovaScintHitAllocator;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeScintHit::LXeScintHit() : fEdep(0.), fPos(0.), fPhysVol(0) {}
+NovaLiquidScintillatorHit::NovaLiquidScintillatorHit() : fEdep(0.), fPos(0.), fPhysVol(0) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeScintHit::LXeScintHit(G4VPhysicalVolume* pVol) : fPhysVol(pVol) {}
+NovaLiquidScintillatorHit::NovaLiquidScintillatorHit(G4VPhysicalVolume* pVol) : fPhysVol(pVol) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeScintHit::~LXeScintHit() {}
+NovaLiquidScintillatorHit::~NovaLiquidScintillatorHit() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeScintHit::LXeScintHit(const LXeScintHit &right) : G4VHit()
+NovaLiquidScintillatorHit::NovaLiquidScintillatorHit(const NovaLiquidScintillatorHit &right) : G4VHit()
 {
   fEdep = right.fEdep;
   fPos = right.fPos;
@@ -31,7 +31,7 @@ LXeScintHit::LXeScintHit(const LXeScintHit &right) : G4VHit()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-const LXeScintHit& LXeScintHit::operator=(const LXeScintHit &right){
+const NovaLiquidScintillatorHit& NovaLiquidScintillatorHit::operator=(const NovaLiquidScintillatorHit &right){
   fEdep = right.fEdep;
   fPos = right.fPos;
   fPhysVol = right.fPhysVol;
@@ -40,15 +40,15 @@ const LXeScintHit& LXeScintHit::operator=(const LXeScintHit &right){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4int LXeScintHit::operator==(const LXeScintHit&) const{
+G4int NovaLiquidScintillatorHit::operator==(const NovaLiquidScintillatorHit&) const{
   return false;
   //returns false because there currently isnt need to check for equality yet
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintHit::Draw() {}
+void NovaLiquidScintillatorHit::Draw() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintHit::Print() {}
+void NovaLiquidScintillatorHit::Print() {}

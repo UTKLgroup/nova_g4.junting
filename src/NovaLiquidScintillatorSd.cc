@@ -1,5 +1,5 @@
-#include "LXeScintSD.hh"
-#include "LXeScintHit.hh"
+#include "NovaLiquidScintillatorSd.hh"
+#include "NovaLiquidScintillatorHit.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Track.hh"
@@ -12,7 +12,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeScintSD::LXeScintSD(G4String name)
+NovaLiquidScintillatorSd::NovaLiquidScintillatorSd(G4String name)
   : G4VSensitiveDetector(name)
 {
   fScintCollection = NULL;
@@ -21,11 +21,11 @@ LXeScintSD::LXeScintSD(G4String name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeScintSD::~LXeScintSD() {}
+NovaLiquidScintillatorSd::~NovaLiquidScintillatorSd() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintSD::Initialize(G4HCofThisEvent* hitsCE){
+void NovaLiquidScintillatorSd::Initialize(G4HCofThisEvent* hitsCE){
   fScintCollection = new NovaScintHitsCollection
                       (SensitiveDetectorName,collectionName[0]);
   //A way to keep all the hits of this event in one place if needed
@@ -38,7 +38,7 @@ void LXeScintSD::Initialize(G4HCofThisEvent* hitsCE){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool LXeScintSD::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
+G4bool NovaLiquidScintillatorSd::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
   G4double edep = aStep->GetTotalEnergyDeposit();
   if(edep==0.) return false; //No edep so dont count as hit
 
@@ -106,7 +106,7 @@ G4bool LXeScintSD::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
   */
   //*********************************************************************************
 
-  LXeScintHit* scintHit = new LXeScintHit(thePrePV);
+  NovaLiquidScintillatorHit* scintHit = new NovaLiquidScintillatorHit(thePrePV);
 
   scintHit->SetEdep(edep);
   scintHit->SetPos(pos);
@@ -118,16 +118,16 @@ G4bool LXeScintSD::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintSD::EndOfEvent(G4HCofThisEvent* ) {}
+void NovaLiquidScintillatorSd::EndOfEvent(G4HCofThisEvent* ) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintSD::clear() {} 
+void NovaLiquidScintillatorSd::clear() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintSD::DrawAll() {} 
+void NovaLiquidScintillatorSd::DrawAll() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeScintSD::PrintAll() {} 
+void NovaLiquidScintillatorSd::PrintAll() {}

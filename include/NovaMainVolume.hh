@@ -86,7 +86,7 @@ class NovaMainVolume : public G4PVPlacement
     G4MaterialPropertiesTable* paintMPT;
     G4OpticalSurface* op_paint;
 
-    static LXeScintSD* scintSd;
+    static NovaLiquidScintillatorSd* scintSd;
     static NovaPmtSd* pmtSd;
 };
 

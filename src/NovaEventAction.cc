@@ -1,5 +1,5 @@
 #include "NovaEventAction.hh"
-#include "LXeScintHit.hh"
+#include "NovaLiquidScintillatorHit.hh"
 #include "NovaPmtHit.hh"
 #include "NovaUserEventInformation.hh"
 #include "NovaRecorderBase.hh"

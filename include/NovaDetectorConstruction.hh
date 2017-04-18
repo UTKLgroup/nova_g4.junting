@@ -15,7 +15,7 @@ class G4VPhysicalVolume;
 class G4Box;
 class G4Tubs;
 class NovaPmtSd;
-class LXeScintSD;
+class NovaLiquidScintillatorSd;
 class G4Sphere;
 
 class NovaDetectorConstruction : public G4VUserDetectorConstruction
