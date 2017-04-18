@@ -9,7 +9,7 @@
 #include "NovaTrajectoryPoint.hh"
 #include "G4ParticleTable.hh"
 
-#include "LXeUserTrackInformation.hh"
+#include "NovaUserTrackInformation.hh"
 
 //#define G4ATTDEBUG
 #ifdef G4ATTDEBUG

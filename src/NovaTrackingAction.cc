@@ -1,6 +1,6 @@
 #include "LXeTrajectory.hh"
 #include "NovaTrackingAction.hh"
-#include "LXeUserTrackInformation.hh"
+#include "NovaUserTrackInformation.hh"
 #include "NovaRecorderBase.hh"
 #include "G4TrackingManager.hh"
 #include "NovaTrajectory.hh"
@@ -13,20 +13,20 @@ void NovaTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
   fpTrackingManager->SetStoreTrajectory(true);
   fpTrackingManager->SetTrajectory(new NovaTrajectory(aTrack));
-  fpTrackingManager->SetUserTrackInformation(new LXeUserTrackInformation);
+  fpTrackingManager->SetUserTrackInformation(new NovaUserTrackInformation);
 }
 
-void NovaTrackingAction::PostUserTrackingAction(const G4Track* aTrack){
-
+void NovaTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
+{
   NovaTrajectory* trajectory=(NovaTrajectory*)fpTrackingManager->GimmeTrajectory();
-  LXeUserTrackInformation* trackInformation =(LXeUserTrackInformation*) aTrack->GetUserInformation();
+  NovaUserTrackInformation* trackInformation =(NovaUserTrackInformation*) aTrack->GetUserInformation();
 
-  trajectory->SetStatus(trackInformation->GetTrackStatus());
+  trajectory->SetStatus(trackInformation->getTrackStatus());
   trajectory->SetTrkLength(aTrack->GetTrackLength());
   if(aTrack->GetParentID()>0)
     trajectory->SetProcessName(aTrack->GetCreatorProcess()->GetProcessName());
-  trajectory->SetNumRefl(trackInformation->GetReflectionCount());
-  trajectory->SetNumTIRefl(trackInformation->GetTotalInternalReflCount());
+  trajectory->SetNumRefl(trackInformation->getReflectionCount());
+  trajectory->SetNumTIRefl(trackInformation->getTotalInternalReflectionCount());
 
   if(fRecorder)
     fRecorder->RecordTrack(aTrack);

@@ -75,7 +75,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
       }
     }
 
-    if (eventInformation->getEnergyDeposition()==0.0) {
+    if (eventInformation->getEnergyDeposition() == 0.0) {
       if(verbose > 0)
         G4cout << "No hits in the scintillator this event." << G4endl;
     }

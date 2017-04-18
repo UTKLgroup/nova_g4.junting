@@ -40,25 +40,54 @@ void h1style(TH1* h1){
     h1->SetTitle("");
 }
 
+void scanRun(TString filename);
+void scanEvent(TString filename);
+
 void nova() {
     gStyle->SetOptFit(1111);
     gStyle->SetOptStat("emr");
+    TString filename = "../cmake-build-debug/nova.root";
+
+    scanRun(filename);
+    // scanEvent(filename);
+}
+
+void scanRun(TString filename)
+{
+    TFile* fileRun = new TFile(filename);
+    TTree* treeRun = (TTree*) fileRun->Get("runTree");
+    TBranch* branchRun = treeRun->GetBranch("runStat");
+    TLeaf* leafHitCount = branchRun->GetLeaf("hitCount");
+    TLeaf* leafAbsorptionCount = branchRun->GetLeaf("absorptionCount");
+
+    for (Int_t j = 0; j < branchRun->GetEntries(); j++) {
+        branchRun->GetEntry(j);
+        double hitCount = leafHitCount->GetValue();
+        double absorptionCount = leafAbsorptionCount->GetValue();
         
-    TFile* f1 = new TFile("nova.root");
-    TTree* t1 = (TTree*) f1->Get("eventTree");
-    TBranch* branch = t1->GetBranch("eventStat");
-    TLeaf* lHitTime = branch->GetLeaf("hitTime");
-    TLeaf* lHitZ = branch->GetLeaf("hitZ");
-    TLeaf* lHitWavelength = branch->GetLeaf("hitWavelength");
-
-    for(Int_t j = 0; j < branch->GetEntries(); j++) {
-        branch->GetEntry(j);
-        double fHitTime = lHitTime->GetValue();
-        double fHitZ = lHitZ->GetValue();
-        double fHitWavelength = lHitWavelength->GetValue();
-
-        cout << fHitTime << endl;
-        cout << fHitZ << endl;
-        cout << fHitWavelength << endl;
+        cout << hitCount << endl;
+        cout << absorptionCount << endl;
     }
 }
+
+void scanEvent(TString filename)
+{
+    TFile* fileEvent = new TFile(filename);
+    TTree* treeEvent = (TTree*) fileEvent->Get("eventTree");
+    TBranch* branchEvent = treeEvent->GetBranch("eventStat");
+    TLeaf* leafHitTime = branchEvent->GetLeaf("hitTime");
+    TLeaf* leafHitZ = branchEvent->GetLeaf("hitZ");
+    TLeaf* leafHitWavelength = branchEvent->GetLeaf("hitWavelength");
+
+    for (Int_t j = 0; j < branchEvent->GetEntries(); j++) {
+        branchEvent->GetEntry(j);
+        double hitTime = leafHitTime->GetValue();
+        double hitZ = leafHitZ->GetValue();
+        double hitWavelength = leafHitWavelength->GetValue();
+
+        cout << hitTime << endl;
+        cout << hitZ << endl;
+        cout << hitWavelength << endl;
+    }
+}
+
