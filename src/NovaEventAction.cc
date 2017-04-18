@@ -149,64 +149,6 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
       eventStat.hitPZ = lastTrajectoryPoint->GetMomentum().getZ() / eV;
       eventStat.hitWavelength = 1239.84 / (lastTrajectoryPoint->GetMomentum().getR() / eV);
 
-      NovaTrajectory* currentTrajectory = trajectory;
-      G4int parentTrackId;
-      NovaTrajectory* parentTrajectory;
-      while (currentTrajectory->GetParticleName() == "opticalphoton") {
-        G4double trkLength = currentTrajectory->GetTrkLength() / cm;
-        eventStat.trackLength += trkLength;
-
-        G4String processName = currentTrajectory->GetProcessName();
-        if(processName == "OpWLS")
-          eventStat.wlsCount++;
-        eventStat.reflectionCount += currentTrajectory->getReflectionCount();
-        eventStat.totalInternalReflectionCount += currentTrajectory->getTotalInternalReflectionCount();
-
-        for(G4int j = currentTrajectory->GetPointEntries() - 1; j >= 0; j--){
-          NovaTrajectoryPoint* trajectoryPoint = (NovaTrajectoryPoint*) currentTrajectory->GetPoint(j);
-          G4ThreeVector position = trajectoryPoint->GetPosition();
-          G4ThreeVector momentum = trajectoryPoint->GetMomentum();
-          G4String vol = trajectoryPoint->GetVolumeName();
-          G4double time = trajectoryPoint->GetTime() / ns;
-
-          if (j == 0) {
-            eventStat.beginTime = time;
-            eventStat.beginX = position.getX();
-            eventStat.beginY = position.getY();
-            eventStat.beginZ = position.getZ();
-            eventStat.beginE = momentum.getR() / eV;
-            eventStat.beginPX = momentum.getX() / eV;
-            eventStat.beginPY = momentum.getY() / eV;
-            eventStat.beginPZ = momentum.getZ() / eV;
-            eventStat.beginWavelength = 1239.84 / (momentum.getR() / eV);
-          }
-
-          if (j > 0) {
-            NovaTrajectoryPoint* previousTrajectoryPoint = (NovaTrajectoryPoint*)currentTrajectory->GetPoint(j-1);
-            G4String previousVolume = previousTrajectoryPoint->GetVolumeName();
-            if (vol == "wlsFiber" && previousVolume == "liquidScintillator") {
-              eventStat.enterTime = time;
-              eventStat.enterX = position.getX();
-              eventStat.enterY = position.getY();
-              eventStat.enterZ = position.getZ();
-              eventStat.enterE = momentum.getR();
-              eventStat.enterPX = momentum.getX();
-              eventStat.enterPY = momentum.getY();
-              eventStat.enterPZ = momentum.getZ();
-              eventStat.enterWavelength = 1239.84 / (momentum.getR() / eV);
-            }
-          }
-        }
-
-        parentTrackId = currentTrajectory->GetParentID();
-        for (G4int j = 0; j < nTrajectories; j++) {
-          parentTrajectory = (NovaTrajectory*) ((*(anEvent->GetTrajectoryContainer()))[j]);
-          if (parentTrajectory->GetTrackID() == parentTrackId) {
-            currentTrajectory = parentTrajectory;
-            break;
-          }
-        }
-      }
       runAction->UpdateEventStatistics(eventStat);
     }
   }

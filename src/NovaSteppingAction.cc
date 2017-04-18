@@ -1,6 +1,6 @@
 #include "NovaSteppingAction.hh"
 #include "NovaEventAction.hh"
-#include "LXeTrackingAction.hh"
+#include "NovaTrackingAction.hh"
 #include "LXeTrajectory.hh"
 #include "NovaPmtSd.hh"
 #include "LXeUserTrackInformation.hh"
@@ -168,7 +168,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step * theStep){
 	  //Triger sensitive detector manually since photon is
 	  //absorbed but status was Detection
 	  G4SDManager* SDman = G4SDManager::GetSDMpointer();
-	  G4String sdName="/LXeDet/pmtSD";
+	  G4String sdName="/NovaDet/pmtSD";
 	  NovaPmtSd* pmtSD = (NovaPmtSd*)SDman->FindSensitiveDetector(sdName);
 	  if(pmtSD)pmtSD->ProcessHits_constStep(theStep,NULL);
 	  

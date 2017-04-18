@@ -7,7 +7,7 @@
 #include "NovaEventAction.hh"
 #include "NovaStackingAction.hh"
 #include "NovaSteppingAction.hh"
-#include "LXeTrackingAction.hh"
+#include "NovaTrackingAction.hh"
 #include "NovaRunAction.hh"
 #include "LXeSteppingVerbose.hh"
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
   runManager->SetUserAction(new NovaStackingAction);
   runManager->SetUserAction(new NovaRunAction(recorder));
   runManager->SetUserAction(new NovaEventAction(recorder));
-  runManager->SetUserAction(new LXeTrackingAction(recorder));
+  runManager->SetUserAction(new NovaTrackingAction(recorder));
   runManager->SetUserAction(new NovaSteppingAction(recorder));
 
   G4UImanager* uiManager = G4UImanager::GetUIpointer();

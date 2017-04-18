@@ -10,7 +10,7 @@ void NovaRunAction::BeginOfRunAction(const G4Run* aRun){
   if(recorder)
     recorder->RecordBeginOfRun(aRun);
 
-  outputFilename=new TFile("nova.root", "update");
+  outputFilename = new TFile("nova.root", "recreate");
 
   runTree = new TTree("runTree", "Run Statistics");
   runTree->Branch("runStat",

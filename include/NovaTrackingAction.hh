@@ -6,11 +6,11 @@
 
 class NovaRecorderBase;
 
-class LXeTrackingAction : public G4UserTrackingAction {
+class NovaTrackingAction : public G4UserTrackingAction {
 
   public:
-    LXeTrackingAction(NovaRecorderBase*);
-    virtual ~LXeTrackingAction() {};
+    NovaTrackingAction(NovaRecorderBase*);
+    virtual ~NovaTrackingAction() {};
 
     virtual void PreUserTrackingAction(const G4Track*);
     virtual void PostUserTrackingAction(const G4Track*);

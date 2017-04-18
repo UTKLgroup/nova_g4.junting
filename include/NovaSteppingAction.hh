@@ -8,7 +8,7 @@
 
 class NovaRecorderBase;
 class NovaEventAction;
-class LXeTrackingAction;
+class NovaTrackingAction;
 class LXeSteppingMessenger;
 
 class NovaSteppingAction : public G4UserSteppingAction
