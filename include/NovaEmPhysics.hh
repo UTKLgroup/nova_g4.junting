@@ -17,37 +17,25 @@
 class NovaEmPhysics : public G4VPhysicsConstructor
 {
   public:
-
     NovaEmPhysics(const G4String& name ="EM");
     virtual ~NovaEmPhysics();
 
   public:
-
-    // This method will be invoked in the Construct() method.
-    // each particle type will be instantiated
     virtual void ConstructParticle();
- 
-    // This method will be invoked in the Construct() method.
-    // each physics process will be instantiated and
-    // registered to the process manager of each particle type
     virtual void ConstructProcess();
 
   protected:
-
-   // Gamma physics
     G4PhotoElectricEffect* fPhotoEffect;
     G4ComptonScattering* fComptonEffect;
     G4GammaConversion* fPairProduction;
  
-    // Electron physics
     G4eMultipleScattering* fElectronMultipleScattering;
     G4eIonisation* fElectronIonisation;
-    G4eBremsstrahlung* fElectronBremsStrahlung;
- 
-    //Positron physics
+    G4eBremsstrahlung* fElectronBremsstrahlung;
+
     G4eMultipleScattering* fPositronMultipleScattering;
     G4eIonisation* fPositronIonisation;
-    G4eBremsstrahlung* fPositronBremsStrahlung;
+    G4eBremsstrahlung* fPositronBremsstrahlung;
     G4eplusAnnihilation* fAnnihilation;
 };
 
