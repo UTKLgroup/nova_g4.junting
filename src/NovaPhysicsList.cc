@@ -1,8 +1,8 @@
-#include "LXePhysicsList.hh"
+#include "NovaPhysicsList.hh"
 
-#include "LXeGeneralPhysics.hh"
-#include "LXeEMPhysics.hh"
-#include "LXeMuonPhysics.hh"
+#include "NovaGeneralPhysics.hh"
+#include "NovaEmPhysics.hh"
+#include "NovaMuonPhysics.hh"
 
 #include "G4OpticalPhysics.hh"
 #include "G4OpticalProcessIndex.hh"
@@ -11,19 +11,19 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePhysicsList::LXePhysicsList() : G4VModularPhysicsList()
+NovaPhysicsList::NovaPhysicsList() : G4VModularPhysicsList()
 {
   // default cut value  (1.0mm)
   defaultCutValue = 1.0*mm;
 
   // General Physics
-  RegisterPhysics( new LXeGeneralPhysics("general") );
+  RegisterPhysics( new NovaGeneralPhysics("general") );
 
   // EM Physics
-  RegisterPhysics( new LXeEMPhysics("standard EM"));
+  RegisterPhysics( new NovaEmPhysics("standard EM"));
 
   // Muon Physics
-  RegisterPhysics( new LXeMuonPhysics("muon"));
+  RegisterPhysics( new NovaMuonPhysics("muon"));
 
   // Optical Physics
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
@@ -37,18 +37,17 @@ LXePhysicsList::LXePhysicsList() : G4VModularPhysicsList()
   opticalPhysics->SetMaxNumPhotonsPerStep(100);
   opticalPhysics->SetMaxBetaChangePerStep(10.0);
 
-  opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
-  opticalPhysics->SetTrackSecondariesFirst(kScintillation,true);
-
+  opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
+  opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXePhysicsList::~LXePhysicsList() {}
+NovaPhysicsList::~NovaPhysicsList() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXePhysicsList::SetCuts(){
+void NovaPhysicsList::SetCuts(){
   //  " G4VUserPhysicsList::SetCutsWithDefault" method sets
   //   the default cut value for all particle types
   SetCutsWithDefault();

@@ -1,5 +1,5 @@
-#ifndef LXeGeneralPhysics_h
-#define LXeGeneralPhysics_h 1
+#ifndef NovaGeneralPhysics_h
+#define NovaGeneralPhysics_h 1
 
 #include "globals.hh"
 #include "G4ios.hh"
@@ -8,12 +8,12 @@
 
 #include "G4Decay.hh"
 
-class LXeGeneralPhysics : public G4VPhysicsConstructor
+class NovaGeneralPhysics : public G4VPhysicsConstructor
 {
   public:
 
-    LXeGeneralPhysics(const G4String& name = "general");
-    virtual ~LXeGeneralPhysics();
+    NovaGeneralPhysics(const G4String& name = "general");
+    virtual ~NovaGeneralPhysics();
 
     // This method will be invoked in the Construct() method.
     // each particle type will be instantiated

@@ -2,7 +2,7 @@
 #include "G4UImanager.hh"
 
 #include "NovaDetectorConstruction.hh"
-#include "LXePhysicsList.hh"
+#include "NovaPhysicsList.hh"
 #include "NovaPrimaryGeneratorAction.hh"
 #include "NovaEventAction.hh"
 #include "NovaStackingAction.hh"
@@ -23,7 +23,7 @@ int main(int argc, char** argv)
   NovaRecorderBase* recorder = NULL;
   G4RunManager* runManager = new G4RunManager;
   runManager->SetUserInitialization(new NovaDetectorConstruction);
-  runManager->SetUserInitialization(new LXePhysicsList);
+  runManager->SetUserInitialization(new NovaPhysicsList);
   runManager->SetUserAction(new NovaPrimaryGeneratorAction(""));
   runManager->SetUserAction(new NovaStackingAction);
   runManager->SetUserAction(new NovaRunAction(recorder));

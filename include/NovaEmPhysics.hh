@@ -1,5 +1,5 @@
-#ifndef LXeEMPhysics_h
-#define LXeEMPhysics_h 1
+#ifndef NovaEmPhysics_h
+#define NovaEmPhysics_h 1
 
 #include "globals.hh"
 #include "G4ios.hh"
@@ -14,12 +14,12 @@
 #include "G4eBremsstrahlung.hh"
 #include "G4eplusAnnihilation.hh"
 
-class LXeEMPhysics : public G4VPhysicsConstructor
+class NovaEmPhysics : public G4VPhysicsConstructor
 {
   public:
 
-    LXeEMPhysics(const G4String& name ="EM");
-    virtual ~LXeEMPhysics();
+    NovaEmPhysics(const G4String& name ="EM");
+    virtual ~NovaEmPhysics();
 
   public:
 

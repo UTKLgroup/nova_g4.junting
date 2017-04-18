@@ -1,5 +1,5 @@
-#ifndef LXeMuonPhysics_h
-#define LXeMuonPhysics_h 1
+#ifndef NovaMuonPhysics_h
+#define NovaMuonPhysics_h 1
 
 #include "globals.hh"
 #include "G4ios.hh"
@@ -13,12 +13,12 @@
 
 #include "G4MuonMinusCapture.hh"
 
-class LXeMuonPhysics : public G4VPhysicsConstructor
+class NovaMuonPhysics : public G4VPhysicsConstructor
 {
   public:
 
-    LXeMuonPhysics(const G4String& name="muon");
-    virtual ~LXeMuonPhysics();
+    NovaMuonPhysics(const G4String& name="muon");
+    virtual ~NovaMuonPhysics();
 
     // This method will be invoked in the Construct() method.
     // each particle type will be instantiated

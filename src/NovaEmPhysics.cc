@@ -1,4 +1,4 @@
-#include "LXeEMPhysics.hh"
+#include "NovaEmPhysics.hh"
 
 #include "globals.hh"
 #include "G4ios.hh"
@@ -6,7 +6,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEMPhysics::LXeEMPhysics(const G4String& name)
+NovaEmPhysics::NovaEmPhysics(const G4String& name)
                :  G4VPhysicsConstructor(name)
 {
   fPhotoEffect = NULL;
@@ -23,7 +23,7 @@ LXeEMPhysics::LXeEMPhysics(const G4String& name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEMPhysics::~LXeEMPhysics() {}
+NovaEmPhysics::~NovaEmPhysics() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -38,7 +38,7 @@ LXeEMPhysics::~LXeEMPhysics() {}
 #include "G4NeutrinoE.hh"
 #include "G4AntiNeutrinoE.hh"
 
-void LXeEMPhysics::ConstructParticle()
+void NovaEmPhysics::ConstructParticle()
 {
   // gamma
   G4Gamma::GammaDefinition();
@@ -54,7 +54,7 @@ void LXeEMPhysics::ConstructParticle()
 
 #include "G4ProcessManager.hh"
 
-void LXeEMPhysics::ConstructProcess()
+void NovaEmPhysics::ConstructProcess()
 {
   fPhotoEffect = new G4PhotoElectricEffect();
   fComptonEffect = new G4ComptonScattering();

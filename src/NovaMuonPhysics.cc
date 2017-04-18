@@ -1,4 +1,4 @@
-#include "LXeMuonPhysics.hh"
+#include "NovaMuonPhysics.hh"
 
 #include "globals.hh"
 #include "G4ios.hh"
@@ -8,7 +8,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeMuonPhysics::LXeMuonPhysics(const G4String& name)
+NovaMuonPhysics::NovaMuonPhysics(const G4String& name)
                    :  G4VPhysicsConstructor(name) {
   fMuPlusIonisation = NULL;
   fMuPlusMultipleScattering = NULL;
@@ -25,7 +25,7 @@ LXeMuonPhysics::LXeMuonPhysics(const G4String& name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeMuonPhysics::~LXeMuonPhysics() {}
+NovaMuonPhysics::~NovaMuonPhysics() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -40,7 +40,7 @@ LXeMuonPhysics::~LXeMuonPhysics() {}
 //without the following header, muon runs report errors
 #include "G4ParticleTypes.hh"
 
-void LXeMuonPhysics::ConstructParticle()
+void NovaMuonPhysics::ConstructParticle()
 {
   //without the following particle definition, muon runs reports errors
   G4Deuteron::DeuteronDefinition();
@@ -69,7 +69,7 @@ void LXeMuonPhysics::ConstructParticle()
 
 #include "G4ProcessManager.hh"
 
-void LXeMuonPhysics::ConstructProcess()
+void NovaMuonPhysics::ConstructProcess()
 {
   fMuPlusIonisation = new G4MuIonisation();
   fMuPlusMultipleScattering = new G4MuMultipleScattering();

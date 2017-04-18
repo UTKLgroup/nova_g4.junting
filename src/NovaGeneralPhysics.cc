@@ -1,13 +1,13 @@
-#include "LXeGeneralPhysics.hh"
+#include "NovaGeneralPhysics.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeGeneralPhysics::LXeGeneralPhysics(const G4String& name)
+NovaGeneralPhysics::NovaGeneralPhysics(const G4String& name)
                      :  G4VPhysicsConstructor(name) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeGeneralPhysics::~LXeGeneralPhysics() {
+NovaGeneralPhysics::~NovaGeneralPhysics() {
   fDecayProcess = NULL;
 }
 
@@ -18,7 +18,7 @@ LXeGeneralPhysics::~LXeGeneralPhysics() {
 #include "G4ChargedGeantino.hh"
 #include "G4Geantino.hh"
 
-void LXeGeneralPhysics::ConstructParticle()
+void NovaGeneralPhysics::ConstructParticle()
 {
   // pseudo-particles
   G4Geantino::GeantinoDefinition();
@@ -27,7 +27,7 @@ void LXeGeneralPhysics::ConstructParticle()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeGeneralPhysics::ConstructProcess()
+void NovaGeneralPhysics::ConstructProcess()
 {
   fDecayProcess = new G4Decay();
 
