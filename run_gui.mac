@@ -1,5 +1,5 @@
 /gps/particle opticalphoton
-/gps/number 10
+/gps/number 1
 /gps/pos/type Plane
 /gps/pos/shape Circle
 /gps/pos/radius 0.35 mm
@@ -7,5 +7,5 @@
 /gps/direction 0.0 0.0 -1.0
 /gps/ang/type beam1d
 /gps/ang/sigma_r 5 deg
-/gps/ene/mono 1 eV
+/gps/ene/mono 2.5 eV
 /run/beamOn 1

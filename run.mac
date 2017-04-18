@@ -1,7 +1,5 @@
 /control/verbose 2
 /control/saveHistory
-/run/verbose 2
-/run/initialize
 
 /gps/particle opticalphoton
 /gps/number 1
@@ -12,5 +10,8 @@
 /gps/direction 0.0 0.0 -1.0
 /gps/ang/type beam1d
 /gps/ang/sigma_r 5 deg
-/gps/ene/mono 1 eV
-/run/beamOn 10
+/gps/ene/mono 2.5 eV
+
+/run/verbose 2
+/run/initialize
+/run/beamOn 1

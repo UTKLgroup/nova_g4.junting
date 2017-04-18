@@ -12,17 +12,17 @@ NovaPhysicsList::NovaPhysicsList() : G4VModularPhysicsList()
   defaultCutValue = 1.0*mm;
 
   // General Physics
-  RegisterPhysics( new NovaGeneralPhysics("general") );
+  RegisterPhysics(new NovaGeneralPhysics("general"));
 
   // EM Physics
-  RegisterPhysics( new NovaEmPhysics("standard EM"));
+  RegisterPhysics(new NovaEmPhysics("standard EM"));
 
   // Muon Physics
-  RegisterPhysics( new NovaMuonPhysics("muon"));
+  RegisterPhysics(new NovaMuonPhysics("muon"));
 
   // Optical Physics
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
-  RegisterPhysics( opticalPhysics );
+  RegisterPhysics(opticalPhysics);
 
   opticalPhysics->SetWLSTimeProfile("delta");
 
