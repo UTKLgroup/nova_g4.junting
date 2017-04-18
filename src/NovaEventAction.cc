@@ -31,7 +31,7 @@ void NovaEventAction::BeginOfEventAction(const G4Event* anEvent)
 
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
   if (scintCollectionId < 0)
-    scintCollectionId = sdManager->GetCollectionID("scintCollection");
+    scintCollectionId = sdManager->GetCollectionID("liquidScintillatorCollection");
   if (pmtCollectionId < 0)
     pmtCollectionId = sdManager->GetCollectionID("pmtHitCollection");
   if (recorder)

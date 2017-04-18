@@ -10,10 +10,10 @@
 #include "G4RotationMatrix.hh"
 #include "G4VPhysicalVolume.hh"
 
+
 class NovaLiquidScintillatorHit : public G4VHit
 {
   public:
- 
     NovaLiquidScintillatorHit();
     NovaLiquidScintillatorHit(G4VPhysicalVolume* pVol);
     virtual ~NovaLiquidScintillatorHit();
@@ -40,7 +40,6 @@ class NovaLiquidScintillatorHit : public G4VHit
     G4double fEdep;
     G4ThreeVector fPos;
     const G4VPhysicalVolume* fPhysVol;
-
 };
 
 typedef G4THitsCollection<NovaLiquidScintillatorHit> NovaScintHitsCollection;

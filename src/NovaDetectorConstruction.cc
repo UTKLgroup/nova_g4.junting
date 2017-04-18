@@ -2,7 +2,7 @@
 #include "NovaDetectorConstruction.hh"
 #include "NovaPmtSd.hh"
 #include "NovaMainVolume.hh"
-
+#include "NovaLiquidScintillatorSd.hh"
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
 #include "G4LogicalBorderSurface.hh"
@@ -368,6 +368,11 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructLiquidScintillatorCell()
                                                                          G4Material::GetMaterial("liquidScintillator"),
                                                                          "liquidScintillatorLogicalVolume",
                                                                          0, 0, 0);
+  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
+  NovaLiquidScintillatorSd* liquidScintillatorSd = new NovaLiquidScintillatorSd("/NovaDet/liquidScintillatorSd");
+  sdManager->AddNewDetector(liquidScintillatorSd);
+  liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
+
   new G4PVPlacement(0,
                     G4ThreeVector(),
                     liquidScintillatorLogicalVolume,
