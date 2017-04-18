@@ -4,18 +4,15 @@
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 
+
 class NovaPhysicsList: public G4VModularPhysicsList
 {
   public:
-
     NovaPhysicsList();
     virtual ~NovaPhysicsList();
 
   public:
-
-    // SetCuts()
     virtual void SetCuts();
-
 };
 
 #endif
