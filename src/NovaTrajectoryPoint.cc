@@ -9,10 +9,10 @@
 #include "G4AttCheck.hh"
 #endif
 
-G4Allocator<NovaTrajectoryPoint> aTrajPointAllocator;
+G4Allocator<NovaTrajectoryPoint> trajectoryPointAllocator;
 
 NovaTrajectoryPoint::NovaTrajectoryPoint()
-    : fTime(0.), fMomentum(0.,0.,0.),
+    : fTime(0.0), fMomentum(0.0, 0.0, 0.0),
       fStepStatus(fUndefined), fVolumeName("") {}
 
 NovaTrajectoryPoint::NovaTrajectoryPoint(const G4Step* aStep)

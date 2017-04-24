@@ -40,17 +40,17 @@ class NovaTrajectoryPoint : public G4TrajectoryPoint
     G4String fVolumeName;
 };
 
-extern G4DLLEXPORT G4Allocator<NovaTrajectoryPoint> aTrajPointAllocator;
+extern G4DLLEXPORT G4Allocator<NovaTrajectoryPoint> trajectoryPointAllocator;
 
 inline void* NovaTrajectoryPoint::operator new(size_t)
 {
-  void *aTrajectoryPoint = (void*) aTrajPointAllocator.MallocSingle();
+  void *aTrajectoryPoint = (void*) trajectoryPointAllocator.MallocSingle();
   return aTrajectoryPoint;
 }
 
 inline void NovaTrajectoryPoint::operator delete(void *aTrajectoryPoint)
 {
-  aTrajPointAllocator.FreeSingle((NovaTrajectoryPoint*) aTrajectoryPoint);
+  trajectoryPointAllocator.FreeSingle((NovaTrajectoryPoint*) aTrajectoryPoint);
 }
 
 #endif
