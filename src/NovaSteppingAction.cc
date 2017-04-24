@@ -57,7 +57,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
 
     G4OpBoundaryProcessStatus boundaryStatus = boundary->GetStatus();
     if (postStepPoint->GetStepStatus() == fGeomBoundary) {
-      fExpectedNextStatus=Undefined;
+      fExpectedNextStatus = Undefined;
       switch (boundaryStatus) {
         case Absorption:
           trackInformation->addTrackStatusFlag(boundaryAbsorbed);

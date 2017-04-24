@@ -2,12 +2,11 @@
 #define NovaTrajectoryPoint_h 1
 
 #include "globals.hh"
-
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 #include "G4TrajectoryPoint.hh"
-
 #include "G4StepStatus.hh"
+
 
 class G4Track;
 class G4Step;
@@ -35,10 +34,10 @@ class NovaTrajectoryPoint : public G4TrajectoryPoint
     virtual std::vector<G4AttValue>* CreateAttValues() const;
 
   private:
-    G4double      fTime;
+    G4double fTime;
     G4ThreeVector fMomentum;
-    G4StepStatus  fStepStatus;
-    G4String      fVolumeName;
+    G4StepStatus fStepStatus;
+    G4String fVolumeName;
 };
 
 extern G4DLLEXPORT G4Allocator<NovaTrajectoryPoint> aTrajPointAllocator;
@@ -51,8 +50,7 @@ inline void* NovaTrajectoryPoint::operator new(size_t)
 
 inline void NovaTrajectoryPoint::operator delete(void *aTrajectoryPoint)
 {
-  aTrajPointAllocator.FreeSingle(
-      (NovaTrajectoryPoint *) aTrajectoryPoint);
+  aTrajPointAllocator.FreeSingle((NovaTrajectoryPoint*) aTrajectoryPoint);
 }
 
 #endif
