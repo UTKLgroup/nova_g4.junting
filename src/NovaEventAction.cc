@@ -1,4 +1,5 @@
 #include <NovaUserTrackInformation.hh>
+#include <G4OpticalPhoton.hh>
 #include "NovaEventAction.hh"
 #include "NovaLiquidScintillatorHit.hh"
 #include "NovaPmtHit.hh"
@@ -102,6 +103,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
   runStat.pmtAboveThresholdCount = eventInformation->getPmtAboveThresholdCount();
   runStat.absorptionCount = eventInformation->getAbsorptionCount();
   runStat.boundaryAbsorptionCount = eventInformation->getBoundaryAbsorptionCount();
+  runStat.photocathodeAbsorptionCount = eventInformation->getPhotocathodeAbsorptionCount();
   runStat.outOfWorldCount = eventInformation->getOutOfWorldCount();
   runStat.unacountedCount = eventInformation->getCherenkovPhotonCount()
                             + eventInformation->getScintillationPhotonCount()
@@ -149,11 +151,11 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
       incrementWlsCount(trajectory);
 
       NovaTrajectory* parentTrajectory = trajectory->getParentTrajectory(trajectoryContainer);
-      while (parentTrajectory != 0) {
+      while (parentTrajectory != 0 && parentTrajectory->GetParticleDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
         eventStat.trackLength += parentTrajectory->getTrackLength();
         eventStat.reflectionCount += parentTrajectory->getReflectionCount();
         eventStat.totalInternalReflectionCount += parentTrajectory->getTotalInternalReflectionCount();
-        incrementWlsCount(trajectory);
+        incrementWlsCount(parentTrajectory);
         parentTrajectory = parentTrajectory->getParentTrajectory(trajectoryContainer);
       }
 

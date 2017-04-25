@@ -56,6 +56,9 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
         case Absorption :
           trackInformation->setTrackStatusFlag(boundaryAbsorbed);
           eventInformation->incrementBoundaryAbsorption();
+          if (postStepPoint->GetPhysicalVolume()->GetName() == "photocathode") {
+            eventInformation->incrementPhotocathodeAbsorptionCount();
+          }
           break;
         case Detection : {
           G4SDManager *sdManager = G4SDManager::GetSDMpointer();
