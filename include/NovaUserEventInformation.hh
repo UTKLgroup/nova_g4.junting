@@ -35,6 +35,8 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4int getPhotonCount(){return photonCountScintillation + photonCountCherenkov;}
     void incrementPmtCountAboveThreshold(){pmtCountAboveThreshold++;}
     G4int getPmtAboveThresholdCount(){return pmtCountAboveThreshold;}
+    void incrementOutOfWorldCount(){outOfWorldCount++;}
+    G4int getOutOfWorldCount()const {return outOfWorldCount;}
 
   private:
     G4int hitCount;
@@ -42,6 +44,7 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4int photonCountCherenkov;
     G4int absorptionCount;
     G4int boundaryAbsorptionCount;
+    G4int outOfWorldCount;
 
     G4double totalEnergyDeposition;
     G4ThreeVector energyWeightedPosition;

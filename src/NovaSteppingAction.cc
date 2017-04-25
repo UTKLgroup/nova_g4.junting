@@ -24,26 +24,21 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
       = (NovaUserEventInformation*)G4EventManager::GetEventManager()->GetConstCurrentEvent()->GetUserInformation();
 
   G4StepPoint* preStepPoint = theStep->GetPreStepPoint();
-  G4VPhysicalVolume* prePhysicalVolume = preStepPoint->GetPhysicalVolume();
   G4StepPoint* postStepPoint = theStep->GetPostStepPoint();
-  G4VPhysicalVolume* postPhysicalVolume = postStepPoint->GetPhysicalVolume();
+  G4VPhysicalVolume* prePhysicalVolume = preStepPoint->GetPhysicalVolume();
 
-  static G4OpBoundaryProcess* boundary = NULL;
-
+  static G4OpBoundaryProcess* boundary = 0;
   if (!boundary) {
     G4ProcessManager* processManager = theStep->GetTrack()->GetDefinition()->GetProcessManager();
-    G4int processCount = processManager->GetProcessListLength();
     G4ProcessVector* processes = processManager->GetProcessList();
-    for (G4int i = 0; i < processCount; i++) {
+    for (G4int i = 0; i < processManager->GetProcessListLength(); i++) {
       if ((*processes)[i]->GetProcessName() == "OpBoundary") {
         boundary = (G4OpBoundaryProcess*)(*processes)[i];
         break;
       }
     }
   }
-
-  if (!postPhysicalVolume)
-    return;
+  G4OpBoundaryProcessStatus boundaryStatus = boundary->GetStatus();
 
   G4ParticleDefinition* particleType = theTrack->GetDefinition();
   if (particleType == G4OpticalPhoton::OpticalPhotonDefinition()) {
@@ -52,7 +47,10 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
       eventInformation->incrementAbsorption();
     }
 
-    G4OpBoundaryProcessStatus boundaryStatus = boundary->GetStatus();
+    if (postStepPoint->GetStepStatus() == fWorldBoundary) {
+      eventInformation->incrementOutOfWorldCount();
+    }
+
     if (postStepPoint->GetStepStatus() == fGeomBoundary) {
       switch (boundaryStatus) {
         case Absorption :

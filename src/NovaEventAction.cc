@@ -103,10 +103,13 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
   runStat.pmtAboveThresholdCount = eventInformation->getPmtAboveThresholdCount();
   runStat.absorptionCount = eventInformation->getAbsorptionCount();
   runStat.boundaryAbsorptionCount = eventInformation->getBoundaryAbsorptionCount();
+  runStat.outOfWorldCount = eventInformation->getOutOfWorldCount();
   runStat.unacountedCount = eventInformation->getCherenkovPhotonCount()
+                            + eventInformation->getScintillationPhotonCount()
                             - eventInformation->getAbsorptionCount()
                             - eventInformation->getHitCount()
-                            - eventInformation->getBoundaryAbsorptionCount();
+                            - eventInformation->getBoundaryAbsorptionCount()
+                            - eventInformation->getOutOfWorldCount();
   runStat.energyDeposition  = eventInformation->getEnergyDeposition() / MeV;
   runStat.energyDepositionX = eventInformation->getEnergyWeightedPosition().getX();
   runStat.energyDepositionY = eventInformation->getEnergyWeightedPosition().getY();

@@ -60,6 +60,7 @@ struct RunStat
   G4int pmtAboveThresholdCount;
   G4int absorptionCount;
   G4int boundaryAbsorptionCount;
+  G4int outOfWorldCount;
   G4int unacountedCount;
 
   G4int primaryPdg;
