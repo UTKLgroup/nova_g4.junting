@@ -1,15 +1,14 @@
 #ifndef NovaEventAction_h
 #define NovaEventAction_h 1
 
-#include "NovaEventMessenger.hh"
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 #include "G4ThreeVector.hh"
 #include "NovaTrajectory.hh"
 
+
 class G4Event;
 class NovaRecorderBase;
-
 
 struct EventStat
 {
@@ -91,18 +90,12 @@ class NovaEventAction : public G4UserEventAction
     virtual void EndOfEventAction(const G4Event*);
 
     void SetSaveThreshold(G4int );
-
     void SetEventVerbose(G4int v){verbose=v;}
-
     void SetPMTThreshold(G4int t){pmtThreshold=t;}
-
-    void SetForceDrawPhotons(G4bool b){forceDrawPhotons=b;}
-    void SetForceDrawNoPhotons(G4bool b){forceDrawNoPhotons=b;}
     void incrementWlsCount(NovaTrajectory* trajectory);
 
   private:
     NovaRecorderBase* recorder;
-    NovaEventMessenger* eventMessenger;
     G4int saveThreshold;
     G4int scintCollectionId;
     G4int pmtCollectionId;
@@ -111,9 +104,6 @@ class NovaEventAction : public G4UserEventAction
 
     RunStat runStat; 
     EventStat eventStat;
-
-    G4bool forceDrawPhotons;
-    G4bool forceDrawNoPhotons;
 };
 
 #endif

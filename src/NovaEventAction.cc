@@ -15,11 +15,8 @@
 
 
 NovaEventAction::NovaEventAction(NovaRecorderBase* r)
-    : recorder(r),saveThreshold(0),scintCollectionId(-1),pmtCollectionId(-1),verbose(0), pmtThreshold(1),
-      forceDrawPhotons(false),forceDrawNoPhotons(false)
-{
-  eventMessenger = new NovaEventMessenger(this);
-}
+    : recorder(r),saveThreshold(0),scintCollectionId(-1),
+      pmtCollectionId(-1),verbose(0),pmtThreshold(1) {}
 
 NovaEventAction::~NovaEventAction(){}
 
