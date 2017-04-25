@@ -11,10 +11,7 @@
 #include "G4EventManager.hh"
 
 NovaSteppingAction::NovaSteppingAction(NovaRecorderBase* r)
-    : fRecorder(r),fOneStepPrimaries(false)
-{
-  fExpectedNextStatus = Undefined;
-}
+    : fRecorder(r),fOneStepPrimaries(false) {}
 
 NovaSteppingAction::~NovaSteppingAction() {}
 
@@ -57,7 +54,6 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
 
     G4OpBoundaryProcessStatus boundaryStatus = boundary->GetStatus();
     if (postStepPoint->GetStepStatus() == fGeomBoundary) {
-      fExpectedNextStatus = Undefined;
       switch (boundaryStatus) {
         case Absorption :
           trackInformation->setTrackStatusFlag(boundaryAbsorbed);
@@ -71,19 +67,14 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
           trackInformation->setTrackStatusFlag(hitPmt);
           break;
         }
-        case FresnelReflection :
         case TotalInternalReflection :
           if(prePhysicalVolume->GetName() == "fiberCore")
             trackInformation->incrementTotalInternalReflectionCount();
           break;
-        case LambertianReflection :
-        case LobeReflection :
-        case SpikeReflection :
         case BackScattering :
           trackInformation->incrementReflectionCount();
-          fExpectedNextStatus = StepTooSmall;
           break;
-        default:
+        default :
           break;
       }
     }

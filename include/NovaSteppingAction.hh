@@ -23,7 +23,6 @@ class NovaSteppingAction : public G4UserSteppingAction
   private:
     NovaRecorderBase* fRecorder;
     G4bool fOneStepPrimaries;
-    G4OpBoundaryProcessStatus fExpectedNextStatus;
 };
 
 #endif
