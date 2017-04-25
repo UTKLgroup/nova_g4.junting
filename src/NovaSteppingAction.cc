@@ -59,11 +59,11 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
     if (postStepPoint->GetStepStatus() == fGeomBoundary) {
       fExpectedNextStatus = Undefined;
       switch (boundaryStatus) {
-        case Absorption:
+        case Absorption :
           trackInformation->addTrackStatusFlag(boundaryAbsorbed);
           eventInformation->incrementBoundaryAbsorption();
           break;
-        case Detection: {
+        case Detection : {
           G4SDManager *sdManager = G4SDManager::GetSDMpointer();
           NovaPmtSd *pmtSd = (NovaPmtSd *) sdManager->FindSensitiveDetector("/NovaDet/pmtSd");
           if (pmtSd)
@@ -71,15 +71,15 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
           trackInformation->addTrackStatusFlag(hitPmt);
           break;
         }
-        case FresnelReflection:
-        case TotalInternalReflection:
+        case FresnelReflection :
+        case TotalInternalReflection :
           if(prePhysicalVolume->GetName() == "fiberCore")
             trackInformation->incrementTotalInternalReflectionCount();
           break;
-        case LambertianReflection:
-        case LobeReflection:
-        case SpikeReflection:
-        case BackScattering:
+        case LambertianReflection :
+        case LobeReflection :
+        case SpikeReflection :
+        case BackScattering :
           trackInformation->incrementReflectionCount();
           fExpectedNextStatus = StepTooSmall;
           break;

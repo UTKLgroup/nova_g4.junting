@@ -1,3 +1,4 @@
+#include <G4TrajectoryContainer.hh>
 #include "G4AttDef.hh"
 #include "G4AttValue.hh"
 #include "G4AttDefStore.hh"
@@ -6,10 +7,10 @@
 #include "NovaTrajectory.hh"
 #include "NovaTrajectoryPoint.hh"
 #include "G4ParticleTable.hh"
-
 #ifdef G4ATTDEBUG
 #include "G4AttCheck.hh"
 #endif
+
 
 G4Allocator<NovaTrajectory> myTrajectoryAllocator;
 
@@ -146,4 +147,15 @@ std::vector<G4AttValue>* NovaTrajectory::CreateAttValues() const
   G4cout << G4AttCheck(values,GetAttDefs());
 #endif
   return values;
+}
+
+NovaTrajectory* NovaTrajectory::getParentTrajectory(G4TrajectoryContainer* trajectoryContainer)
+{
+  for (G4int i = 0; i < trajectoryContainer->size(); i++) {
+    NovaTrajectory* trajectory = (NovaTrajectory*) (*trajectoryContainer)[i];
+    if (trajectory->GetTrackID() == this->GetParentID()) {
+      return trajectory;
+    }
+  }
+  return 0;
 }

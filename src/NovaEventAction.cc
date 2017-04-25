@@ -3,15 +3,12 @@
 #include "NovaPmtHit.hh"
 #include "NovaUserEventInformation.hh"
 #include "NovaRecorderBase.hh"
-
 #include "G4EventManager.hh"
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
 #include "G4VVisManager.hh"
 #include "G4SystemOfUnits.hh"
-
 #include "NovaRunAction.hh"
-
 #include "NovaTrajectory.hh"
 #include "NovaTrajectoryPoint.hh"
 
@@ -113,11 +110,10 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
   runStat.energyDepositionX = eventInformation->getEnergyWeightedPosition().getX();
   runStat.energyDepositionY = eventInformation->getEnergyWeightedPosition().getY();
   runStat.energyDepositionZ = eventInformation->getEnergyWeightedPosition().getZ();
-
   eventStat.eventId = anEvent->GetEventID();
-  NovaTrajectory* trajectory;
+
   for (G4int i = 0; i < nTrajectories; i++) {
-    trajectory = (NovaTrajectory*) ((*(anEvent->GetTrajectoryContainer()))[i]);
+    NovaTrajectory* trajectory = (NovaTrajectory*) (*trajectoryContainer)[i];
 
     if (trajectory->GetParentID() == 0) {
       NovaTrajectoryPoint* trajectoryPoint = (NovaTrajectoryPoint*) trajectory->GetPoint(0);
@@ -132,11 +128,6 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
     }
 
     if(trajectory->GetStatus() == 2){
-      eventStat.trackLength = 0.;
-      eventStat.wlsCount = 0;
-      eventStat.reflectionCount = 0;
-      eventStat.totalInternalReflectionCount = 0;
-
       NovaTrajectoryPoint* lastTrajectoryPoint = (NovaTrajectoryPoint*)trajectory->GetPoint(trajectory->GetPointEntries() - 1);
       eventStat.hitTime = lastTrajectoryPoint->GetTime();
       eventStat.hitX = lastTrajectoryPoint->GetPosition().getX();
@@ -147,6 +138,19 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
       eventStat.hitPY = lastTrajectoryPoint->GetMomentum().getY() / eV;
       eventStat.hitPZ = lastTrajectoryPoint->GetMomentum().getZ() / eV;
       eventStat.hitWavelength = 1239.84 / (lastTrajectoryPoint->GetMomentum().getR() / eV);
+
+      eventStat.wlsCount = 0;
+      eventStat.trackLength = trajectory->getTrackLength();
+      eventStat.reflectionCount = trajectory->getReflectionCount();
+      eventStat.totalInternalReflectionCount = trajectory->getTotalInternalReflectionCount();
+
+      NovaTrajectory* parentTrajectory = trajectory->getParentTrajectory(trajectoryContainer);
+      while (parentTrajectory != 0) {
+        eventStat.trackLength += parentTrajectory->getTrackLength();
+        eventStat.reflectionCount += parentTrajectory->getReflectionCount();
+        eventStat.totalInternalReflectionCount += parentTrajectory->getTotalInternalReflectionCount();
+        parentTrajectory = parentTrajectory->getParentTrajectory(trajectoryContainer);
+      }
 
       runAction->UpdateEventStatistics(eventStat);
     }

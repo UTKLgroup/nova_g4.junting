@@ -62,6 +62,8 @@ class NovaTrajectory : public G4VTrajectory
     virtual const std::map<G4String,G4AttDef>* GetAttDefs() const;
     virtual std::vector<G4AttValue>* CreateAttValues() const;
 
+    NovaTrajectory* getParentTrajectory(G4TrajectoryContainer* trajectoryContainer);
+
   private:
     TrajectoryPointContainer* trajectoryPointContainer;
     G4int trackId;
