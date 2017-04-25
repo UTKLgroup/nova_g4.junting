@@ -10,7 +10,6 @@
 #include "G4VVisManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "NovaRunAction.hh"
-#include "NovaTrajectory.hh"
 #include "NovaTrajectoryPoint.hh"
 
 
@@ -147,12 +146,14 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
       eventStat.trackLength = trajectory->getTrackLength();
       eventStat.reflectionCount = trajectory->getReflectionCount();
       eventStat.totalInternalReflectionCount = trajectory->getTotalInternalReflectionCount();
+      incrementWlsCount(trajectory);
 
       NovaTrajectory* parentTrajectory = trajectory->getParentTrajectory(trajectoryContainer);
       while (parentTrajectory != 0) {
         eventStat.trackLength += parentTrajectory->getTrackLength();
         eventStat.reflectionCount += parentTrajectory->getReflectionCount();
         eventStat.totalInternalReflectionCount += parentTrajectory->getTotalInternalReflectionCount();
+        incrementWlsCount(trajectory);
         parentTrajectory = parentTrajectory->getParentTrajectory(trajectoryContainer);
       }
 
@@ -173,4 +174,10 @@ void NovaEventAction::SetSaveThreshold(G4int save)
   saveThreshold = save;
   G4RunManager::GetRunManager()->SetRandomNumberStore(true);
   G4RunManager::GetRunManager()->SetRandomNumberStoreDir("random/");
+}
+
+void NovaEventAction::incrementWlsCount(NovaTrajectory* trajectory)
+{
+  if (trajectory->GetProcessName() == "OpWLS")
+    eventStat.wlsCount++;
 }

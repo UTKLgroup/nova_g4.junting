@@ -5,6 +5,7 @@
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 #include "G4ThreeVector.hh"
+#include "NovaTrajectory.hh"
 
 class G4Event;
 class NovaRecorderBase;
@@ -96,6 +97,7 @@ class NovaEventAction : public G4UserEventAction
 
     void SetForceDrawPhotons(G4bool b){forceDrawPhotons=b;}
     void SetForceDrawNoPhotons(G4bool b){forceDrawNoPhotons=b;}
+    void incrementWlsCount(NovaTrajectory* trajectory);
 
   private:
     NovaRecorderBase* recorder;

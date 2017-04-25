@@ -11,6 +11,8 @@
 #include "G4VTrajectory.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4TrajectoryPoint.hh"
+#include "G4TrajectoryContainer.hh"
+
 
 typedef std::vector<G4VTrajectoryPoint*> TrajectoryPointContainer;
 
