@@ -5,14 +5,11 @@
 #include "globals.hh"
 
 
-enum LXeTrackStatus
+enum NovaTrackStatus
 {
-  active=1,
-  hitPmt=2,
-  absorbed=4,
-  boundaryAbsorbed=8,
-  hitSphere=16,
-  inactive=14
+  hitPmt=1,
+  absorbed=2,
+  boundaryAbsorbed=4,
 };
 
 class NovaUserTrackInformation : public G4VUserTrackInformation
@@ -21,15 +18,11 @@ class NovaUserTrackInformation : public G4VUserTrackInformation
     NovaUserTrackInformation();
     virtual ~NovaUserTrackInformation();
     void setTrackStatusFlag(int s){trackStatus=s;}
-    void addTrackStatusFlag(int s);
-    int getTrackStatus()const {return trackStatus;}
     void incrementReflectionCount(){reflectionCount++;}
-    G4int getReflectionCount()const {return reflectionCount;}
     void incrementTotalInternalReflectionCount(){totalInternalReflectionCount++;}
+    int getTrackStatus()const {return trackStatus;}
+    G4int getReflectionCount()const {return reflectionCount;}
     G4int getTotalInternalReflectionCount()const {return totalInternalReflectionCount;}
-    void setForceDrawTrajectory(G4bool b){forceDraw=b;}
-    G4bool getForceDrawTrajectory(){return forceDraw;}
-    inline virtual void Print() const{};
 
   private:
     int trackStatus;

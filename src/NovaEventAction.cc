@@ -1,3 +1,4 @@
+#include <NovaUserTrackInformation.hh>
 #include "NovaEventAction.hh"
 #include "NovaLiquidScintillatorHit.hh"
 #include "NovaPmtHit.hh"
@@ -127,7 +128,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
       runStat.primaryZ = position.getZ();
     }
 
-    if(trajectory->GetStatus() == 2){
+    if(trajectory->GetStatus() == hitPmt){
       NovaTrajectoryPoint* lastTrajectoryPoint = (NovaTrajectoryPoint*)trajectory->GetPoint(trajectory->GetPointEntries() - 1);
       eventStat.hitTime = lastTrajectoryPoint->GetTime();
       eventStat.hitX = lastTrajectoryPoint->GetPosition().getX();

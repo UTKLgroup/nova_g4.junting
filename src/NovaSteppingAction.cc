@@ -51,7 +51,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
   G4ParticleDefinition* particleType = theTrack->GetDefinition();
   if (particleType == G4OpticalPhoton::OpticalPhotonDefinition()) {
     if (postStepPoint->GetProcessDefinedStep()->GetProcessName() == "OpAbsorption") {
-      trackInformation->addTrackStatusFlag(absorbed);
+      trackInformation->setTrackStatusFlag(absorbed);
       eventInformation->incrementAbsorption();
     }
 
@@ -60,15 +60,15 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
       fExpectedNextStatus = Undefined;
       switch (boundaryStatus) {
         case Absorption :
-          trackInformation->addTrackStatusFlag(boundaryAbsorbed);
+          trackInformation->setTrackStatusFlag(boundaryAbsorbed);
           eventInformation->incrementBoundaryAbsorption();
           break;
         case Detection : {
           G4SDManager *sdManager = G4SDManager::GetSDMpointer();
           NovaPmtSd *pmtSd = (NovaPmtSd *) sdManager->FindSensitiveDetector("/NovaDet/pmtSd");
           if (pmtSd)
-            pmtSd->ProcessHits_constStep(theStep, NULL);
-          trackInformation->addTrackStatusFlag(hitPmt);
+            pmtSd->ProcessHits_constStep(theStep, 0);
+          trackInformation->setTrackStatusFlag(hitPmt);
           break;
         }
         case FresnelReflection :

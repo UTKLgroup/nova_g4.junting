@@ -19,9 +19,8 @@ class NovaUserEventInformation : public G4VUserEventInformation
     void incrementAbsorption(){absorptionCount++;}
     void incrementBoundaryAbsorption(){boundaryAbsorptionCount++;}
 
-    void incrementHitCount(G4int i = 1){hitCount+=i;}
+    void incrementHitCount(G4int i = 1){hitCount += i;}
     void setEnergyWeightedPosition(const G4ThreeVector &p){energyWeightedPosition=p;}
-    void setConversionPosition(const G4ThreeVector &p){conversionPos = p; conversionPositionSet = true;}
     void setPositionMax(const G4ThreeVector &p, G4double eDep){positionMax = p; energyDepositionMax = eDep;}
 
     G4int getScintillationPhotonCount()const {return photonCountScintillation;}
@@ -33,8 +32,7 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4int getBoundaryAbsorptionCount() const {return boundaryAbsorptionCount;}
 
     G4ThreeVector getEnergyWeightedPosition(){return energyWeightedPosition;}
-    G4double isConversionPositionSet(){return conversionPositionSet;}
-    G4int getPhotonCount(){return photonCountScintillation+photonCountCherenkov;}
+    G4int getPhotonCount(){return photonCountScintillation + photonCountCherenkov;}
     void incrementPmtCountAboveThreshold(){pmtCountAboveThreshold++;}
     G4int getPmtAboveThresholdCount(){return pmtCountAboveThreshold;}
 
@@ -48,8 +46,6 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4double totalEnergyDeposition;
     G4ThreeVector energyWeightedPosition;
     G4ThreeVector reconstructionPosition;
-    G4ThreeVector conversionPos;
-    G4bool conversionPositionSet;
     G4ThreeVector positionMax;
     G4double energyDepositionMax;
     G4int pmtCountAboveThreshold;
