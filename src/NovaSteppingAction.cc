@@ -69,7 +69,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
           break;
         }
         case TotalInternalReflection :
-          if(prePhysicalVolume->GetName() == "fiberCore")
+          if(prePhysicalVolume->GetName() == "core")
             trackInformation->incrementTotalInternalReflectionCount();
           break;
         case BackScattering :
