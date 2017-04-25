@@ -91,7 +91,7 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
   fDefaultsCmd->SetGuidance("(Update still required)");
 
   fMainScintYield=new G4UIcmdWithADouble("/Nova/detector/MainScintYield",this);
-  fMainScintYield->SetGuidance("Set scinitillation yield of main volume.");
+  fMainScintYield->SetGuidance("Set scintillation yield of main volume.");
   fMainScintYield->SetGuidance("Specified in photons/MeV");
 
   fpmtQECmd = new G4UIcmdWithADouble("/Nova/detector/pmtQE",this);

@@ -18,6 +18,7 @@ NovaDetectorConstruction::NovaDetectorConstruction()
   nistManager = G4NistManager::Instance();
   isUpdated = false;
   setDefaults();
+  new NovaDetectorMessenger(this);
 }
 
 NovaDetectorConstruction::~NovaDetectorConstruction()
@@ -276,7 +277,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
 
 G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
 {
-  G4double fiberLength = 0.1 * m;
+  G4double fiberLength = cellLength;
   G4double experimentalHallX = fiberRadius * 2.0;
   G4double experimentalHallY = fiberRadius * 2.0;
   G4double experimentalHallZ = fiberLength * 0.6;
@@ -293,7 +294,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
                                                      0, false, 0);
 
   G4double coreFraction = 1.0 - 2.0 * fiberCladdingFraction;
-  G4double coreRadius  = fiberRadius * coreFraction;
+  G4double coreRadius = fiberRadius * coreFraction;
   G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
 
   G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, fiberLength / 2.0, 0.0, 360.0 * deg);

@@ -39,8 +39,6 @@ class NovaDetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fCelltoPMTLCmd;
     G4UIcmdWithADoubleAndUnit* fFibTailCmd;
     G4UIcmdWithABool* fUsePMTCmd;
-    G4UIcmdWithADouble* fScintReflectivityCmd;
-    G4UIcmdWithADouble* fVetoReflectivityCmd;
     G4UIcmdWithABool* fLxeCmd;
     G4UIcommand* fUpdateCmd;
     G4UIcommand* fDefaultsCmd;
