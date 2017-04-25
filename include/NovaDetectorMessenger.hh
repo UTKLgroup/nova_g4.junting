@@ -23,28 +23,19 @@ class NovaDetectorMessenger: public G4UImessenger
 
   private:
     NovaDetectorConstruction* fLXeDetector;
-    G4UIdirectory* fDetectorDir;
-    G4UIdirectory* fVolumesDir;
+    G4UIdirectory* detectorDir;
 
-    G4UIcmdWithADoubleAndUnit* fRectWidthCmd;
-    G4UIcmdWithADoubleAndUnit* fRectHeightCmd;
-    G4UIcmdWithADoubleAndUnit* fCellLengthCmd;
-    G4UIcmdWithADoubleAndUnit* fPVCThicknessCmd;
-    G4UIcmdWithADoubleAndUnit* fInner_Corner_RadiusCmd;
-    G4UIcmdWithADoubleAndUnit* fFibRadiusCmd;
-    G4UIcmdWithADoubleAndUnit* fFib1XCmd;
-    G4UIcmdWithADoubleAndUnit* fFib1YCmd;
-    G4UIcmdWithADoubleAndUnit* fFib2XCmd;
-    G4UIcmdWithADoubleAndUnit* fFib2YCmd;
-    G4UIcmdWithADoubleAndUnit* fCelltoPMTLCmd;
-    G4UIcmdWithADoubleAndUnit* fFibTailCmd;
-    G4UIcmdWithABool* fUsePMTCmd;
-    G4UIcmdWithABool* fLxeCmd;
-    G4UIcommand* fUpdateCmd;
-    G4UIcommand* fDefaultsCmd;
-    G4UIcmdWithADouble* fMainScintYield;
-    G4UIcmdWithADouble* fpmtQECmd;
-    G4UIcmdWithoutParameter* fPrintSettings;
+    G4UIcmdWithADoubleAndUnit* rectangleWidth;
+    G4UIcmdWithADoubleAndUnit* rectangleHeight;
+    G4UIcmdWithADoubleAndUnit* cellLength;
+    G4UIcmdWithADoubleAndUnit* pvcThickness;
+    G4UIcmdWithADoubleAndUnit* innerCellCornerRadius;
+    G4UIcmdWithADoubleAndUnit* fiberRadius;
+    G4UIcmdWithABool* usePmt;
+    G4UIcommand* update;
+    G4UIcommand* defaultValue;
+    G4UIcmdWithADouble* liquidScintillatorLightYield;
+    G4UIcmdWithoutParameter* printSetting;
 };
 
 #endif
