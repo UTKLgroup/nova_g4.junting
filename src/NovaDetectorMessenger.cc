@@ -78,19 +78,19 @@ NovaDetectorMessenger::~NovaDetectorMessenger()
 void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if (command == rectangleWidth) {
-    detectorConstruction->setRectWidth(rectangleWidth->GetNewDoubleValue(newValue));
+    detectorConstruction->setRectangleWidth(rectangleWidth->GetNewDoubleValue(newValue));
   }
   else if (command == rectangleHeight) {
-    detectorConstruction->setRectHeight(rectangleHeight->GetNewDoubleValue(newValue));
+    detectorConstruction->setRectangleHeight(rectangleHeight->GetNewDoubleValue(newValue));
   }
   else if (command == cellLength) {
     detectorConstruction->setCellLength(cellLength->GetNewDoubleValue(newValue));
   }
   else if (command == pvcThickness) {
-    detectorConstruction->setPVCThickness(pvcThickness->GetNewDoubleValue(newValue));
+    detectorConstruction->setPvcThickness(pvcThickness->GetNewDoubleValue(newValue));
   }
   else if (command == innerCellCornerRadius) {
-    detectorConstruction->setInnerCornerRadius(innerCellCornerRadius->GetNewDoubleValue(newValue));
+    detectorConstruction->setInnerCellCornerRadius(innerCellCornerRadius->GetNewDoubleValue(newValue));
   }
   else if (command == fiberRadius) {
     detectorConstruction->setFiberRadius(fiberRadius->GetNewDoubleValue(newValue));

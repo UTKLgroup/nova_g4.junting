@@ -10,6 +10,7 @@
 #include "G4RotationMatrix.hh"
 #include "G4VUserDetectorConstruction.hh"
 
+
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Box;
@@ -23,43 +24,23 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
   public:
     NovaDetectorConstruction();
     virtual ~NovaDetectorConstruction();
-
     virtual G4VPhysicalVolume* Construct();
 
+    void setRectangleWidth(G4double a){rectangleWidth = a; isUpdated=true;}
+    void setRectangleHeight(G4double a){rectangleHeight = a; isUpdated=true;}
+    void setCellLength(G4double a){cellLength = a; isUpdated=true;}
+    void setPvcThickness(G4double a){pvcThickness = a; isUpdated=true;}
+    void setInnerCellCornerRadius(G4double a){innerCellCornerRadius = a; isUpdated=true;}
+    void setFiberRadius(G4double a){fiberRadius = a; isUpdated=true;}
+    G4double getOuterCellCornerRadius(){return innerCellCornerRadius + pvcThickness;}
+    G4double getCellWidth(){return rectangleWidth + 2.0 * getOuterCellCornerRadius();}
+    G4double getCellHeight(){return rectangleHeight + 2.0 * getOuterCellCornerRadius();}
+    void setUsePMT(bool b){usePmt = b;}
+    void setLiquidScintillatorLightYield(G4double y);
     void setDefaults();
     void updateGeometry();
     void printSettings();
 
-    void setLiquidScintillatorLightYield(G4double y);
-    void setRectWidth(G4double a){rectangleWidth = a; isUpdated=true;}
-    void setRectHeight(G4double a){rectangleHeight = a; isUpdated=true;}
-    void setCellLength(G4double a){cellLength = a; isUpdated=true;}
-    void setPVCThickness(G4double a){pvcThickness = a; isUpdated=true;}
-    void setInnerCornerRadius(G4double a){innerCornerRadius = a; isUpdated=true;}
-    void setFiberRadius(G4double a){fiberRadius = a; isUpdated=true;}
-    void setUsePMT(bool b){usePmt = b;}
-
-    G4double getRectangleWidth(){return rectangleWidth;}
-    G4double getRectangleHeight(){return rectangleHeight;}
-    G4double getCellLength(){return cellLength;}
-    G4double getPvcThickness(){return pvcThickness;}
-    G4double getInnerCornerRadius(){return innerCornerRadius;}
-    G4double getFiberRadius(){return fiberRadius;}
-    G4double getFiber1X(){return fiber1X;}
-    G4double getFiber1Y(){return fiber1Y;}
-    G4double getFiber2X(){return fiber2X;}
-    G4double getFiber2Y(){return fiber2Y;}
-    G4double getCellToPmtDistance(){return cellToPmtDistance;}
-    G4double getFiberTailLength(){return fiberTailLength;}
-    G4double getPmtHeight(){return fiberRadius / 4.;}
-    G4double getFullFiberLength(){return cellToPmtDistance + cellLength / 2. + fiberTailLength;}
-    G4double getOuterCornerRadius(){return innerCornerRadius + pvcThickness;}
-    G4double getCellWidth(){return rectangleWidth + 2. * getOuterCornerRadius();}
-    G4double getCellHeight(){return rectangleHeight + 2. * getOuterCornerRadius();}
-    G4double getPmtZ(){return cellToPmtDistance + getPmtHeight();}
-    G4double getFiberZ(){return getFullFiberLength() / 2. - (fiberTailLength + cellLength / 2.);}
-    bool getUsePMT(){return usePmt;}
-    G4bool getIsUpdated(){return isUpdated;}
     G4double convertWavelengthToEnergy(G4double wavelength) {
       return PLANK_CONSTANT / wavelength * eV;
     }
@@ -127,15 +108,9 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double rectangleHeight;
     G4double cellLength;
     G4double pvcThickness;
-    G4double innerCornerRadius;
+    G4double innerCellCornerRadius;
     G4double fiberRadius;
     G4double fiberCladdingFraction;
-    G4double fiber1X;
-    G4double fiber1Y;
-    G4double fiber2X;
-    G4double fiber2Y;
-    G4double cellToPmtDistance;
-    G4double fiberTailLength;
     G4double pmtThickness;
     bool usePmt;
 };
