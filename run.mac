@@ -10,8 +10,13 @@
 /gps/direction 0.0 0.0 -1.0
 /gps/ang/type beam1d
 /gps/ang/sigma_r 5 deg
-/gps/ene/mono 2.5 eV
+/gps/ene/mono 3.1 eV
 
+/Nova/detector/cellLength 0.1 m
+/Nova/detector/update
+/Nova/detector/printSetting
+
+/tracking/verbose 1
 /run/verbose 2
 /run/initialize
-/run/beamOn 1
+/run/beamOn 20
