@@ -8,7 +8,7 @@
 
 
 NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
-    : fLXeDetector(detector)
+    : detectorConstruction(detector)
 {
   detectorDir = new G4UIdirectory("/Nova/detector/");
   detectorDir->SetGuidance("Detector geometry control");
@@ -78,36 +78,36 @@ NovaDetectorMessenger::~NovaDetectorMessenger()
 void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if (command == rectangleWidth) {
-    fLXeDetector->setRectWidth(rectangleWidth->GetNewDoubleValue(newValue));
+    detectorConstruction->setRectWidth(rectangleWidth->GetNewDoubleValue(newValue));
   }
   else if (command == rectangleHeight) {
-    fLXeDetector->setRectHeight(rectangleHeight->GetNewDoubleValue(newValue));
+    detectorConstruction->setRectHeight(rectangleHeight->GetNewDoubleValue(newValue));
   }
   else if (command == cellLength) {
-    fLXeDetector->setCellLength(cellLength->GetNewDoubleValue(newValue));
+    detectorConstruction->setCellLength(cellLength->GetNewDoubleValue(newValue));
   }
   else if (command == pvcThickness) {
-    fLXeDetector->setPVCThickness(pvcThickness->GetNewDoubleValue(newValue));
+    detectorConstruction->setPVCThickness(pvcThickness->GetNewDoubleValue(newValue));
   }
   else if (command == innerCellCornerRadius) {
-    fLXeDetector->setInnerCornerRadius(innerCellCornerRadius->GetNewDoubleValue(newValue));
+    detectorConstruction->setInnerCornerRadius(innerCellCornerRadius->GetNewDoubleValue(newValue));
   }
   else if (command == fiberRadius) {
-    fLXeDetector->setFiberRadius(fiberRadius->GetNewDoubleValue(newValue));
+    detectorConstruction->setFiberRadius(fiberRadius->GetNewDoubleValue(newValue));
   }
   else if (command == usePmt) {
-    fLXeDetector->setUsePMT(usePmt->GetNewBoolValue(newValue));
+    detectorConstruction->setUsePMT(usePmt->GetNewBoolValue(newValue));
   }
   else if (command == update) {
-    fLXeDetector->updateGeometry();
+    detectorConstruction->updateGeometry();
   }
   else if (command == defaultValue) {
-    fLXeDetector->setDefaults();
+    detectorConstruction->setDefaults();
   }
   else if (command == liquidScintillatorLightYield) {
-    fLXeDetector->setMainScintYield(liquidScintillatorLightYield->GetNewDoubleValue(newValue));
+    detectorConstruction->setLiquidScintillatorLightYield(liquidScintillatorLightYield->GetNewDoubleValue(newValue));
   }
   else if (command == printSetting) {
-    fLXeDetector->printSettings();
+    detectorConstruction->printSettings();
   }
 }

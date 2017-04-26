@@ -30,21 +30,14 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void updateGeometry();
     void printSettings();
 
-    void setMainScintYield(G4double y);
+    void setLiquidScintillatorLightYield(G4double y);
     void setRectWidth(G4double a){rectangleWidth = a; isUpdated=true;}
     void setRectHeight(G4double a){rectangleHeight = a; isUpdated=true;}
     void setCellLength(G4double a){cellLength = a; isUpdated=true;}
     void setPVCThickness(G4double a){pvcThickness = a; isUpdated=true;}
     void setInnerCornerRadius(G4double a){innerCornerRadius = a; isUpdated=true;}
     void setFiberRadius(G4double a){fiberRadius = a; isUpdated=true;}
-    void setFiber1X(G4double a){fiber1X = a; isUpdated=true;}
-    void setFiber1Y(G4double a){fiber1Y = a; isUpdated=true;}
-    void setFiber2X(G4double a){fiber2X = a; isUpdated=true;}
-    void setFiber2Y(G4double a){fiber2Y = a; isUpdated=true;}
-    void setCellToPmtDistance(G4double a){cellToPmtDistance = a; isUpdated=true;}
-    void setFiberTailLength(G4double a){fiberTailLength = a; isUpdated=true;}
     void setUsePMT(bool b){usePmt = b;}
-    void setPmtQuantumEfficiency(G4double qe){pmtQuantumEfficiency = qe; isUpdated=true;}
 
     G4double getRectangleWidth(){return rectangleWidth;}
     G4double getRectangleHeight(){return rectangleHeight;}
@@ -82,8 +75,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4String FIBER_CORE_WLS_ABSORPTION_LENGTH_FILENAME = "y11_abs_length.dat";
     G4String FIBER_CORE_WLS_EMISSION_FILENAME = "WLSemit.cfg";
     G4String FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME = "PMMABulkAbsorb.dat";
-    G4String APD_QUANTUM_EFFICIENCY = "apd_qe_1.dat";
-    G4String PMT_QUANTUM_EFFICIENCY = "qe_file_2.dat";
+    G4String APD_QUANTUM_EFFICIENCY_FILENAME = "apd_qe_1.dat";
+    G4String PMT_QUANTUM_EFFICIENCY_FILENAME = "qe_file_2.dat";
 
     G4String getFilePath(G4String filename) {return INPUT_DIR + "/" + filename;}
     void defineMaterials();
@@ -144,7 +137,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double cellToPmtDistance;
     G4double fiberTailLength;
     G4double pmtThickness;
-    G4double pmtQuantumEfficiency;
     bool usePmt;
 };
 

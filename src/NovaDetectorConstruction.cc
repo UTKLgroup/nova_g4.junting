@@ -590,7 +590,7 @@ G4LogicalVolume* NovaDetectorConstruction::makePmt()
 
   std::vector<G4double> energies;
   std::vector<G4double> quantumEfficiencies;
-  std::ifstream fQuantumEfficiency(getFilePath(APD_QUANTUM_EFFICIENCY));
+  std::ifstream fQuantumEfficiency(getFilePath(APD_QUANTUM_EFFICIENCY_FILENAME));
   if (fQuantumEfficiency.is_open()) {
     while (!fQuantumEfficiency.eof()) {
       fQuantumEfficiency >> inputWavelength >> filler >> inputVariable;
@@ -660,7 +660,6 @@ void NovaDetectorConstruction::setDefaults()
   fiberTailLength = 10.0 * cm;
   usePmt = true;
   pmtThickness = 1.0 * mm;
-  G4UImanager::GetUIpointer()->ApplyCommand("/LXe/detector/scintYieldFactor 1.");
   isUpdated = true;
 }
 
@@ -680,7 +679,7 @@ void NovaDetectorConstruction::updateGeometry()
   isUpdated = false;
 }
 
-void NovaDetectorConstruction::setMainScintYield(G4double y)
+void NovaDetectorConstruction::setLiquidScintillatorLightYield(G4double y)
 {
   liquidScintillatorMpt->AddConstProperty("SCINTILLATIONYIELD", y / MeV);
 }

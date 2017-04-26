@@ -22,7 +22,7 @@ class NovaDetectorMessenger: public G4UImessenger
     virtual void SetNewValue(G4UIcommand*, G4String);
 
   private:
-    NovaDetectorConstruction* fLXeDetector;
+    NovaDetectorConstruction* detectorConstruction;
     G4UIdirectory* detectorDir;
 
     G4UIcmdWithADoubleAndUnit* rectangleWidth;
