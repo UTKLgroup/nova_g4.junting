@@ -341,9 +341,9 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
 
 G4VPhysicalVolume* NovaDetectorConstruction::constructLiquidScintillatorCell()
 {
-  G4double experimentalHallX = getCellWidth() / 2.0  + 20.0*cm;
+  G4double experimentalHallX = getCellHeight() / 2.0  + 20.0*cm;
   G4double experimentalHallY = getCellHeight() / 2.0  + 20.0*cm;
-  G4double experimentalHallZ = getCellToPmtDistance() + 20.0*cm;
+  G4double experimentalHallZ = cellLength / 2.0 + 20.0*cm;
 
   experimentalHallSolid = new G4Box("experimentalHallSolid",experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
