@@ -1,7 +1,7 @@
 #include <TString.h>
+#include <G4PVPlacement.hh>
 #include "NovaDetectorConstruction.hh"
 #include "NovaPmtSd.hh"
-#include "NovaMainVolume.hh"
 #include "NovaLiquidScintillatorSd.hh"
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
@@ -11,7 +11,10 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4GeometryManager.hh"
-#include "G4UImanager.hh"
+#include "G4Box.hh"
+#include "G4Tubs.hh"
+#include "G4OpticalSurface.hh"
+
 
 NovaDetectorConstruction::NovaDetectorConstruction()
 {
