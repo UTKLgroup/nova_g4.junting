@@ -293,7 +293,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   experimentalHallPhysicalVolume = new G4PVPlacement(0,
                                                      G4ThreeVector(),
                                                      experimentalHallLogicalVolume,
-                                                     "experimentalHallPhysicalVolume",
+                                                     "experimentalHall",
                                                      0, false, 0);
 
   G4double coreFraction = 1.0 - 2.0 * fiberCladdingFraction;
@@ -317,7 +317,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
 
   new G4PVPlacement(0, G4ThreeVector(), coreLogicalVolume, "core", innerCladdingLogicalVolume, false, 0);
   new G4PVPlacement(0, G4ThreeVector(), innerCladdingLogicalVolume, "innerCladding", outerCladdingLogicalVolume, false, 0);
-  new G4PVPlacement(0, G4ThreeVector(), outerCladdingLogicalVolume, "wlsFiber", experimentalHallLogicalVolume, false, 0);
+  new G4PVPlacement(0, G4ThreeVector(), outerCladdingLogicalVolume, "outerCladding", experimentalHallLogicalVolume, false, 0);
 
   G4LogicalVolume* pmtLogicalVolume = makePmt();
   G4double pmtZ = -fiberLength / 2.0 - pmtThickness / 2.0;
