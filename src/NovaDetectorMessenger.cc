@@ -108,6 +108,6 @@ void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     detectorConstruction->setLiquidScintillatorLightYield(liquidScintillatorLightYield->GetNewDoubleValue(newValue));
   }
   else if (command == printSetting) {
-    detectorConstruction->printSettings();
+    detectorConstruction->printSetting();
   }
 }

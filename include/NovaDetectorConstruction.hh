@@ -39,7 +39,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void setLiquidScintillatorLightYield(G4double y);
     void setDefaults();
     void updateGeometry();
-    void printSettings();
+    void printSetting();
 
     G4double convertWavelengthToEnergy(G4double wavelength) {
       return PLANK_CONSTANT / wavelength * eV;

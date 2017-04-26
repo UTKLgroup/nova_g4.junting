@@ -626,7 +626,7 @@ G4LogicalVolume* NovaDetectorConstruction::makePmt()
   return pmtLogicalVolume;
 }
 
-void NovaDetectorConstruction::printSettings()
+void NovaDetectorConstruction::printSetting()
 {
   G4cout << std::setw(25) << "liquidScintillatorLightYield = " << std::setw(10) << liquidScintillatorMpt->GetConstProperty("SCINTILLATIONYIELD") << std::setw(10) << " MeV-1" << G4endl;
   G4cout << std::setw(25) << "cellLength = " << std::setw(10) << cellLength / cm << std::setw(10) << " cm" << G4endl;
@@ -664,6 +664,7 @@ void NovaDetectorConstruction::updateGeometry()
   G4LogicalBorderSurface::CleanSurfaceTable();
   G4SurfaceProperty::CleanSurfacePropertyTable();
 
+  defineMaterials();
   G4RunManager::GetRunManager()->DefineWorldVolume(constructDetector());
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 
