@@ -3,9 +3,9 @@
 #include <fstream>
 
 Double_t getHitTimeFirstPeak(TString filename);
+Double_t getMeanHitTime(TString filename);
 void scanRun(TString filename);
 void scanEvent(TString filename);
-Double_t getMeanHitTime(TString filename);
 void plotHitTime(TString filename, TString figureName);
 void plotGpsEnergySpectrum(TString filename, TString figureName);
 void plotSpeed();
@@ -56,7 +56,8 @@ void plotSpeed()
   // TString configuration = "0deg.395nm_spectrum";
   // TString configuration = "0deg.360nm_spectrum";
   // TString configuration = "0deg.360nm_spectrum.seed2";
-  TString configuration = "0deg.395nm_spectrum.seed2";
+  // TString configuration = "0deg.395nm_spectrum.seed2";
+  TString configuration = "0deg.430nm_spectrum.seed2";
 
   for (Int_t i = 1; i <= 5; i++) {
     lengths.push_back((Double_t) i);
@@ -69,8 +70,6 @@ void plotSpeed()
   }
 
   TCanvas* c1 = new TCanvas("c1", "c1", 800, 600);
-  // gPad->SetLeftMargin(0.15);
-  // gPad->SetBottomMargin(0.15);
   setMargin();
 
   const Int_t lengthCount = 5;
