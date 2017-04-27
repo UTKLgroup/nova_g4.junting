@@ -117,23 +117,6 @@ void NovaDetectorConstruction::defineFiberCore(G4String materialName)
   fiberCore->SetMaterialPropertiesTable(fiberCoreMpt);
 }
 
-void NovaDetectorConstruction::readCsvFile(G4String filename,
-                                           std::vector<G4double>& energies,
-                                           std::vector<G4double>& values,
-                                           double valueUnit)
-{
-  G4String wavelengthString;
-  G4String valueString;
-  std::ifstream fCsv(getFilePath(filename));
-  if(fCsv.is_open()){
-    while (std::getline(fCsv, wavelengthString, ',')) {
-      std::getline(fCsv, valueString);
-      energies.push_back(convertWavelengthToEnergy(std::stof(wavelengthString)));
-      values.push_back(std::stof(valueString) * valueUnit);
-    }
-  }
-}
-
 void NovaDetectorConstruction::definePmma(G4String materialName)
 {
   pmma = new G4Material(materialName, 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
@@ -628,4 +611,21 @@ void NovaDetectorConstruction::updateGeometry()
 void NovaDetectorConstruction::setLiquidScintillatorLightYield(G4double y)
 {
   liquidScintillatorMpt->AddConstProperty("SCINTILLATIONYIELD", y / MeV);
+}
+
+void NovaDetectorConstruction::readCsvFile(G4String filename,
+                                           std::vector<G4double>& energies,
+                                           std::vector<G4double>& values,
+                                           double valueUnit)
+{
+  G4String wavelengthString;
+  G4String valueString;
+  std::ifstream fCsv(getFilePath(filename));
+  if(fCsv.is_open()){
+    while (std::getline(fCsv, wavelengthString, ',')) {
+      std::getline(fCsv, valueString);
+      energies.push_back(convertWavelengthToEnergy(std::stof(wavelengthString)));
+      values.push_back(std::stof(valueString) * valueUnit);
+    }
+  }
 }
