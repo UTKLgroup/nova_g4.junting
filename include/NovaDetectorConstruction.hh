@@ -41,8 +41,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void printSetting();
 
     void readCsvFile(G4String filename,
-                     std::vector<G4double>* energies,
-                     std::vector<G4double>* values,
+                     std::vector<G4double>& energies,
+                     std::vector<G4double>& values,
                      double valueUnit);
     G4double convertWavelengthToEnergy(G4double wavelength) {
       return PLANK_CONSTANT / wavelength * eV;

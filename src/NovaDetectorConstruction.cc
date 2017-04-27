@@ -146,7 +146,7 @@ void NovaDetectorConstruction::defineFiberCore(G4String materialName)
 
   std::vector<G4double> wlsEmissionEnergies;
   std::vector<G4double> wlsEmissions;
-  readCsvFile(getFilePath(FIBER_CORE_WLS_EMISSION_FILENAME), &wlsAbsorptionEnergies, &wlsEmissions, 1.0);
+  readCsvFile(getFilePath(FIBER_CORE_WLS_EMISSION_FILENAME), wlsAbsorptionEnergies, wlsEmissions, 1.0);
 
   G4double refractionIndex = 1.59;
   std::vector<G4double> refractionIndices(wlsAbsorptionEnergies.size(), refractionIndex);
@@ -162,8 +162,8 @@ void NovaDetectorConstruction::defineFiberCore(G4String materialName)
 }
 
 void NovaDetectorConstruction::readCsvFile(G4String filename,
-                                           std::vector<G4double>* energies,
-                                           std::vector<G4double>* values,
+                                           std::vector<G4double>& energies,
+                                           std::vector<G4double>& values,
                                            double valueUnit)
 {
   G4String wavelengthString;
@@ -172,8 +172,8 @@ void NovaDetectorConstruction::readCsvFile(G4String filename,
   if(fCsv.is_open()){
     while (std::getline(fCsv, wavelengthString, ',')) {
       std::getline(fCsv, valueString);
-      energies->push_back(convertWavelengthToEnergy(std::stof(wavelengthString)));
-      values->push_back(std::stof(valueString) * valueUnit);
+      energies.push_back(convertWavelengthToEnergy(std::stof(wavelengthString)));
+      values.push_back(std::stof(valueString) * valueUnit);
     }
   }
 }
