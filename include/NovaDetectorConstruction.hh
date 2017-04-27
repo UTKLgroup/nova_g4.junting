@@ -33,7 +33,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void setInnerCellCornerRadius(G4double a){innerCellCornerRadius = a; isUpdated=true;}
     void setFiberRadius(G4double a){fiberRadius = a; isUpdated=true;}
     G4double getOuterCellCornerRadius(){return innerCellCornerRadius + pvcThickness;}
-    G4double getCellWidth(){return rectangleWidth + 2.0 * getOuterCellCornerRadius();}
     G4double getCellHeight(){return rectangleHeight + 2.0 * getOuterCellCornerRadius();}
     void setUsePMT(bool b){usePmt = b;}
     void setLiquidScintillatorLightYield(G4double y);
