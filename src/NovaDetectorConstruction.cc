@@ -103,15 +103,16 @@ void NovaDetectorConstruction::defineFiberCore(G4String materialName)
   std::vector<G4double> wlsEmissions;
   readCsvFile(FIBER_CORE_WLS_EMISSION_FILENAME, wlsEmissionEnergies, wlsEmissions, 1.0);
 
-  G4double refractionIndex = 1.59;
-  std::vector<G4double> refractionIndices(wlsAbsorptionEnergies.size(), refractionIndex);
+  std::vector<G4double> refractionIndexEnergies;
+  std::vector<G4double> refractionIndices;
+  readCsvFile(FIBER_CORE_REFRACTION_INDEX_FILENAME, refractionIndexEnergies, refractionIndices, 1.0);
 
   fiberCoreMpt = new G4MaterialPropertiesTable();
   fiberCoreMpt->AddProperty("ABSLENGTH", &absorptionEnergies[0], &absorptions[0], (G4int) absorptionEnergies.size());
   fiberCoreMpt->AddProperty("WLSABSLENGTH", &wlsAbsorptionEnergies[0],  &wlsAbsorptions[0],  (G4int) wlsAbsorptionEnergies.size());
   fiberCoreMpt->AddProperty("WLSCOMPONENT", &wlsEmissionEnergies[0], &wlsEmissions[0], (G4int) wlsEmissionEnergies.size());
   fiberCoreMpt->AddConstProperty("WLSTIMECONSTANT", 11.8 * ns);
-  fiberCoreMpt->AddProperty("RINDEX", &wlsAbsorptionEnergies[0], &refractionIndices[0], (G4int) wlsAbsorptionEnergies.size());
+  fiberCoreMpt->AddProperty("RINDEX", &refractionIndexEnergies[0], &refractionIndices[0], (G4int) refractionIndexEnergies.size());
   fiberCoreMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.7);
   fiberCore->SetMaterialPropertiesTable(fiberCoreMpt);
 }
@@ -144,11 +145,12 @@ void NovaDetectorConstruction::definePmma(G4String materialName)
   std::vector<G4double> absorptions;
   readCsvFile(FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME, absorptionEnergies, absorptions, m);
 
-  G4double refractionIndex = 1.49;
-  std::vector<G4double> refractionIndices(absorptionEnergies.size(), refractionIndex);
+  std::vector<G4double> refractionIndexEnergies;
+  std::vector<G4double> refractionIndices;
+  readCsvFile(FIBER_FIRST_CLADDING_REFRACTION_INDEX_FILENAME, refractionIndexEnergies, refractionIndices, 1.0);
 
   pmmaMpt = new G4MaterialPropertiesTable();
-  pmmaMpt->AddProperty("RINDEX", &absorptionEnergies[0], &refractionIndices[0], (G4int) absorptionEnergies.size());
+  pmmaMpt->AddProperty("RINDEX", &refractionIndexEnergies[0], &refractionIndices[0], (G4int) refractionIndexEnergies.size());
   pmmaMpt->AddProperty("ABSLENGTH", &absorptionEnergies[0], &absorptions[0], (G4int) absorptionEnergies.size());
   pmma->SetMaterialPropertiesTable(pmmaMpt);
 }
@@ -168,11 +170,12 @@ void NovaDetectorConstruction::defineFluorinatedPolymer(G4String materialName)
     absorptionEnergies.push_back(energy);
   }
 
-  G4double refractionIndex = 1.42;
-  std::vector<G4double> refractionIndices(absorptionEnergies.size(), refractionIndex);
+  std::vector<G4double> refractionIndexEnergies;
+  std::vector<G4double> refractionIndices;
+  readCsvFile(FIBER_SECOND_CLADDING_REFRACTION_INDEX_FILENAME, refractionIndexEnergies, refractionIndices, 1.0);
 
   fluorinatedPolymerMpt = new G4MaterialPropertiesTable();
-  fluorinatedPolymerMpt->AddProperty("RINDEX", &absorptionEnergies[0], &refractionIndices[0], (G4int) absorptionEnergies.size());
+  fluorinatedPolymerMpt->AddProperty("RINDEX", &refractionIndexEnergies[0], &refractionIndices[0], (G4int) refractionIndexEnergies.size());
   fluorinatedPolymerMpt->AddProperty("ABSLENGTH", pmmaAbslengthMaterialPropertyVector);
   fluorinatedPolymer->SetMaterialPropertiesTable(fluorinatedPolymerMpt);
 }

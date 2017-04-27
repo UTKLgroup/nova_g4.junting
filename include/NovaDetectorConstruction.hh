@@ -50,6 +50,10 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
 
   private:
     G4double PLANK_CONSTANT = 1239.84193;
+    G4double FIBER_CORE_REFRACTION_INDEX = 1.59;
+    G4double FIBER_FIRST_CLADDING_REFRACTION_INDEX = 1.49;
+    G4double FIBER_SECOND_CLADDING_REFRACTION_INDEX = 1.42;
+
     G4String INPUT_DIR = "input";
     G4String LIQUID_SCINTILLATOR_EMISSION_FILENAME = "ppo_emission.txt";
     G4String LIQUID_SCINTILLATOR_ABSORPTION_LENGTH_FILENAME = "PSTBulkAbsorb.cfg";
@@ -59,6 +63,9 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4String FIBER_CORE_WLS_ABSORPTION_LENGTH_FILENAME = "y11_abs_length.dat";
     G4String FIBER_CORE_WLS_EMISSION_FILENAME = "k27_emission.csv";
     G4String FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME = "PMMABulkAbsorb.dat";
+    G4String FIBER_CORE_REFRACTION_INDEX_FILENAME = "refraction_index_polystyrene_k27.csv";
+    G4String FIBER_FIRST_CLADDING_REFRACTION_INDEX_FILENAME = "refraction_index_pmma.csv";
+    G4String FIBER_SECOND_CLADDING_REFRACTION_INDEX_FILENAME = "refraction_index_fluorinated_polymer.csv";
     G4String APD_QUANTUM_EFFICIENCY_FILENAME = "apd_qe_1.dat";
     G4String PMT_QUANTUM_EFFICIENCY_FILENAME = "qe_file_2.dat";
 
