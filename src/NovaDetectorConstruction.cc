@@ -123,30 +123,15 @@ void NovaDetectorConstruction::defineFiberCore(G4String materialName)
 
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
-  std::ifstream fAbsorption(getFilePath(FIBER_CORE_ABSORPTION_LENGTH_FILENAME));
-  if(fAbsorption.is_open()) {
-    while(!fAbsorption.eof()) {
-      fAbsorption >> inputWavelength >> filler >> inputVariable;
-      absorptionEnergies.push_back(convertWavelengthToEnergy(inputWavelength));
-      absorptions.push_back(inputVariable * m);
-    }
-  }
+  readCsvFile(FIBER_CORE_ABSORPTION_LENGTH_FILENAME, absorptionEnergies, absorptions, m);
 
   std::vector<G4double> wlsAbsorptionEnergies;
   std::vector<G4double> wlsAbsorptions;
-  std::ifstream fWlsAbsorption(getFilePath(FIBER_CORE_WLS_ABSORPTION_LENGTH_FILENAME));
-  if (fWlsAbsorption.is_open()) {
-    while(!fWlsAbsorption.eof()) {
-      fWlsAbsorption >> inputWavelength >> filler >> inputVariable;
-      G4double energy = convertWavelengthToEnergy(inputWavelength);
-      wlsAbsorptionEnergies.push_back(energy);
-      wlsAbsorptions.push_back(inputVariable * m);
-    }
-  }
+  readCsvFile(FIBER_CORE_WLS_ABSORPTION_LENGTH_FILENAME, wlsAbsorptionEnergies, wlsAbsorptions, m);
 
   std::vector<G4double> wlsEmissionEnergies;
   std::vector<G4double> wlsEmissions;
-  readCsvFile(getFilePath(FIBER_CORE_WLS_EMISSION_FILENAME), wlsAbsorptionEnergies, wlsEmissions, 1.0);
+  readCsvFile(FIBER_CORE_WLS_EMISSION_FILENAME, wlsEmissionEnergies, wlsEmissions, 1.0);
 
   G4double refractionIndex = 1.59;
   std::vector<G4double> refractionIndices(wlsAbsorptionEnergies.size(), refractionIndex);
@@ -168,7 +153,7 @@ void NovaDetectorConstruction::readCsvFile(G4String filename,
 {
   G4String wavelengthString;
   G4String valueString;
-  std::ifstream fCsv(filename);
+  std::ifstream fCsv(getFilePath(filename));
   if(fCsv.is_open()){
     while (std::getline(fCsv, wavelengthString, ',')) {
       std::getline(fCsv, valueString);
