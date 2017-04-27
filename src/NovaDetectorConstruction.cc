@@ -172,15 +172,7 @@ void NovaDetectorConstruction::definePmma(G4String materialName)
 
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
-
-  std::ifstream fPmmaAbsorption(getFilePath(FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME));
-  if(fPmmaAbsorption.is_open()){
-    while(!fPmmaAbsorption.eof()){
-      fPmmaAbsorption >> inputWavelength >> filler >> inputVariable;
-      absorptionEnergies.push_back(convertWavelengthToEnergy(inputWavelength));
-      absorptions.push_back(inputVariable * m);
-    }
-  }
+  readCsvFile(FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME, absorptionEnergies, absorptions, m);
 
   G4double refractionIndex = 1.49;
   std::vector<G4double> refractionIndices(absorptionEnergies.size(), refractionIndex);
@@ -588,14 +580,8 @@ G4LogicalVolume* NovaDetectorConstruction::makePmt()
 
   std::vector<G4double> energies;
   std::vector<G4double> quantumEfficiencies;
-  std::ifstream fQuantumEfficiency(getFilePath(APD_QUANTUM_EFFICIENCY_FILENAME));
-  if (fQuantumEfficiency.is_open()) {
-    while (!fQuantumEfficiency.eof()) {
-      fQuantumEfficiency >> inputWavelength >> filler >> inputVariable;
-      energies.push_back(convertWavelengthToEnergy(inputWavelength));
-      quantumEfficiencies.push_back(inputVariable);
-    }
-  }
+  readCsvFile(APD_QUANTUM_EFFICIENCY_FILENAME, energies, quantumEfficiencies, 1.0);
+
   std::vector<G4double> refractionIndices(energies.size(), 1.49);
   std::vector<G4double> reflectivities(energies.size(), 0.0);
 
