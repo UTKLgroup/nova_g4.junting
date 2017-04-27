@@ -36,50 +36,20 @@ void NovaDetectorConstruction::defineLiquidScintillator(G4String materialName)
 
   std::vector<G4double> emissionEnergies;
   std::vector<G4double> fastEmissions;
-  std::vector<G4double> slowEmissions;
-  std::ifstream fEmission(getFilePath(LIQUID_SCINTILLATOR_EMISSION_FILENAME));
-  if(fEmission.is_open()){
-    while(!fEmission.eof()){
-      fEmission >> inputWavelength >> filler >> inputVariable;
-      G4double photonEnergy =convertWavelengthToEnergy(inputWavelength);
-      emissionEnergies.push_back(photonEnergy);
-      fastEmissions.push_back(inputVariable);
-      slowEmissions.push_back(0.0);
-    }
-  }
+  readCsvFile(LIQUID_SCINTILLATOR_EMISSION_FILENAME, emissionEnergies, fastEmissions, 1.0);
+  std::vector<G4double> slowEmissions(emissionEnergies.size(), 0.0);
 
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
-  std::ifstream fAbsorption(getFilePath(LIQUID_SCINTILLATOR_ABSORPTION_LENGTH_FILENAME));
-  if(fAbsorption.is_open()){
-    while(!fAbsorption.eof()){
-      fAbsorption >> inputWavelength >> filler >> inputVariable;
-      absorptionEnergies.push_back(convertWavelengthToEnergy(inputWavelength));
-      absorptions.push_back(1.8 * inputVariable * m);
-    }
-  }
+  readCsvFile(LIQUID_SCINTILLATOR_ABSORPTION_LENGTH_FILENAME, absorptionEnergies, absorptions, 1.8 * m);
 
   std::vector<G4double> wlsAbsorptionEnergies;
   std::vector<G4double> wlsAbsorptions;
-  std::ifstream fWlsAbsorption(getFilePath(LIQUID_SCINTILLATOR_WLS_ABSORPTION_LENGTH_FILENAME));
-  if (fWlsAbsorption.is_open()){
-    while (!fWlsAbsorption.eof()){
-      fWlsAbsorption >> inputWavelength >> filler >> inputVariable;
-      wlsAbsorptionEnergies.push_back(convertWavelengthToEnergy(inputWavelength));
-      wlsAbsorptions.push_back(1.8 * inputVariable * m);
-    }
-  }
+  readCsvFile(LIQUID_SCINTILLATOR_WLS_ABSORPTION_LENGTH_FILENAME, wlsAbsorptionEnergies, wlsAbsorptions, 1.8 * m);
 
   std::vector<G4double> wlsEmissionEnergies;
   std::vector<G4double> wlsEmissions;
-  std::ifstream fWlsEmission(getFilePath(LIQUID_SCINTILLATOR_WLS_EMISSION_FILENAME));
-  if(fWlsEmission.is_open()){
-    while (!fWlsEmission.eof()){
-      fWlsEmission >> inputWavelength >> filler >> inputVariable;
-      wlsEmissionEnergies.push_back(convertWavelengthToEnergy(inputWavelength));
-      wlsEmissions.push_back(inputVariable);
-    }
-  }
+  readCsvFile(LIQUID_SCINTILLATOR_WLS_EMISSION_FILENAME, wlsEmissionEnergies, wlsEmissions, 1.0);
 
   G4double refractionIndex = 1.47;
   std::vector<G4double> refractionIndices(emissionEnergies.size(), refractionIndex);
