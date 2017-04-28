@@ -10,21 +10,148 @@ void plotHitTime(TString filename, TString figureName);
 void plotGpsEnergySpectrum(TString filename, TString figureName);
 void plotSpeed();
 void plotSpeedData();
+void plotSpectrum();
+void readCsvFile(TString filename, vector<Double_t>& wavelengths, vector<Double_t>& values, double valueUnit);
+TString getFilePath(TString filename);
+TH1D* getHitWavelengthHist(TString filename);
+void normalizeTh1(TH1* h1);
 
 void nova() {
-  // gStyle->SetOptFit(1111);
-  // gStyle->SetOptFit(0);
-  // gStyle->SetOptStat("emr");
-  // TString filename = "../cmake-build-debug/nova.root";
-
-  // scanRun(filename);
-  // scanEvent(filename);
-  // plotHitTime("../cmake-build-debug/nova.1m.root", "1m");
-  // plotHitTime("../cmake-build-debug/nova.2m.root", "2m");
-
+//  gStyle->SetOptFit(1111);
+//  gStyle->SetOptFit(0);
+//  gStyle->SetOptStat("emr");
+//  TString filename = "../cmake-build-debug/nova.root";
+//
+//  scanRun(filename);
+//  scanEvent(filename);
+//  plotHitTime("../cmake-build-debug/nova.1m.root", "1m");
+//  plotHitTime("../cmake-build-debug/nova.2m.root", "2m");
+//
   plotSpeed();
-  // plotSpeedData();
-  // cout << getHitTimeFirstPeak("../cmake-build-debug/nova.2deg.430nm.3m.root") << endl;
+//  plotSpeedData();
+//  plotSpectrum();
+}
+
+void plotSpectrum()
+{
+  gStyle->SetOptStat(0);
+  Int_t wavelength = 470;
+
+  vector<Double_t> data1mWavelengths;
+  vector<Double_t> data1mIntensities;
+  readCsvFile(TString::Format("led_%dnm_wls_spectrum_1m.csv", wavelength), data1mWavelengths, data1mIntensities, 1.0);
+  TGraph* gr1m = new TGraph(data1mWavelengths.size(), &data1mWavelengths[0], &data1mIntensities[0]);
+
+  vector<Double_t> data2mWavelengths;
+  vector<Double_t> data2mIntensities;
+  readCsvFile(TString::Format("led_%dnm_wls_spectrum_2m.csv", wavelength), data2mWavelengths, data2mIntensities, 1.0);
+  TGraph* gr2m = new TGraph(data2mWavelengths.size(), &data2mWavelengths[0], &data2mIntensities[0]);
+
+  vector<Double_t> data4mWavelengths;
+  vector<Double_t> data4mIntensities;
+  readCsvFile(TString::Format("led_%dnm_wls_spectrum_4m.csv", wavelength), data4mWavelengths, data4mIntensities, 1.0);
+  TGraph* gr4m = new TGraph(data4mWavelengths.size(), &data4mWavelengths[0], &data4mIntensities[0]);
+
+  wavelength = 360;
+  Int_t beamOnCount = 500000;
+  // wavelength = 395;
+  // Int_t beamOnCount = 100000;
+  TH1D* h1m = getHitWavelengthHist(TString::Format("nova.0deg.%dnm_spectrum.seed1.beamOn%d.1m.root", wavelength, beamOnCount));
+  TH1D* h2m = getHitWavelengthHist(TString::Format("nova.0deg.%dnm_spectrum.seed1.beamOn%d.2m.root", wavelength, beamOnCount));
+  TH1D* h4m = getHitWavelengthHist(TString::Format("nova.0deg.%dnm_spectrum.seed1.beamOn%d.4m.root", wavelength, beamOnCount));
+
+  TCanvas* c1 = new TCanvas("c1", "c1", 800, 600);
+  setMargin();
+  Int_t integral1m = h1m->Integral();
+  Int_t integral2m = h2m->Integral();
+  Int_t integral4m = h4m->Integral();
+
+  h1m->Scale(1. / integral1m * 0.21);
+  h2m->Scale(1. / integral1m * 0.21);
+  h4m->Scale(1. / integral1m * 0.21);
+
+  setH1Style(h1m);
+  h1m->GetXaxis()->SetTitle("Wavelength (m)");
+  h1m->GetYaxis()->SetTitle("Intensity");
+  h1m->SetLineColor(kBlack);
+  h1m->Draw();
+
+  h2m->SetLineColor(kBlue);
+  setH1Style(h2m);
+  h2m->Draw("sames");
+
+  h4m->SetLineColor(kRed);
+  setH1Style(h4m);
+  h4m->Draw("sames");
+
+  gr1m->SetLineColor(kBlack);
+  gr1m->SetLineWidth(2);
+  gr1m->Draw("C,sames");
+
+  gr2m->SetLineColor(kBlue);
+  gr2m->SetLineWidth(2);
+  gr2m->Draw("C,sames");
+
+  gr4m->SetLineColor(kRed);
+  gr4m->SetLineWidth(2);
+  gr4m->Draw("C,sames");
+
+  TLegend* lg = new TLegend(0.63, 0.5, 0.87, 0.86);
+  lg->AddEntry(h1m, "MC 1m", "le");
+  lg->AddEntry(h2m, "MC 2m", "le");
+  lg->AddEntry(h4m, "MC 4m", "le");
+
+  lg->AddEntry(gr1m, "Data 1m", "l");
+  lg->AddEntry(gr2m, "Data 2m", "l");
+  lg->AddEntry(gr4m, "Data 4m", "l");
+
+  setLegendStyle(lg);
+  lg->Draw();
+
+  c1->SaveAs("figures/plotSpectrum.pdf");
+}
+
+void normalizeTh1(TH1* h1)
+{
+  h1->Scale(1. / h1->Integral());
+}
+
+TH1D* getHitWavelengthHist(TString filename)
+{
+  TFile* fileEvent = new TFile(getFilePath(filename));
+  TTree* treeEvent = (TTree*) fileEvent->Get("eventTree");
+  TBranch* branchEvent = treeEvent->GetBranch("eventStat");
+  TLeaf* leafHitWavelength = branchEvent->GetLeaf("hitWavelength");
+
+  TH1D* hHitWavelength = new TH1D("hHitWavelength", "hHitWavelength", 220, 480, 700);
+  for (Int_t j = 0; j < branchEvent->GetEntries(); j++) {
+    branchEvent->GetEntry(j);
+    hHitWavelength->Fill(leafHitWavelength->GetValue());
+  }
+  return hHitWavelength;
+}
+
+void readCsvFile(TString filename,
+                 vector<Double_t>& wavelengths,
+                 vector<Double_t>& values,
+                 double valueUnit)
+{
+  string wavelengthString;
+  string valueString;
+
+  ifstream fCsv(getFilePath(filename));
+  if (fCsv.is_open()) {
+    while (getline(fCsv, wavelengthString, ',')) {
+      getline(fCsv, valueString);
+      wavelengths.push_back(stof(wavelengthString));
+      values.push_back(stof(valueString) * valueUnit);
+    }
+  }
+}
+
+TString getFilePath(TString filename)
+{
+  return "../cmake-build-debug/" + filename;
 }
 
 void plotSpeedData()
@@ -46,18 +173,20 @@ void plotSpeedData()
 
 void plotSpeed()
 {
+  gStyle->SetOptStat("emr");
+  gStyle->SetOptFit(1111);
   vector<Double_t> lengths;
   vector<Double_t> meanHitTimes;
   // TString configuration = "400nm";
   // TString configuration = "430nm";
   // TString configuration = "2deg.430nm";
-  // TString configuration = "0deg.470nm_spectrum";
+  TString configuration = "0deg.470nm_spectrum";
   // TString configuration = "0deg.430nm_spectrum";
   // TString configuration = "0deg.395nm_spectrum";
   // TString configuration = "0deg.360nm_spectrum";
   // TString configuration = "0deg.360nm_spectrum.seed2";
   // TString configuration = "0deg.395nm_spectrum.seed2";
-  TString configuration = "0deg.430nm_spectrum.seed2";
+  // TString configuration = "0deg.430nm_spectrum.seed2";
 
   for (Int_t i = 1; i <= 5; i++) {
     lengths.push_back((Double_t) i);
@@ -154,10 +283,13 @@ void plotHitTime(TString filename, TString figureName)
   TCanvas* c1 = new TCanvas("c1", "c1", 800, 600);
   gPad->SetLeftMargin(0.15);
   gPad->SetBottomMargin(0.15);
+  gPad->SetLogy();
 
   setH1Style(hHitTime);
   hHitTime->GetXaxis()->SetTitle("Time (ns)");
   hHitTime->GetYaxis()->SetTitle("Hit Count");
+  hHitTime->SetName("");
+  hHitTime->SetTitle(figureName);
   hHitTime->Draw();
   c1->SaveAs(TString::Format("figures/%s.pdf", figureName.Data()));
 }
