@@ -228,6 +228,12 @@ def get_h1_model_timing(photon_count, distance):
 
     return h_time
 
+def get_h1_hit_time(root_filename):
+    f_event = TFile(root_filename)
+    h_hit_time = TH1D('h_hit_time', 'h_hit_time', 100, 0, 100)
+    for event in f_event.eventTree:
+        h_hit_time.Fill(event.hitTime)
+
 def plot_timing():
     h1 = get_h1_model_timing(10000, 100)
     # h2 = get_h1_model_timing(10000, 200)
