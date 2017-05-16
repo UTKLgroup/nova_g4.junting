@@ -27,9 +27,9 @@ void nova() {
 //  plotHitTime("../cmake-build-debug/nova.1m.root", "1m");
 //  plotHitTime("../cmake-build-debug/nova.2m.root", "2m");
 //
-  plotSpeed();
+ plotSpeed();
 //  plotSpeedData();
-//  plotSpectrum();
+ // plotSpectrum();
 }
 
 void plotSpectrum()
@@ -52,13 +52,14 @@ void plotSpectrum()
   readCsvFile(TString::Format("led_%dnm_wls_spectrum_4m.csv", wavelength), data4mWavelengths, data4mIntensities, 1.0);
   TGraph* gr4m = new TGraph(data4mWavelengths.size(), &data4mWavelengths[0], &data4mIntensities[0]);
 
-  wavelength = 360;
-  Int_t beamOnCount = 500000;
+  // wavelength = 360;
+  // wavelength = 470;
+  // Int_t beamOnCount = 500000;
   // wavelength = 395;
   // Int_t beamOnCount = 100000;
-  TH1D* h1m = getHitWavelengthHist(TString::Format("nova.0deg.%dnm_spectrum.seed1.beamOn%d.1m.root", wavelength, beamOnCount));
-  TH1D* h2m = getHitWavelengthHist(TString::Format("nova.0deg.%dnm_spectrum.seed1.beamOn%d.2m.root", wavelength, beamOnCount));
-  TH1D* h4m = getHitWavelengthHist(TString::Format("nova.0deg.%dnm_spectrum.seed1.beamOn%d.4m.root", wavelength, beamOnCount));
+  TH1D* h1m = getHitWavelengthHist(TString::Format("run_spectrum.%dnm.100cm.root", wavelength));
+  TH1D* h2m = getHitWavelengthHist(TString::Format("run_spectrum.%dnm.200cm.root", wavelength));
+  TH1D* h4m = getHitWavelengthHist(TString::Format("run_spectrum.%dnm.400cm.root", wavelength));
 
   TCanvas* c1 = new TCanvas("c1", "c1", 800, 600);
   setMargin();
@@ -72,7 +73,8 @@ void plotSpectrum()
 
   setH1Style(h1m);
   h1m->GetXaxis()->SetTitle("Wavelength (m)");
-  h1m->GetYaxis()->SetTitle("Intensity");
+  h1m->GetYaxis()->SetTitle("Relative Intensity (a.u.)");
+  h1m->GetYaxis()->SetTitleOffset(1.6);
   h1m->SetLineColor(kBlack);
   h1m->Draw();
 
@@ -174,28 +176,30 @@ void plotSpeedData()
 void plotSpeed()
 {
   gStyle->SetOptStat("emr");
-  gStyle->SetOptFit(1111);
+  // gStyle->SetOptFit(1111);
   vector<Double_t> lengths;
   vector<Double_t> meanHitTimes;
   // TString configuration = "400nm";
   // TString configuration = "430nm";
   // TString configuration = "2deg.430nm";
-  TString configuration = "0deg.470nm_spectrum";
+  // TString configuration = "0deg.470nm_spectrum";
   // TString configuration = "0deg.430nm_spectrum";
   // TString configuration = "0deg.395nm_spectrum";
   // TString configuration = "0deg.360nm_spectrum";
   // TString configuration = "0deg.360nm_spectrum.seed2";
   // TString configuration = "0deg.395nm_spectrum.seed2";
   // TString configuration = "0deg.430nm_spectrum.seed2";
+  TString configuration = "395nm";
 
   for (Int_t i = 1; i <= 5; i++) {
     lengths.push_back((Double_t) i);
-    TString filename = TString::Format("../cmake-build-debug/nova.%s.%dm.root", configuration.Data(), i);
-    meanHitTimes.push_back(getMeanHitTime(filename));
-    // meanHitTimes.push_back(getHitTimeFirstPeak(filename));
+    TString filename = TString::Format("../cmake-build-debug/run_speed.395nm.%dcm.random_seed_1.root", i * 100);
+    // meanHitTimes.push_back(getMeanHitTime(filename));
+    meanHitTimes.push_back(getHitTimeFirstPeak(filename));
+    // plotHitTime(filename, TString::Format("%s.%dm", configuration.Data(), i));
     plotHitTime(filename, TString::Format("%s.%dm", configuration.Data(), i));
-    if (i == 1)
-      plotGpsEnergySpectrum(filename, TString::Format("%s.%dm.gps_energy_spectrum", configuration.Data(), i));
+    // if (i == 1)
+    // plotGpsEnergySpectrum(filename, TString::Format("%s.%dm.gps_energy_spectrum", configuration.Data(), i));
   }
 
   TCanvas* c1 = new TCanvas("c1", "c1", 800, 600);
@@ -203,7 +207,7 @@ void plotSpeed()
 
   const Int_t lengthCount = 5;
   Double_t times[lengthCount] = {68.4189, 73.7123, 79.6922, 85.5795, 91.3367};
-  Double_t offset = times[1] - meanHitTimes[1];
+  Double_t offset = times[0] - meanHitTimes[0];
   for (int i = 0; i < lengthCount; i++) {
     times[i] -= offset;
   }
@@ -215,7 +219,8 @@ void plotSpeed()
   grData->SetMarkerStyle(20);
   grData->Draw("AP");
   grData->Fit("pol1");
-  grData->GetXaxis()->SetLimits(20, 60);
+  // grData->GetXaxis()->SetLimits(20, 60);
+  TF1* pol1Fit = grData->GetFunction("pol1");
 
   TGraph* gr = new TGraph(lengths.size(), &meanHitTimes[0], &lengths[0]);
   gr->GetXaxis()->SetTitle("Time (ns)");
@@ -225,15 +230,18 @@ void plotSpeed()
   gr->SetMarkerSize(1.8);
   gr->Draw("P");
 
-  TLegend* lg = new TLegend(0.15, 0.7, 0.5, 0.85);
+  TLegend* lg = new TLegend(0.18, 0.7, 0.5, 0.85);
   lg->AddEntry(grData, "Data", "p");
   lg->AddEntry(gr, "MC", "p");
+  lg->AddEntry(pol1Fit, "Fit to data, 0.173 m/ns", "l");
   setLegendStyle(lg);
+  lg->SetMargin(0.3);
   lg->Draw();
 
   c1->Update();
   c1->Modified();
-  c1->SaveAs(TString::Format("figures/speed.%s.pdf", configuration.Data()));
+  // c1->SaveAs(TString::Format("figures/speed.%s.pdf", configuration.Data()));
+  c1->SaveAs(TString::Format("figures/plotSpeed.pdf"));
 }
 
 Double_t getHitTimeFirstPeak(TString filename)
