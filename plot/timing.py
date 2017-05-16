@@ -31,10 +31,10 @@ def plot_collect():
     raw_input('Press any key to continue')
 
 def plot_emission_tau_effect():
-    f_9 = TFile('photon_timing_mc_1.root')
+    f_9 = TFile('data/photon_timing_mc_1.root')
     h_9 = f_9.Get("photontimingana/fSliceDuration")
 
-    f_12 = TFile('photon_timing_mc.emission_tau_11_point_8.2.root')
+    f_12 = TFile('data/photon_timing_mc.emission_tau_11_point_8.2.root')
     h_12 = f_12.Get("photontimingana/fSliceDuration")
     
     c1 = TCanvas('c1', 'c1', 800, 600)
@@ -208,7 +208,7 @@ def get_h1_model_timing(photon_count, distance):
     speed_of_light = 29.9792458
     speed_of_light_fiber = speed_of_light / fiber_index_of_refraction
     base_time = distance / speed_of_light_fiber
-    dt_per_zs = get_random_samples('Dt_per_z_distribution.root', 'Dt_per_z', photon_count)
+    dt_per_zs = get_random_samples('data/Dt_per_z_distribution.root', 'Dt_per_z', photon_count)
 
     h_time = TH1D('h_time', 'h_time', 100, 0, 100)
     for dt_per_z in dt_per_zs:
@@ -228,31 +228,74 @@ def get_h1_model_timing(photon_count, distance):
 
     return h_time
 
-def get_h1_hit_time(root_filename):
-    f_event = TFile(root_filename)
+def get_h1_multiple_wls_model_timing(photon_count, distance):
+    emission_tau = 11.8
+    fiber_index_of_refraction = 1.59
+    speed_of_light = 29.9792458
+    speed_of_light_fiber = speed_of_light / fiber_index_of_refraction
+    base_time = distance / speed_of_light_fiber
+    dt_per_zs = get_random_samples('data/Dt_per_z_distribution.root', 'Dt_per_z', photon_count)
+
+    h_time = TH1D('h_time', 'h_time', 100, 0, 100)
+    for dt_per_z in dt_per_zs:
+        time = base_time
+        time += np.random.exponential(emission_tau)
+        time += np.random.exponential(emission_tau)
+        time += np.random.exponential(emission_tau)
+
+        fiber_spread = 0.
+        weight = -1.
+        uweight = 0.
+        while weight < uweight:
+    	    fiber_spread = distance * dt_per_z
+    	    delta_distance = fiber_spread * speed_of_light_fiber
+    	    weight = get_fiber_transmission(distance + delta_distance) / get_fiber_transmission(distance)
+    	    uweight = uniform(0, 1)
+        time += fiber_spread
+        h_time.Fill(time)
+
+    return h_time
+
+def get_h1_hit_time(root_filename, photon_count):
     h_hit_time = TH1D('h_hit_time', 'h_hit_time', 100, 0, 100)
+    f_event = TFile(root_filename)
+    counter = 0
     for event in f_event.eventTree:
         h_hit_time.Fill(event.hitTime)
+        counter += 1
+        if counter >= photon_count:
+            break
+    return h_hit_time
 
 def plot_timing():
-    h1 = get_h1_model_timing(10000, 100)
-    # h2 = get_h1_model_timing(10000, 200)
-    # h3 = get_h1_model_timing(10000, 400)
+    photon_count = 10000
+    # fiber_length = 400
+    fiber_length = 100
+    h_simulation = get_h1_hit_time('../cmake-build-debug/run_spectrum.470nm.{}cm.root'.format(fiber_length), photon_count)
+    # h_model = get_h1_model_timing(int(h_simulation.Integral()), fiber_length)
+    h_model = get_h1_multiple_wls_model_timing(int(h_simulation.Integral()), fiber_length)
 
+    print h_simulation
+    print type(h_simulation)
     c1 = TCanvas('c1', 'c1', 800, 600)
-    h1.Draw()
-    # h2.Draw('sames')
-    # h3.Draw('sames')
+    set_margin()
+
+    set_h1_style(h_model)
+    h_model.Draw()
+    h_model.GetYaxis().SetRangeUser(0, 1500)
+    h_model.GetXaxis().SetTitle('')
+    h_simulation.Draw('sames')
+
     c1.Update()
     c1.SaveAs('figures/plot_timing.pdf')
     raw_input()
 
 # plot_smear()
 # plot_collect()
-plot_emission_tau_effect()
+# plot_emission_tau_effect()
 # plot_noise_effect()
 # get_random_samples('Dt_per_z_distribution.root', 'Dt_per_z', 10)
 # test_random_draw()
 # test_fiber_transmission()
 # test_random_exponential()
-# plot_timing()
+plot_timing()
