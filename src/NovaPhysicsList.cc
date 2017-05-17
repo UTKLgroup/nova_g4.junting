@@ -24,7 +24,7 @@ NovaPhysicsList::NovaPhysicsList() : G4VModularPhysicsList()
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
   RegisterPhysics(opticalPhysics);
 
-  opticalPhysics->SetWLSTimeProfile("delta");
+  opticalPhysics->SetWLSTimeProfile("exponential");
 
   opticalPhysics->SetScintillationYieldFactor(1.0);
   opticalPhysics->SetScintillationExcitationRatio(0.0);
