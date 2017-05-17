@@ -127,25 +127,31 @@ def plot_noise_effect():
 def plot_two_wls_effect():
     gStyle.SetOptStat('nmri')
 
+    # f_standard = TFile('data/photon_timing_mc.emission_tau_11_point_8.1.root')
     f_standard = TFile('data/photon_timing_mc_1.root')
     h_standard = f_standard.Get("photontimingana/fSliceDuration")
+    # h_standard = f_standard.Get("photontimingana/fSliceMeanTNS")
 
-    f_two_wls = TFile('data/photon_timing_mc.2wls.root')
+    # f_two_wls = TFile('data/photon_timing_mc.2wls.root')
+    f_two_wls = TFile('data/photon_timing_mc.2wls.drop_photrans.root')
     h_two_wls = f_two_wls.Get("photontimingana/fSliceDuration")
+    # h_two_wls = f_two_wls.Get("photontimingana/fSliceMeanTNS")
 
     c1 = TCanvas('c1', 'c1', 800, 600)
     set_margin()
 
+    max_y = max(h_standard.GetMaximum(), h_two_wls.GetMaximum()) * 1.2
     set_h1_style(h_standard)
     h_standard.GetXaxis().SetTitle('Slice Duration (ns)')
     h_standard.GetYaxis().SetTitle('Slice Count')
     h_standard.SetName('standard MC')
     h_standard.GetXaxis().SetRangeUser(0, 300)
-    h_standard.GetYaxis().SetRangeUser(0, 700)
+    h_standard.GetYaxis().SetRangeUser(0, max_y)
+    h_standard.SetTitle('Effect of Two WLS in MC')
     h_standard.Draw()
 
     set_h1_style(h_two_wls)
-    h_two_wls.SetName('two WLS MC')
+    h_two_wls.SetName('11.8 ns, 2 WLS MC')
     h_two_wls.SetLineColor(kRed + 2)
     h_two_wls.Draw('sames')
 
@@ -318,7 +324,8 @@ def test_random_exponential():
     raw_input()
 
 def get_h1_model_timing(photon_count, distance):
-    emission_tau = 11.8
+    # emission_tau = 11.8
+    emission_tau = 9.
     fiber_index_of_refraction = 1.59
     speed_of_light = 29.9792458
     speed_of_light_fiber = speed_of_light / fiber_index_of_refraction
@@ -343,8 +350,9 @@ def get_h1_model_timing(photon_count, distance):
 
     return h_time
 
-def get_h1_multiple_wls_model_timing(photon_count, distance):
+def get_h1_multiple_wls_model_timing(photon_count, wls_count, distance):
     emission_tau = 11.8
+    # emission_tau = 9.
     fiber_index_of_refraction = 1.59
     speed_of_light = 29.9792458
     speed_of_light_fiber = speed_of_light / fiber_index_of_refraction
@@ -354,9 +362,9 @@ def get_h1_multiple_wls_model_timing(photon_count, distance):
     h_time = TH1D('h_time', 'h_time', 100, 0, 100)
     for dt_per_z in dt_per_zs:
         time = base_time
-        time += np.random.exponential(emission_tau)
-        time += np.random.exponential(emission_tau)
-        time += np.random.exponential(emission_tau)
+
+        for i in range(wls_count):
+            time += np.random.exponential(emission_tau)
 
         fiber_spread = 0.
         weight = -1.
@@ -413,13 +421,11 @@ def plot_effect_of_led():
     c1.SaveAs('figures/plot_effect_of_led.pdf')
     raw_input()
 
-def plot_timing():
+def plot_timing(fiber_length):
     gStyle.SetOptStat('nemr')
 
     photon_count = 100000
-    fiber_length = 400
-    # fiber_length = 200
-    h_simulation = get_h1_hit_time('../cmake-build-debug/run_spectrum.470nm.{}cm.root'.format(fiber_length), photon_count)
+    h_simulation = get_h1_hit_time('../cmake-build-debug/run_spectrum.wls_exponential.395nm.{}cm.random_seed_1.root'.format(fiber_length), photon_count)
     h_model = get_h1_model_timing(int(h_simulation.GetEntries()), fiber_length)
 
     c1 = TCanvas('c1', 'c1', 800, 600)
@@ -429,6 +435,7 @@ def plot_timing():
     if fiber_length == 400:
         max_y = 6000
 
+    max_y = max(h_model.GetMaximum(), h_simulation.GetMaximum()) * 1.2
     set_h1_style(h_model)
     h_model.Draw()
     h_model.GetYaxis().SetRangeUser(0, max_y)
@@ -466,31 +473,55 @@ def plot_timing():
     c1.SaveAs('figures/plot_timing.{}cm.pdf'.format(fiber_length))
     raw_input()
 
-def plot_multiple_wls_timing():
-    photon_count = 10000
-    # fiber_length = 400
-    fiber_length = 200
-    h_simulation = get_h1_hit_time('../cmake-build-debug/run_spectrum.470nm.{}cm.root'.format(fiber_length), photon_count)
-    h_model = get_h1_multiple_wls_model_timing(int(h_simulation.Integral()), fiber_length)
+def plot_multiple_wls_timing(fiber_length):
+    gStyle.SetOptStat(0)
+
+    photon_count = 100000
+    h_simulation = get_h1_hit_time('../cmake-build-debug/run_spectrum.wls_exponential.395nm.{}cm.random_seed_1.root'.format(fiber_length), photon_count)
+    h_model_wls_1 = get_h1_multiple_wls_model_timing(int(h_simulation.GetEntries() * 100), 1, fiber_length)
+    h_model_wls_2 = get_h1_multiple_wls_model_timing(int(h_simulation.GetEntries() * 100), 2, fiber_length)
+    h_model_wls_3 = get_h1_multiple_wls_model_timing(int(h_simulation.GetEntries() * 100), 3, fiber_length)
+
+    h_model_wls_1.Scale(0.01)
+    h_model_wls_2.Scale(0.01)
+    h_model_wls_3.Scale(0.01)
 
     c1 = TCanvas('c1', 'c1', 800, 600)
     set_margin()
 
-    set_h1_style(h_model)
-    h_model.Draw()
-    h_model.GetYaxis().SetRangeUser(0, 1000)
-    h_model.GetXaxis().SetTitle('Time to APD (ns)')
-    h_model.GetYaxis().SetTitle('Photon Count')
-    h_model.SetTitle('{} cm fiber'.format(fiber_length))
-    h_model.SetLineColor(kRed + 2)
-
+    max_y = max([h_simulation.GetMaximum(), h_model_wls_1.GetMaximum(), h_model_wls_2.GetMaximum(), h_model_wls_3.GetMaximum()]) * 1.2
     set_h1_style(h_simulation)
-    h_simulation.SetLineColor(kBlue + 2)
-    h_simulation.Draw('sames')
+    h_simulation.Draw()
+    h_simulation.GetYaxis().SetRangeUser(0, max_y)
+    h_simulation.GetXaxis().SetTitle('Time to APD (ns)')
+    h_simulation.GetYaxis().SetTitle('Photon Count')
+    h_simulation.SetTitle('{} cm fiber'.format(fiber_length))
+    h_simulation.SetLineWidth(2)
+    h_simulation.SetLineColor(kBlack)
+
+    set_h1_style(h_model_wls_1)
+    h_model_wls_1.SetLineColor(kRed + 2)
+    h_model_wls_1.Draw('sames,hist')
+
+    set_h1_style(h_model_wls_2)
+    h_model_wls_2.SetLineColor(kGreen + 2)
+    h_model_wls_2.Draw('sames,hist')
+
+    set_h1_style(h_model_wls_3)
+    h_model_wls_3.SetLineColor(kOrange + 2)
+    h_model_wls_3.Draw('sames,hist')
+
+    lg1 = TLegend(0.5, 0.6, 0.85, 0.85)
+    lg1.AddEntry(h_simulation, 'simulation', 'l')
+    lg1.AddEntry(h_model_wls_1, 'model, 1 wls', 'l')
+    lg1.AddEntry(h_model_wls_2, 'model, 2 wls', 'l')
+    lg1.AddEntry(h_model_wls_3, 'model, 3 wls', 'l')
+    set_legend_style(lg1)
+    lg1.Draw()
 
     c1.Update()
-    c1.SaveAs('figures/plot_timing.{}cm.pdf'.format(fiber_length))
-    raw_input()
+    c1.SaveAs('figures/plot_multiple_wls_timing.{}cm.pdf'.format(fiber_length))
+    raw_input('Press any key to continue.')
 
 # plot_smear()
 # plot_collect()
@@ -504,5 +535,7 @@ def plot_multiple_wls_timing():
 # test_fiber_transmission()
 # test_random_exponential()
 # plot_effect_of_led()
-plot_timing()
-# plot_multiple_wls_timing()
+# plot_timing(200)
+plot_timing(400)
+# plot_multiple_wls_timing(200)
+# plot_multiple_wls_timing(400)

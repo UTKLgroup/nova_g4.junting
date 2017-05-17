@@ -58,20 +58,21 @@ def write_face_illumination_mac(**kwargs):
         f_mac.write('/run/beamOn {}\n'.format(event_count))
 
 def run_spectrum():    
-    for random_seed in range(1, 2):
+    for random_seed in range(1, 3):
         print random_seed
         for fiber_length in [100, 200, 400]:
+        # for fiber_length in [800, 1600, 3200]:
             # led_wavelength = 470
             led_wavelength = 395
             mac_filename='run.side_illumination.mac'        
-            event_count = 100000
+            event_count = 50000
     
             write_side_illumination_mac(led_wavelength=led_wavelength,
                                         fiber_length=fiber_length,
                                         event_count=event_count,
                                         mac_filename=mac_filename)
             call('./nova {} {}'.format(mac_filename, random_seed), shell=True)
-            call('mv nova.root run_spectrum.{}nm.{}cm.random_seed_{}.root'.format(led_wavelength, fiber_length, random_seed), shell=True)
+            call('mv nova.root run_spectrum.wls_exponential.{}nm.{}cm.random_seed_{}.root'.format(led_wavelength, fiber_length, random_seed), shell=True)
 
 def run_speed():
     led_wavelength = 395
@@ -94,7 +95,7 @@ if __name__ == '__main__':
 
     # write_side_illumination_mac(led_wavelength=395,
     #                             fiber_length=10,
-    #                             event_count=1000,
+    #                             event_count=20,
     #                             mac_filename='run.side_illumination.mac')
 
     # write_face_illumination_mac(led_wavelength=395,
