@@ -1,3 +1,5 @@
+*.txt
+*.root
 data
 figures
 cry_v1.7
