@@ -70,7 +70,7 @@ def get_h1_cell_tns(filename):
     return h_cell_tns
 
 def get_h1_absolute_cell_tns(filename):
-    h_absolute_cell_tns = TH1D('h_absolute_cell_tns', 'h_absolute_cell_tns', 50, 0, 200)
+    h_absolute_cell_tns = TH1D('h_absolute_cell_tns', 'h_absolute_cell_tns', 100, 210000, 230000)
     for cell_tnss in get_slice_tnss(filename):
         for cell_tns in cell_tnss:
             h_absolute_cell_tns.Fill(cell_tns)
@@ -98,6 +98,35 @@ def plot_cell_tns():
     c1.Update()
     raw_input('Press anykey to continue.\n')
 
+def plot_h1_absolute_cell_tns():
+    h1 = get_h1_absolute_cell_tns('tns32.txt')
+    h2 = get_h1_absolute_cell_tns('tns33.txt')
+    h3 = get_h1_absolute_cell_tns('tns34.txt')
+
+    c1 = TCanvas('c1', 'c1', 800, 600)
+    h1.SetLineColor(kBlack)
+    h1.SetName('h1')
+    h1.GetYaxis().SetRangeUser(0, h1.GetMaximum() * 1.2)
+    h1.Draw()
+
+    h2.SetLineColor(kBlue)
+    h2.SetName('h2')
+    h2.Draw('sames')
+
+    h3.SetLineColor(kRed)
+    h3.SetName('h3')
+    h3.Draw('sames')
+
+    c1.Update()
+    raw_input('Press anykey to continue.\n')
+
+def print_run_info(filename):
+    print len(get_event_tnss(filename))
+    for i, event_tns in enumerate(get_event_tnss('tns32.txt')):
+        print '\nevent {} has {} slices'.format(i, len(event_tns))
+        for j, slice_tns in enumerate(event_tns):
+            print 'slice {} has {} cell hits, with mean {}'.format(j, len(slice_tns), sum(slice_tns) / len(slice_tns))
+
 # pprint(sorted(map(lambda x: len(x), get_slice_tnss('tns21.txt'))))
 # pprint(sorted(map(lambda x: len(x), get_slice_tnss('tns23.txt'))))
 # pprint(sorted(map(lambda x: len(x), get_slice_tnss('tns20.txt'))))
@@ -118,3 +147,6 @@ def plot_cell_tns():
 # plot_cell_absolute_tns()
 
 # print get_slice_tnss('tns30.txt')
+# print_run_info('tns32.txt')
+
+plot_h1_absolute_cell_tns()
