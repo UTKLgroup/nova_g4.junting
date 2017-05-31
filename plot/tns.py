@@ -101,7 +101,7 @@ def get_h1_absolute_cell_tns(filename):
             h_absolute_cell_tns.Fill(cell_tns)
     return h_absolute_cell_tns
 
-def plot_h1_absolute_cell_tns():
+def plot_absolute_cell_tns():
     h1 = get_h1_absolute_cell_tns('tns36.txt')
     h2 = get_h1_absolute_cell_tns('tns35.txt')
     h3 = get_h1_absolute_cell_tns('tns37.txt')
@@ -303,11 +303,10 @@ def plot_effect_of_removing_cell_hit():
 # pprint(get_slice_tnss('tns20.txt'))
 # pprint(get_slice_durations('tns22.txt'))
 # pprint(get_slice_durations('tns21.txt'))
-# print get_slice_tnss('tns30.txt')
-# print_run_info('tns32.txt')
 
 # plot_slice_durations()
 # plot_cell_tns()
-# plot_h1_absolute_cell_tns()
+# plot_absolute_cell_tns()
 # plot_effect_of_20_wls()
 plot_effect_of_removing_cell_hit()
+# print_run_info('tns32.txt')
