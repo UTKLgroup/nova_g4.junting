@@ -230,7 +230,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
 
 G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
 {
-  G4double fiberLength = cellLength;
+  G4double fiberLength = length;
   G4double experimentalHallX = fiberRadius * 2.0;
   G4double experimentalHallY = fiberRadius * 2.0;
   G4double experimentalHallZ = fiberLength * 0.6;
@@ -293,7 +293,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
 {
   G4double experimentalHallX = getCellHeight() / 2.0  + 20.0*cm;
   G4double experimentalHallY = getCellHeight() / 2.0  + 20.0*cm;
-  G4double experimentalHallZ = cellLength / 2.0 + 20.0*cm;
+  G4double experimentalHallZ = length / 2.0 + 20.0*cm;
 
   experimentalHallSolid = new G4Box("experimentalHallSolid",experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
@@ -306,7 +306,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                                                      "experimentalHallPhysicalVolume",
                                                      0, false, 0);
 
-  G4UnionSolid* pvcSolid = makeCellSolid(0.0, cellLength);
+  G4UnionSolid* pvcSolid = makeCellSolid(0.0, length);
   G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSolid,
                                                           G4Material::GetMaterial("pvc"),
                                                           "pvcLogicalVolume",
@@ -318,7 +318,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                     experimentalHallLogicalVolume,
                     false, 0);
 
-  G4UnionSolid* liquidScintillatorSolid = makeCellSolid(pvcThickness, cellLength - pvcThickness);
+  G4UnionSolid* liquidScintillatorSolid = makeCellSolid(pvcThickness, length - pvcThickness);
   G4LogicalVolume* liquidScintillatorLogicalVolume = new G4LogicalVolume(liquidScintillatorSolid,
                                                                          G4Material::GetMaterial("liquidScintillator"),
                                                                          "liquidScintillatorLogicalVolume",
@@ -397,17 +397,17 @@ G4UnionSolid* NovaDetectorConstruction::makePvcCellSolid()
   G4Box* pvcHorizontal = new G4Box("pvcHorizontal",
                                    straightWidth / 2.0,
                                    pvcThickness / 2.0,
-                                   cellLength / 2.0);
+                                   length / 2.0);
 
   G4Box* pvcVertical = new G4Box("pvcVertical",
                                  straightHeight / 2.0,
                                  pvcThickness / 2.0,
-                                 cellLength / 2.0);
+                                 length / 2.0);
 
   G4Tubs* pvcCorner = new G4Tubs("pvcCorner",
                                  innerCellCornerRadius,
                                  outerCornerRadius,
-                                 cellLength / 2.0,
+                                 length / 2.0,
                                  0.0,
                                  0.5 * CLHEP::pi * rad);
 
@@ -475,17 +475,17 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillatorSolid()
   G4Box* box1 = new G4Box("box1",
                           straightWidth / 2.,
                           fullHeight / 2.,
-                          cellLength / 2.);
+                          length / 2.);
 
   G4Box* box2 = new G4Box("box2",
                           innerCellCornerRadius / 2.,
                           straightHeight / 2.,
-                          cellLength / 2.);
+                          length / 2.);
 
   G4Tubs* innerCorner = new G4Tubs("innerCorner",
                                    0.0 * mm,
                                    innerCellCornerRadius,
-                                   cellLength / 2.0,
+                                   length / 2.0,
                                    0.0,
                                    CLHEP::pi / 2.0 * rad);
 
@@ -548,17 +548,17 @@ G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
   G4double coreRadius  = fiberRadius * coreFraction;
   G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
 
-  G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, cellLength / 2.0, 0.0, 360.0 * deg);
+  G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, length / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
                                                                     G4Material::GetMaterial("fluorinatedPolymer"),
                                                                     "outerCladdingLogicalVolume");
 
-  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, cellLength / 2.0, 0.0, 360.0 * deg);
+  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, length / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
                                                                     G4Material::GetMaterial("pmma"),
                                                                     "innerCladdingLogicalVolume");
 
-  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, cellLength / 2.0, 0.0, 360.0 * deg);
+  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, length / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
                                                            G4Material::GetMaterial("fiberCore"),
                                                            "coreLogicalVolume");
@@ -623,7 +623,7 @@ G4LogicalVolume* NovaDetectorConstruction::makePmt()
 void NovaDetectorConstruction::printSetting()
 {
   G4cout << std::setw(25) << "liquidScintillatorLightYield = " << std::setw(10) << liquidScintillatorMpt->GetConstProperty("SCINTILLATIONYIELD") << std::setw(10) << " MeV-1" << G4endl;
-  G4cout << std::setw(25) << "cellLength = " << std::setw(10) << cellLength / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "length = " << std::setw(10) << length / cm << std::setw(10) << " cm" << G4endl;
   G4cout << std::setw(25) << "straightWidth = " << std::setw(10) << straightWidth / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "straightHeight = " << std::setw(10) << straightHeight / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "innerCellCornerRadius = " << std::setw(10) << innerCellCornerRadius / mm << std::setw(10) << " mm" << G4endl;
@@ -643,7 +643,7 @@ void NovaDetectorConstruction::setDefaults()
   pvcThickness = 3.3 * mm;
   fiberRadius = 0.35 * mm;
   fiberCladdingFraction = 0.03;
-  cellLength = 120.0 * cm;
+  length = 120.0 * cm;
   pmtThickness = 1.0 * mm;
   photodetectorType = "apd";
   simulationMode = "cell";

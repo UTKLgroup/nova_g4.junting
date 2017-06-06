@@ -38,10 +38,10 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
   fiberRadius->SetParameterName("fiberRadius", false);
   fiberRadius->SetDefaultUnit("mm");
 
-  cellLength = new G4UIcmdWithADoubleAndUnit("/nova/detector/cellLength", this);
-  cellLength->SetGuidance("Set the cell length.");
-  cellLength->SetParameterName("cellLength", false);
-  cellLength->SetDefaultUnit("cm");
+  length = new G4UIcmdWithADoubleAndUnit("/nova/detector/length", this);
+  length->SetGuidance("Set detector length.");
+  length->SetParameterName("length", false);
+  length->SetDefaultUnit("cm");
 
   photodetectorType = new G4UIcmdWithAString("/nova/detector/photodetectorType", this);
   photodetectorType->SetGuidance("Photodetector type. Two options are available: pmt and apd.");
@@ -68,7 +68,7 @@ NovaDetectorMessenger::~NovaDetectorMessenger()
 {
   delete straightWidth;
   delete straightHeight;
-  delete cellLength;
+  delete length;
   delete pvcThickness;
   delete innerCellCornerRadius;
   delete fiberRadius;
@@ -88,8 +88,8 @@ void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if (command == straightHeight) {
     detectorConstruction->setStraightHeight(straightHeight->GetNewDoubleValue(newValue));
   }
-  else if (command == cellLength) {
-    detectorConstruction->setCellLength(cellLength->GetNewDoubleValue(newValue));
+  else if (command == length) {
+    detectorConstruction->setLength(length->GetNewDoubleValue(newValue));
   }
   else if (command == pvcThickness) {
     detectorConstruction->setPvcThickness(pvcThickness->GetNewDoubleValue(newValue));
