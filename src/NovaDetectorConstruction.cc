@@ -311,6 +311,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                                                           G4Material::GetMaterial("pvc"),
                                                           "pvcLogicalVolume",
                                                           0, 0, 0);
+  setPvcSurfaceProperty(pvcLogicalVolume);
   new G4PVPlacement(0,
                     G4ThreeVector(0, -getCellHeight() / 2.0 + pvcThickness / 2.0),
                     pvcLogicalVolume,
@@ -323,6 +324,10 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                                                                          G4Material::GetMaterial("liquidScintillator"),
                                                                          "liquidScintillatorLogicalVolume",
                                                                          0, 0, 0);
+  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
+  NovaLiquidScintillatorSd* liquidScintillatorSd = new NovaLiquidScintillatorSd("/NovaDet/liquidScintillatorSd");
+  sdManager->AddNewDetector(liquidScintillatorSd);
+  liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
   new G4PVPlacement(0,
                     G4ThreeVector(0, 0, pvcThickness / 2.0),
                     liquidScintillatorLogicalVolume,
@@ -330,12 +335,30 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                     pvcLogicalVolume,
                     false, 0);
 
-  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-  NovaLiquidScintillatorSd* liquidScintillatorSd = new NovaLiquidScintillatorSd("/NovaDet/liquidScintillatorSd");
-  sdManager->AddNewDetector(liquidScintillatorSd);
-  liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
-
   return experimentalHallPhysicalVolume;
+}
+
+void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume)
+{
+  std::vector<G4double> reflectivityEnergies;
+  std::vector<G4double> reflectivities;
+  readCsvFile(PVC_REFLECTIVITY_FILENAME, reflectivityEnergies, reflectivities, 1.0);
+  std::vector<G4double> zeroConstants(reflectivityEnergies.size(), 0.0);
+
+  G4MaterialPropertiesTable* pvcOpticalSurfaceMpt = new G4MaterialPropertiesTable();
+  pvcOpticalSurfaceMpt->AddProperty("REFLECTIVITY", &reflectivityEnergies[0], &reflectivityEnergies[0], (G4int) reflectivityEnergies.size());
+  pvcOpticalSurfaceMpt->AddProperty("SPECULARLOBECONSTANT", &reflectivityEnergies[0], &zeroConstants[0], (G4int) reflectivityEnergies.size());
+  pvcOpticalSurfaceMpt->AddProperty("SPECULARSPIKECONSTANT", &reflectivityEnergies[0], &zeroConstants[0], (G4int) reflectivityEnergies.size());
+  pvcOpticalSurfaceMpt->AddProperty("BACKSCATTERCONSTANT", &reflectivityEnergies[0], &zeroConstants[0], (G4int) reflectivityEnergies.size());
+
+  G4OpticalSurface* pvcOpticalSurface = new G4OpticalSurface("pvcSurface");
+  pvcOpticalSurface->SetModel(unified);
+  pvcOpticalSurface->SetPolish(0);
+  pvcOpticalSurface->SetFinish(groundfrontpainted);
+  pvcOpticalSurface->SetType(dielectric_metal);
+  pvcOpticalSurface->SetMaterialPropertiesTable(pvcOpticalSurfaceMpt);
+
+  new G4LogicalSkinSurface("pvcLogicalSkinSurface", pvcLogicalVolume, pvcOpticalSurface);
 }
 
 G4UnionSolid* NovaDetectorConstruction::makeCellSolid(G4double deltaSize, G4double length)

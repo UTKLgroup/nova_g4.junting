@@ -58,6 +58,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double FIBER_SECOND_CLADDING_REFRACTION_INDEX = 1.42;
 
     G4String INPUT_DIR = "input";
+    G4String PVC_REFLECTIVITY_FILENAME = "avg_ext.txt";
     G4String LIQUID_SCINTILLATOR_EMISSION_FILENAME = "ppo_emission.txt";
     G4String LIQUID_SCINTILLATOR_ABSORPTION_LENGTH_FILENAME = "PSTBulkAbsorb.cfg";
     G4String LIQUID_SCINTILLATOR_WLS_ABSORPTION_LENGTH_FILENAME = "UPS923.cfg";
@@ -81,6 +82,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void defineFluorinatedPolymer(G4String materialName);
     void definePvc(G4String materialName);
     void defineGalactic();
+    void setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume);
+
     G4UnionSolid* makeCellSolid(G4double deltaSize, G4double length);
     G4UnionSolid* makePvcCellSolid();
     G4UnionSolid* makeLiquidScintillatorSolid();
