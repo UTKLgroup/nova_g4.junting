@@ -306,7 +306,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                                                      "experimentalHallPhysicalVolume",
                                                      0, false, 0);
 
-  G4UnionSolid* pvcSolid = makePvcCell();
+  G4UnionSolid* pvcSolid = makeCellSolid(0.0, cellLength);
   G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSolid,
                                                           G4Material::GetMaterial("pvc"),
                                                           "pvcLogicalVolume",
@@ -318,30 +318,79 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                     experimentalHallLogicalVolume,
                     false, 0);
 
-  G4UnionSolid* liquidScintillatorSolid = makeLiquidScintillator();
+  G4UnionSolid* liquidScintillatorSolid = makeCellSolid(pvcThickness, cellLength - pvcThickness);
   G4LogicalVolume* liquidScintillatorLogicalVolume = new G4LogicalVolume(liquidScintillatorSolid,
                                                                          G4Material::GetMaterial("liquidScintillator"),
                                                                          "liquidScintillatorLogicalVolume",
                                                                          0, 0, 0);
+  new G4PVPlacement(0,
+                    G4ThreeVector(0, 0, pvcThickness / 2.0),
+                    liquidScintillatorLogicalVolume,
+                    "liquidScintillator",
+                    pvcLogicalVolume,
+                    false, 0);
+
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
   NovaLiquidScintillatorSd* liquidScintillatorSd = new NovaLiquidScintillatorSd("/NovaDet/liquidScintillatorSd");
   sdManager->AddNewDetector(liquidScintillatorSd);
   liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
 
-  new G4PVPlacement(0,
-                    G4ThreeVector(),
-                    liquidScintillatorLogicalVolume,
-                    "liquidScintillator",
-                    experimentalHallLogicalVolume,
-                    false, 0);
-
-  G4LogicalVolume* wlsFiberLogicalVolume = makeWlsFiber();
-  new G4PVPlacement(0, G4ThreeVector(), wlsFiberLogicalVolume, "wlsFiber", liquidScintillatorLogicalVolume, false, 0);
-
   return experimentalHallPhysicalVolume;
 }
 
-G4UnionSolid* NovaDetectorConstruction::makePvcCell()
+G4UnionSolid* NovaDetectorConstruction::makeCellSolid(G4double deltaSize, G4double length)
+{
+  G4Box* pvcHorizontal = new G4Box("pvcHorizontal",
+                                   getCellWidth() / 2.0 - deltaSize,
+                                   straightHeight / 2.0,
+                                   length / 2.0);
+
+  G4Box* pvcVertical = new G4Box("pvcVertical",
+                                 straightWidth / 2.0,
+                                 getCellHeight() / 2.0 - deltaSize,
+                                 length / 2.0);
+
+  G4Tubs* pvcCorner = new G4Tubs("pvcCorner",
+                                 0.0,
+                                 getOuterCellCornerRadius() - deltaSize,
+                                 length / 2.0,
+                                 0.0,
+                                 CLHEP::twopi * rad);
+
+  G4UnionSolid* pvcPart1 = new G4UnionSolid("pvcPart1",
+                                            pvcHorizontal,
+                                            pvcVertical,
+                                            0,
+                                            G4ThreeVector());
+
+  G4UnionSolid* pvcPart2 = new G4UnionSolid("pvcPart2",
+                                            pvcPart1,
+                                            pvcCorner,
+                                            0,
+                                            G4ThreeVector(straightWidth / 2.0, straightHeight / 2.0, 0.0));
+
+  G4UnionSolid* pvcPart3 = new G4UnionSolid("pvcPart3",
+                                            pvcPart2,
+                                            pvcCorner,
+                                            0,
+                                            G4ThreeVector(-straightWidth / 2.0, straightHeight / 2.0, 0.0));
+
+  G4UnionSolid* pvcPart4 = new G4UnionSolid("pvcPart4",
+                                            pvcPart3,
+                                            pvcCorner,
+                                            0,
+                                            G4ThreeVector(-straightWidth / 2.0, -straightHeight / 2.0, 0.0));
+
+  G4UnionSolid* pvcPart5 = new G4UnionSolid("pvcPart5",
+                                            pvcPart4,
+                                            pvcCorner,
+                                            0,
+                                            G4ThreeVector(straightWidth / 2.0, -straightHeight / 2.0, 0.0));
+
+  return pvcPart5;
+}
+
+G4UnionSolid* NovaDetectorConstruction::makePvcCellSolid()
 {
   G4double outerCornerRadius = getOuterCellCornerRadius();
 
@@ -419,7 +468,8 @@ G4UnionSolid* NovaDetectorConstruction::makePvcCell()
   return pvcPart7;
 }
 
-G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
+G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillatorSolid()
+{
   G4double fullHeight = straightHeight + 2. * innerCellCornerRadius;
 
   G4Box* box1 = new G4Box("box1",
@@ -494,7 +544,7 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
 
 G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
 {
-  G4double coreFraction = 1. - 2. * fiberCladdingFraction;
+  G4double coreFraction = 1.0 - 2.0 * fiberCladdingFraction;
   G4double coreRadius  = fiberRadius * coreFraction;
   G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
 

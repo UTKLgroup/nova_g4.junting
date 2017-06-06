@@ -26,19 +26,20 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     virtual ~NovaDetectorConstruction();
     virtual G4VPhysicalVolume* Construct();
 
-    void setStraightWidth(G4double a){straightWidth = a; isUpdated = true;}
-    void setStraightHeight(G4double a){straightHeight = a; isUpdated = true;}
-    void setCellLength(G4double a){cellLength = a; isUpdated = true;}
-    void setPvcThickness(G4double a){pvcThickness = a; isUpdated = true;}
-    void setInnerCellCornerRadius(G4double a){innerCellCornerRadius = a; isUpdated = true;}
-    void setFiberRadius(G4double a){fiberRadius = a; isUpdated = true;}
+    void setStraightWidth(G4double a) {straightWidth = a; isUpdated = true;}
+    void setStraightHeight(G4double a) {straightHeight = a; isUpdated = true;}
+    void setCellLength(G4double a) {cellLength = a; isUpdated = true;}
+    void setPvcThickness(G4double a) {pvcThickness = a; isUpdated = true;}
+    void setInnerCellCornerRadius(G4double a) {innerCellCornerRadius = a; isUpdated = true;}
+    void setFiberRadius(G4double a) {fiberRadius = a; isUpdated = true;}
     void setSimulationMode(G4String a) {simulationMode = a; isUpdated = true;}
-    void setPhotodetectorType(G4String a){photodetectorType = a;}
+    void setPhotodetectorType(G4String a) {photodetectorType = a;}
     void setLiquidScintillatorLightYield(G4double y);
     void setDefaults();
 
-    G4double getOuterCellCornerRadius(){return innerCellCornerRadius + pvcThickness;}
-    G4double getCellHeight(){return straightHeight + 2.0 * getOuterCellCornerRadius();}
+    G4double getOuterCellCornerRadius() {return innerCellCornerRadius + pvcThickness;}
+    G4double getCellHeight() {return straightHeight + 2.0 * getOuterCellCornerRadius();}
+    G4double getCellWidth() { return straightWidth + 2.0 * getOuterCellCornerRadius();}
     void updateDetector();
     void printSetting();
 
@@ -80,8 +81,9 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void defineFluorinatedPolymer(G4String materialName);
     void definePvc(G4String materialName);
     void defineGalactic();
-    G4UnionSolid* makePvcCell();
-    G4UnionSolid* makeLiquidScintillator();
+    G4UnionSolid* makeCellSolid(G4double deltaSize, G4double length);
+    G4UnionSolid* makePvcCellSolid();
+    G4UnionSolid* makeLiquidScintillatorSolid();
     G4LogicalVolume* makeWlsFiber();
     G4LogicalVolume* makePmt();
     G4VPhysicalVolume* constructDetector();
