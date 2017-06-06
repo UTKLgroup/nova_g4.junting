@@ -12,7 +12,7 @@
 /gps/ang/sigma_r 5 deg
 /gps/ene/mono 3.1 eV
 
-/Nova/detector/cellLength 0.1 m
+/Nova/detector/length 0.1 m
 /Nova/detector/update
 /Nova/detector/printSetting
 
