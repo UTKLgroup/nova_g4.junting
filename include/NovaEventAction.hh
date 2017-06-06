@@ -53,7 +53,6 @@ struct EventStat
 struct RunStat
 {
   G4int scintillationPhotonCount;
-
   G4int cherenkovPhotonCount;
 
   G4int hitCount;

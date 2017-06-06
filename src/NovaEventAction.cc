@@ -56,7 +56,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
     int nHit = scintHitsCollection->entries();
     G4ThreeVector energyWeightedPosition(0.0);
     G4double energyDeposition;
-    G4double energyDepositionMax = 0;
+    G4double energyDepositionMax = 0.0;
 
     for(int i = 0; i < nHit; i++) {
       energyDeposition = (*scintHitsCollection)[i]->GetEdep();
@@ -65,7 +65,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
       if (energyDeposition > energyDepositionMax) {
         energyDepositionMax = energyDeposition;
         G4ThreeVector positionMax = (*scintHitsCollection)[i]->GetPos();
-        eventInformation->setPositionMax(positionMax, energyDeposition);
+        eventInformation->setPositionMax(positionMax, energyDepositionMax);
       }
     }
 
@@ -152,7 +152,9 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
         eventStat.trackLength += parentTrajectory->getTrackLength();
         eventStat.reflectionCount += parentTrajectory->getReflectionCount();
         eventStat.totalInternalReflectionCount += parentTrajectory->getTotalInternalReflectionCount();
-        incrementWlsCount(parentTrajectory);
+        if (parentTrajectory->GetProcessName() == "OpWLS") {
+          incrementWlsCount(parentTrajectory);
+        }
         parentTrajectory = parentTrajectory->getParentTrajectory(trajectoryContainer);
       }
 
