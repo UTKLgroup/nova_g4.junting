@@ -23,8 +23,9 @@ def write_side_illumination_mac(**kwargs):
         f_mac.write('/gps/pos/rot2 0 1 0\n')
         f_mac.write('/control/execute led_{}nm_spectrum.mac\n'.format(led_wavelength))
         
-        f_mac.write( '/Nova/detector/cellLength {} cm\n'.format(fiber_length))
-        f_mac.write('/Nova/detector/update\n')
+        f_mac.write('/nova/simulationMode fiber\n')
+        f_mac.write( '/nova/detector/cellLength {} cm\n'.format(fiber_length))
+        f_mac.write('/nova/detector/update\n')
         
         f_mac.write( '/tracking/verbose 0\n')
         f_mac.write('/run/initialize\n')
