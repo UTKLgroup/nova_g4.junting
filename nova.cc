@@ -16,7 +16,7 @@
 
 int main(int argc, char** argv)
 {
-  NovaRecorderBase* recorder = NULL;
+  NovaRecorderBase* recorder = 0;
   G4RunManager* runManager = new G4RunManager;
   runManager->SetUserInitialization(new NovaDetectorConstruction);
   runManager->SetUserInitialization(new NovaPhysicsList);

@@ -38,7 +38,6 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
       }
     }
   }
-  G4OpBoundaryProcessStatus boundaryStatus = boundary->GetStatus();
 
   G4ParticleDefinition* particleType = theTrack->GetDefinition();
   if (particleType == G4OpticalPhoton::OpticalPhotonDefinition()) {
@@ -52,7 +51,7 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
     }
 
     if (postStepPoint->GetStepStatus() == fGeomBoundary) {
-      switch (boundaryStatus) {
+      switch (boundary->GetStatus()) {
         case Absorption :
           trackInformation->setTrackStatusFlag(boundaryAbsorbed);
           eventInformation->incrementBoundaryAbsorption();

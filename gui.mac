@@ -44,4 +44,4 @@
 /gui/addButton viewer "Update scene" "/vis/scene/notifyHandlers"
 
 /run/printProgress 100
-/gui/addIcon "Run" user_icon "/control/execute run.mac" run.png
+/gui/addIcon "Run" user_icon "/control/execute run_gui.mac" run.png
