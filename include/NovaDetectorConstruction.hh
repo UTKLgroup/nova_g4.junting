@@ -26,14 +26,14 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     virtual ~NovaDetectorConstruction();
     virtual G4VPhysicalVolume* Construct();
 
-    void setRectangleWidth(G4double a){rectangleWidth = a; isUpdated=true;}
-    void setRectangleHeight(G4double a){rectangleHeight = a; isUpdated=true;}
+    void setStraightWidth(G4double a){straightWidth = a; isUpdated=true;}
+    void setStraightHeight(G4double a){straightHeight = a; isUpdated=true;}
     void setCellLength(G4double a){cellLength = a; isUpdated=true;}
     void setPvcThickness(G4double a){pvcThickness = a; isUpdated=true;}
     void setInnerCellCornerRadius(G4double a){innerCellCornerRadius = a; isUpdated=true;}
     void setFiberRadius(G4double a){fiberRadius = a; isUpdated=true;}
     G4double getOuterCellCornerRadius(){return innerCellCornerRadius + pvcThickness;}
-    G4double getCellHeight(){return rectangleHeight + 2.0 * getOuterCellCornerRadius();}
+    G4double getCellHeight(){return straightHeight + 2.0 * getOuterCellCornerRadius();}
     void setUsePMT(bool b){usePmt = b;}
     void setLiquidScintillatorLightYield(G4double y);
     void setDefaults();
@@ -83,7 +83,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* makeWlsFiber();
     G4LogicalVolume* makePmt();
     G4VPhysicalVolume* constructDetector();
-    G4VPhysicalVolume* constructLiquidScintillatorCell();
+    G4VPhysicalVolume* constructNovaCell();
     G4VPhysicalVolume* constructSingleWlsFiber();
     G4bool isUpdated;
     G4Box* experimentalHallSolid;
@@ -114,8 +114,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4String filler;
 
     G4double liquidScintillatorLightYield;
-    G4double rectangleWidth;
-    G4double rectangleHeight;
+    G4double straightWidth;
+    G4double straightHeight;
     G4double cellLength;
     G4double pvcThickness;
     G4double innerCellCornerRadius;

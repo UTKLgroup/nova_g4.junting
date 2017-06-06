@@ -25,8 +25,8 @@ class NovaDetectorMessenger: public G4UImessenger
     NovaDetectorConstruction* detectorConstruction;
     G4UIdirectory* detectorDir;
 
-    G4UIcmdWithADoubleAndUnit* rectangleWidth;
-    G4UIcmdWithADoubleAndUnit* rectangleHeight;
+    G4UIcmdWithADoubleAndUnit* straightWidth;
+    G4UIcmdWithADoubleAndUnit* straightHeight;
     G4UIcmdWithADoubleAndUnit* cellLength;
     G4UIcmdWithADoubleAndUnit* pvcThickness;
     G4UIcmdWithADoubleAndUnit* innerCellCornerRadius;

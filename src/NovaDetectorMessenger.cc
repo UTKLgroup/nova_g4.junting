@@ -13,15 +13,15 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
   detectorDir = new G4UIdirectory("/Nova/detector/");
   detectorDir->SetGuidance("Detector geometry control");
 
-  rectangleHeight = new G4UIcmdWithADoubleAndUnit("/Nova/detector/rectangleHeight", this);
-  rectangleHeight->SetGuidance("Set the rectangle height.");
-  rectangleHeight->SetParameterName("rectangleHeight", false);
-  rectangleHeight->SetDefaultUnit("mm");
+  straightHeight = new G4UIcmdWithADoubleAndUnit("/Nova/detector/straightHeight", this);
+  straightHeight->SetGuidance("Set the rectangle height.");
+  straightHeight->SetParameterName("straightHeight", false);
+  straightHeight->SetDefaultUnit("mm");
 
-  rectangleWidth = new G4UIcmdWithADoubleAndUnit("/Nova/detector/rectangleWidth", this);
-  rectangleWidth->SetGuidance("Set the rectangle width.");
-  rectangleWidth->SetParameterName("rectangleWidth", false);
-  rectangleWidth->SetDefaultUnit("mm");
+  straightWidth = new G4UIcmdWithADoubleAndUnit("/Nova/detector/straightWidth", this);
+  straightWidth->SetGuidance("Set the rectangle width.");
+  straightWidth->SetParameterName("straightWidth", false);
+  straightWidth->SetDefaultUnit("mm");
 
   innerCellCornerRadius = new G4UIcmdWithADoubleAndUnit("/Nova/detector/innerCellCornerRadius", this);
   innerCellCornerRadius->SetGuidance("Set the inner cell corner radius.");
@@ -62,8 +62,8 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
 
 NovaDetectorMessenger::~NovaDetectorMessenger()
 {
-  delete rectangleWidth;
-  delete rectangleHeight;
+  delete straightWidth;
+  delete straightHeight;
   delete cellLength;
   delete pvcThickness;
   delete innerCellCornerRadius;
@@ -77,11 +77,11 @@ NovaDetectorMessenger::~NovaDetectorMessenger()
 
 void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if (command == rectangleWidth) {
-    detectorConstruction->setRectangleWidth(rectangleWidth->GetNewDoubleValue(newValue));
+  if (command == straightWidth) {
+    detectorConstruction->setStraightWidth(straightWidth->GetNewDoubleValue(newValue));
   }
-  else if (command == rectangleHeight) {
-    detectorConstruction->setRectangleHeight(rectangleHeight->GetNewDoubleValue(newValue));
+  else if (command == straightHeight) {
+    detectorConstruction->setStraightHeight(straightHeight->GetNewDoubleValue(newValue));
   }
   else if (command == cellLength) {
     detectorConstruction->setCellLength(cellLength->GetNewDoubleValue(newValue));

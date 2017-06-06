@@ -282,7 +282,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   return experimentalHallPhysicalVolume;
 }
 
-G4VPhysicalVolume* NovaDetectorConstruction::constructLiquidScintillatorCell()
+G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
 {
   G4double experimentalHallX = getCellHeight() / 2.0  + 20.0*cm;
   G4double experimentalHallY = getCellHeight() / 2.0  + 20.0*cm;
@@ -339,12 +339,12 @@ G4UnionSolid* NovaDetectorConstruction::makePvcCell()
   G4double outerCornerRadius = getOuterCellCornerRadius();
 
   G4Box* pvcHorizontal = new G4Box("pvcHorizontal",
-                                   rectangleWidth / 2.0,
+                                   straightWidth / 2.0,
                                    pvcThickness / 2.0,
                                    cellLength / 2.0);
 
   G4Box* pvcVertical = new G4Box("pvcVertical",
-                                 rectangleHeight / 2.0,
+                                 straightHeight / 2.0,
                                  pvcThickness / 2.0,
                                  cellLength / 2.0);
 
@@ -364,65 +364,65 @@ G4UnionSolid* NovaDetectorConstruction::makePvcCell()
                                             pvcHorizontal,
                                             pvcCorner,
                                             &rotate90,
-                                            G4ThreeVector(rectangleWidth / 2.0,
+                                            G4ThreeVector(straightWidth / 2.0,
                                                           innerCellCornerRadius + pvcThickness / 2.0));
 
   G4UnionSolid* pvcPart2 = new G4UnionSolid("pvcPart2",
                                             pvcPart1,
                                             pvcVertical,
                                             &rotate90,
-                                            G4ThreeVector(rectangleWidth / 2.0 + innerCellCornerRadius + pvcThickness / 2.0,
-                                                          innerCellCornerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
+                                            G4ThreeVector(straightWidth / 2.0 + innerCellCornerRadius + pvcThickness / 2.0,
+                                                          innerCellCornerRadius + pvcThickness / 2.0 + straightHeight / 2.0));
 
   G4UnionSolid* pvcPart3 = new G4UnionSolid("pvcPart3",
                                             pvcPart2,
                                             pvcCorner,
                                             0,
-                                            G4ThreeVector(rectangleWidth / 2.0,
-                                                          innerCellCornerRadius + pvcThickness / 2.0 + rectangleHeight));
+                                            G4ThreeVector(straightWidth / 2.0,
+                                                          innerCellCornerRadius + pvcThickness / 2.0 + straightHeight));
 
   G4UnionSolid* pvcPart4 = new G4UnionSolid("pvcPart4",
                                             pvcPart3,
                                             pvcHorizontal,
                                             0,
                                             G4ThreeVector(0,
-                                                          2.0 * innerCellCornerRadius + rectangleHeight + pvcThickness));
+                                                          2.0 * innerCellCornerRadius + straightHeight + pvcThickness));
 
   G4UnionSolid* pvcPart5 = new G4UnionSolid("pvcPart5",
                                             pvcPart4,
                                             pvcCorner,
                                             &rotate270,
-                                            G4ThreeVector(-rectangleWidth / 2.0,
-                                                          innerCellCornerRadius + pvcThickness / 2.0 + rectangleHeight));
+                                            G4ThreeVector(-straightWidth / 2.0,
+                                                          innerCellCornerRadius + pvcThickness / 2.0 + straightHeight));
 
   G4UnionSolid* pvcPart6 = new G4UnionSolid("pvcPart6",
                                             pvcPart5,
                                             pvcVertical,
                                             &rotate90,
-                                            G4ThreeVector(-(rectangleWidth / 2.0 + innerCellCornerRadius + pvcThickness / 2.0),
-                                                          innerCellCornerRadius + pvcThickness / 2.0 + rectangleHeight / 2.0));
+                                            G4ThreeVector(-(straightWidth / 2.0 + innerCellCornerRadius + pvcThickness / 2.0),
+                                                          innerCellCornerRadius + pvcThickness / 2.0 + straightHeight / 2.0));
 
   G4UnionSolid* pvcPart7 = new G4UnionSolid("pvcPart7",
                                             pvcPart6,
                                             pvcCorner,
                                             &rotate180,
-                                            G4ThreeVector(-rectangleWidth / 2.0,
+                                            G4ThreeVector(-straightWidth / 2.0,
                                                           innerCellCornerRadius + pvcThickness / 2.0));
 
   return pvcPart7;
 }
 
 G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
-  G4double fullHeight = rectangleHeight + 2. * innerCellCornerRadius;
+  G4double fullHeight = straightHeight + 2. * innerCellCornerRadius;
 
   G4Box* box1 = new G4Box("box1",
-                          rectangleWidth / 2.,
+                          straightWidth / 2.,
                           fullHeight / 2.,
                           cellLength / 2.);
 
   G4Box* box2 = new G4Box("box2",
                           innerCellCornerRadius / 2.,
-                          rectangleHeight / 2.,
+                          straightHeight / 2.,
                           cellLength / 2.);
 
   G4Tubs* innerCorner = new G4Tubs("innerCorner",
@@ -436,20 +436,20 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
                                              box1,
                                              box2,
                                              0,
-                                             G4ThreeVector(rectangleWidth / 2. + innerCellCornerRadius / 2., 0, 0));
+                                             G4ThreeVector(straightWidth / 2. + innerCellCornerRadius / 2., 0, 0));
 
   G4UnionSolid* unionBox2 = new G4UnionSolid("unionBox2",
                                              unionBox1,
                                              box2,
                                              0,
-                                             G4ThreeVector(-rectangleWidth / 2. - innerCellCornerRadius / 2., 0, 0));
+                                             G4ThreeVector(-straightWidth / 2. - innerCellCornerRadius / 2., 0, 0));
 
   G4UnionSolid* unionCorner1 = new G4UnionSolid("unionCorner1",
                                                 unionBox2,
                                                 innerCorner,
                                                 0,
-                                                G4ThreeVector(rectangleWidth / 2.,
-                                                              rectangleHeight / 2.,
+                                                G4ThreeVector(straightWidth / 2.,
+                                                              straightHeight / 2.,
                                                               0));
 
   G4RotationMatrix rotate270;
@@ -458,8 +458,8 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
                                                 unionCorner1,
                                                 innerCorner,
                                                 &rotate270,
-                                                G4ThreeVector(-rectangleWidth / 2.,
-                                                              rectangleHeight / 2.,
+                                                G4ThreeVector(-straightWidth / 2.,
+                                                              straightHeight / 2.,
                                                               0));
 
   G4RotationMatrix rotate90;
@@ -468,8 +468,8 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
                                                 unionCorner2,
                                                 innerCorner,
                                                 &rotate90,
-                                                G4ThreeVector(rectangleWidth / 2.,
-                                                              -rectangleHeight / 2.,
+                                                G4ThreeVector(straightWidth / 2.,
+                                                              -straightHeight / 2.,
                                                               0));
 
   G4RotationMatrix rotate180;
@@ -478,8 +478,8 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillator(){
                                                 unionCorner3,
                                                 innerCorner,
                                                 &rotate180,
-                                                G4ThreeVector(-rectangleWidth / 2.,
-                                                              -rectangleHeight / 2.,
+                                                G4ThreeVector(-straightWidth / 2.,
+                                                              -straightHeight / 2.,
                                                               0));
 
   return unionCorner4;
@@ -567,8 +567,8 @@ void NovaDetectorConstruction::printSetting()
 {
   G4cout << std::setw(25) << "liquidScintillatorLightYield = " << std::setw(10) << liquidScintillatorMpt->GetConstProperty("SCINTILLATIONYIELD") << std::setw(10) << " MeV-1" << G4endl;
   G4cout << std::setw(25) << "cellLength = " << std::setw(10) << cellLength / cm << std::setw(10) << " cm" << G4endl;
-  G4cout << std::setw(25) << "rectangleWidth = " << std::setw(10) << rectangleWidth / mm << std::setw(10) << " mm" << G4endl;
-  G4cout << std::setw(25) << "rectangleHeight = " << std::setw(10) << rectangleHeight / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "straightWidth = " << std::setw(10) << straightWidth / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "straightHeight = " << std::setw(10) << straightHeight / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "innerCellCornerRadius = " << std::setw(10) << innerCellCornerRadius / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "pvcThickness = " << std::setw(10) << pvcThickness / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "fiberRadius = " << std::setw(10) << fiberRadius / mm << std::setw(10) << " mm" << G4endl;
@@ -579,8 +579,8 @@ void NovaDetectorConstruction::printSetting()
 void NovaDetectorConstruction::setDefaults()
 {
   liquidScintillatorLightYield = 100.0;
-  rectangleHeight = 40.0 * mm;
-  rectangleWidth = 17.7 * mm;
+  straightHeight = 40.0 * mm;
+  straightWidth = 17.7 * mm;
   innerCellCornerRadius = 9.7 * mm;
   pvcThickness = 3.3 * mm;
   fiberRadius = 0.35 * mm;
