@@ -32,7 +32,7 @@ class NovaDetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* pvcThickness;
     G4UIcmdWithADoubleAndUnit* innerCellCornerRadius;
     G4UIcmdWithADoubleAndUnit* fiberRadius;
-    G4UIcmdWithABool* usePmt;
+    G4UIcmdWithAString* photodetectorType;
     G4UIcommand* update;
     G4UIcommand* defaultValue;
     G4UIcmdWithADouble* liquidScintillatorLightYield;

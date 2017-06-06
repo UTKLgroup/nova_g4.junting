@@ -43,8 +43,8 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
   cellLength->SetParameterName("cellLength", false);
   cellLength->SetDefaultUnit("cm");
 
-  usePmt = new G4UIcmdWithABool("/nova/detector/volumes/usePmt", this);
-  usePmt->SetGuidance("Use PMT, else use APD");
+  photodetectorType = new G4UIcmdWithAString("/nova/detector/photodetectorType", this);
+  photodetectorType->SetGuidance("Photodetector type. Two options are available: pmt and apd.");
 
   update = new G4UIcommand("/nova/detector/update", this);
   update->SetGuidance("Update the detector geometry with new values.");
@@ -56,7 +56,7 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
   liquidScintillatorLightYield=new G4UIcmdWithADouble("/nova/detector/liquidScintillatorLightYield", this);
   liquidScintillatorLightYield->SetGuidance("Set the liquid scintillator light yield in number of photons per MeV.");
 
-  printSetting = new G4UIcmdWithoutParameter("/nova/detector/printSetting", this);
+  printSetting = new G4UIcmdWithoutParameter("/nova/printSetting", this);
   printSetting->SetGuidance("Print the detector setting.");
 
   simulationMode = new G4UIcmdWithAString("/nova/simulationMode", this);
@@ -72,11 +72,12 @@ NovaDetectorMessenger::~NovaDetectorMessenger()
   delete pvcThickness;
   delete innerCellCornerRadius;
   delete fiberRadius;
-  delete usePmt;
+  delete photodetectorType;
   delete update;
   delete defaultValue;
   delete liquidScintillatorLightYield;
   delete printSetting;
+  delete simulationMode;
 }
 
 void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
@@ -99,8 +100,8 @@ void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if (command == fiberRadius) {
     detectorConstruction->setFiberRadius(fiberRadius->GetNewDoubleValue(newValue));
   }
-  else if (command == usePmt) {
-    detectorConstruction->setUsePMT(usePmt->GetNewBoolValue(newValue));
+  else if (command == photodetectorType) {
+    detectorConstruction->setPhotodetectorType(newValue);
   }
   else if (command == update) {
     detectorConstruction->updateDetector();

@@ -20,7 +20,6 @@ NovaDetectorConstruction::NovaDetectorConstruction()
 {
   nistManager = G4NistManager::Instance();
   isUpdated = false;
-  simulationMode = "cell";
   setDefaults();
   new NovaDetectorMessenger(this);
 }
@@ -580,7 +579,7 @@ void NovaDetectorConstruction::printSetting()
   G4cout << std::setw(25) << "innerCellCornerRadius = " << std::setw(10) << innerCellCornerRadius / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "pvcThickness = " << std::setw(10) << pvcThickness / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "fiberRadius = " << std::setw(10) << fiberRadius / mm << std::setw(10) << " mm" << G4endl;
-  G4cout << std::setw(25) << "usePmt = " << std::setw(10) << usePmt << G4endl;
+  G4cout << std::setw(25) << "photodetectorType = " << std::setw(10) << photodetectorType << G4endl;
   G4cout << std::setw(25) << "simulationMode = " << std::setw(10) << simulationMode << G4endl;
   G4cout << G4endl;
 }
@@ -596,7 +595,8 @@ void NovaDetectorConstruction::setDefaults()
   fiberCladdingFraction = 0.03;
   cellLength = 120.0 * cm;
   pmtThickness = 1.0 * mm;
-  usePmt = true;
+  photodetectorType = "apd";
+  simulationMode = "cell";
   isUpdated = true;
 }
 
