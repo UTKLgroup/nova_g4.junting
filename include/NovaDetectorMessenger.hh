@@ -1,6 +1,7 @@
 #ifndef NovaDetectorMessenger_h
 #define NovaDetectorMessenger_h 1
 
+#include <G4UIcmdWithAString.hh>
 #include "G4UImessenger.hh"
 #include "globals.hh"
 
@@ -36,6 +37,7 @@ class NovaDetectorMessenger: public G4UImessenger
     G4UIcommand* defaultValue;
     G4UIcmdWithADouble* liquidScintillatorLightYield;
     G4UIcmdWithoutParameter* printSetting;
+    G4UIcmdWithAString* simulationMode;
 };
 
 #endif

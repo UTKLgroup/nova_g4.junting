@@ -20,6 +20,7 @@ NovaDetectorConstruction::NovaDetectorConstruction()
 {
   nistManager = G4NistManager::Instance();
   isUpdated = false;
+  simulationMode = "cell";
   setDefaults();
   new NovaDetectorMessenger(this);
 }
@@ -218,7 +219,14 @@ G4VPhysicalVolume* NovaDetectorConstruction::Construct()
 
 G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
 {
-  return constructSingleWlsFiber();
+  if (simulationMode == "fiber") {
+    return constructSingleWlsFiber();
+  }
+  else if (simulationMode == "cell") {
+    return constructNovaCell();
+  }
+  else
+    throw "The selected simulation mode does not exist.";
 }
 
 G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
@@ -573,6 +581,7 @@ void NovaDetectorConstruction::printSetting()
   G4cout << std::setw(25) << "pvcThickness = " << std::setw(10) << pvcThickness / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "fiberRadius = " << std::setw(10) << fiberRadius / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "usePmt = " << std::setw(10) << usePmt << G4endl;
+  G4cout << std::setw(25) << "simulationMode = " << std::setw(10) << simulationMode << G4endl;
   G4cout << G4endl;
 }
 
@@ -591,7 +600,7 @@ void NovaDetectorConstruction::setDefaults()
   isUpdated = true;
 }
 
-void NovaDetectorConstruction::updateGeometry()
+void NovaDetectorConstruction::updateDetector()
 {
   G4GeometryManager::GetInstance()->OpenGeometry();
   G4PhysicalVolumeStore::GetInstance()->Clean();

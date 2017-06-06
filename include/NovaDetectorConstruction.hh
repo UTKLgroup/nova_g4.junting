@@ -26,18 +26,19 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     virtual ~NovaDetectorConstruction();
     virtual G4VPhysicalVolume* Construct();
 
-    void setStraightWidth(G4double a){straightWidth = a; isUpdated=true;}
-    void setStraightHeight(G4double a){straightHeight = a; isUpdated=true;}
-    void setCellLength(G4double a){cellLength = a; isUpdated=true;}
-    void setPvcThickness(G4double a){pvcThickness = a; isUpdated=true;}
-    void setInnerCellCornerRadius(G4double a){innerCellCornerRadius = a; isUpdated=true;}
-    void setFiberRadius(G4double a){fiberRadius = a; isUpdated=true;}
+    void setStraightWidth(G4double a){straightWidth = a; isUpdated = true;}
+    void setStraightHeight(G4double a){straightHeight = a; isUpdated = true;}
+    void setCellLength(G4double a){cellLength = a; isUpdated = true;}
+    void setPvcThickness(G4double a){pvcThickness = a; isUpdated = true;}
+    void setInnerCellCornerRadius(G4double a){innerCellCornerRadius = a; isUpdated = true;}
+    void setFiberRadius(G4double a){fiberRadius = a; isUpdated = true;}
+    void setSimulationMode(G4String a) {simulationMode = a; isUpdated = true;}
     G4double getOuterCellCornerRadius(){return innerCellCornerRadius + pvcThickness;}
     G4double getCellHeight(){return straightHeight + 2.0 * getOuterCellCornerRadius();}
     void setUsePMT(bool b){usePmt = b;}
     void setLiquidScintillatorLightYield(G4double y);
     void setDefaults();
-    void updateGeometry();
+    void updateDetector();
     void printSetting();
 
     void readCsvFile(G4String filename,
@@ -123,6 +124,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double fiberCladdingFraction;
     G4double pmtThickness;
     bool usePmt;
+    G4String simulationMode;
 };
 
 #endif
