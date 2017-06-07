@@ -770,11 +770,14 @@ void NovaDetectorConstruction::printSetting()
 {
   G4cout << std::setw(25) << "liquidScintillatorLightYield = " << std::setw(10) << liquidScintillatorMpt->GetConstProperty("SCINTILLATIONYIELD") << std::setw(10) << " MeV-1" << G4endl;
   G4cout << std::setw(25) << "detectorLength = " << std::setw(10) << detectorLength / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "snoutLength = " << std::setw(10) << snoutLength / cm << std::setw(10) << " cm" << G4endl;
   G4cout << std::setw(25) << "straightWidth = " << std::setw(10) << straightWidth / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "straightHeight = " << std::setw(10) << straightHeight / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "innerCellCornerRadius = " << std::setw(10) << innerCellCornerRadius / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "pvcThickness = " << std::setw(10) << pvcThickness / mm << std::setw(10) << " mm" << G4endl;
   G4cout << std::setw(25) << "fiberRadius = " << std::setw(10) << fiberRadius / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(25) << "fiberCurveRadius = " << std::setw(10) << fiberCurveRadius / cm << std::setw(10) << " cm" << G4endl;
+  G4cout << std::setw(25) << "fiberCurveToEndPlateDistance = " << std::setw(10) << fiberCurveToEndPlateDistance / cm << std::setw(10) << " cm" << G4endl;
   G4cout << std::setw(25) << "photodetectorType = " << std::setw(10) << photodetectorType << G4endl;
   G4cout << std::setw(25) << "simulationMode = " << std::setw(10) << simulationMode << G4endl;
   G4cout << G4endl;
