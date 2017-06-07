@@ -785,7 +785,7 @@ void NovaDetectorConstruction::printSetting()
 
 void NovaDetectorConstruction::setDefaults()
 {
-  liquidScintillatorLightYield = 100.0;
+  liquidScintillatorLightYield = 1.0;
   straightHeight = 40.0 * mm;
   straightWidth = 17.7 * mm;
   innerCellCornerRadius = 9.7 * mm;
