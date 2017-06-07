@@ -655,9 +655,19 @@ G4LogicalVolume* NovaDetectorConstruction::makePmtLogicalVolume()
                                                                    G4Material::GetMaterial("G4_Al"),
                                                                    "photocathodeLogicalVolume");
 
+  G4String quantumEfficiencyFilename;
+  if (photodetectorType == "apd") {
+    quantumEfficiencyFilename = APD_QUANTUM_EFFICIENCY_FILENAME;
+  }
+  else if (photodetectorType == "pmt") {
+    quantumEfficiencyFilename = PMT_QUANTUM_EFFICIENCY_FILENAME;
+  }
+  else
+    throw "The selected photodetector type does not exist.";
+
   std::vector<G4double> energies;
   std::vector<G4double> quantumEfficiencies;
-  readCsvFile(APD_QUANTUM_EFFICIENCY_FILENAME, energies, quantumEfficiencies, 1.0);
+  readCsvFile(quantumEfficiencyFilename, energies, quantumEfficiencies, 1.0);
 
   std::vector<G4double> refractionIndices(energies.size(), 1.49);
   std::vector<G4double> reflectivities(energies.size(), 0.0);
