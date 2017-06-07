@@ -296,7 +296,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
   G4double experimentalHallY = getCellHeight() / 2.0 + 20.0 * cm;
   G4double experimentalHallZ = detectorLength / 2.0 + 20.0 * cm;
 
-  experimentalHallSolid = new G4Box("experimentalHallSolid",experimentalHallX, experimentalHallY, experimentalHallZ);
+  experimentalHallSolid = new G4Box("experimentalHallSolid", experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
                                                        G4Material::GetMaterial("G4_Galactic"),
                                                        "experimentalHallLogicalVolume",
@@ -307,7 +307,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                                                      "experimentalHallPhysicalVolume",
                                                      0, false, 0);
 
-  G4UnionSolid* pvcSolid = makeCellSolid(0.0, detectorLength);
+  G4Box* pvcSolid = new G4Box("pvcSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, detectorLength / 2.0);
   G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSolid,
                                                           G4Material::GetMaterial("pvc"),
                                                           "pvcLogicalVolume",
@@ -378,6 +378,19 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
   pmtSd->initPmts(2);
   pmtSd->setPmtPosition(0, fiberCurveRadius, 0.0, pmtZ);
   pmtSd->setPmtPosition(1, -fiberCurveRadius, 0.0, pmtZ);
+
+  G4Box* endPlateSolid = new G4Box("endPlateSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, pvcThickness);
+  G4LogicalVolume* endPlateLogicalVolume = new G4LogicalVolume(endPlateSolid,
+                                                               G4Material::GetMaterial("pvc"),
+                                                               "endPlateLogicalVolume",
+                                                               0, 0, 0);
+  setPvcSurfaceProperty(endPlateLogicalVolume, true);
+  new G4PVPlacement(0,
+                    G4ThreeVector(0.0, 0.0, detectorLength / 2.0 + pvcThickness / 2.0),
+                    endPlateLogicalVolume,
+                    "endPlate",
+                    experimentalHallLogicalVolume,
+                    false, 0);
 
   return experimentalHallPhysicalVolume;
 }
