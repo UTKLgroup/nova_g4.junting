@@ -45,3 +45,6 @@
 
 /run/printProgress 100
 /gui/addIcon "Run" user_icon "/control/execute run_gui.mac" run.png
+/gui/addIcon "X view" user_icon "/vis/viewer/set/viewpointThetaPhi 90 0" X.png
+/gui/addIcon "Y view" user_icon "/vis/viewer/set/viewpointThetaPhi 90 90" Y.png
+/gui/addIcon "Z view" user_icon "/vis/viewer/set/viewpointThetaPhi 0 0" Z.png

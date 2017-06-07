@@ -30,6 +30,9 @@ set(NOVA_SCRIPTS
         vis.mac
         gui.mac
         run.png
+        X.png
+        Y.png
+        Z.png
         general_particle_source.mac
         )
 
