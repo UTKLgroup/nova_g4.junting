@@ -13,6 +13,7 @@
 #include "G4GeometryManager.hh"
 #include "G4Box.hh"
 #include "G4Tubs.hh"
+#include "G4Torus.hh"
 #include "G4OpticalSurface.hh"
 
 
@@ -213,22 +214,22 @@ void NovaDetectorConstruction::defineMaterials()
 G4VPhysicalVolume* NovaDetectorConstruction::Construct()
 {
   defineMaterials();
-  return constructDetector();
+  return makeDetectorPhysicalVolume();
 }
 
-G4VPhysicalVolume* NovaDetectorConstruction::constructDetector()
+G4VPhysicalVolume* NovaDetectorConstruction::makeDetectorPhysicalVolume()
 {
   if (simulationMode == "fiber") {
-    return constructSingleWlsFiber();
+    return makeSingleWlsFiberPhysicalVolume();
   }
   else if (simulationMode == "cell") {
-    return constructNovaCell();
+    return makeNovaCellPhysicalVolume();
   }
   else
     throw "The selected simulation mode does not exist.";
 }
 
-G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
+G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
 {
   G4double fiberLength = detectorLength;
   G4double experimentalHallX = fiberRadius * 2.0;
@@ -269,7 +270,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   new G4PVPlacement(0, G4ThreeVector(), innerCladdingLogicalVolume, "innerCladding", outerCladdingLogicalVolume, false, 0);
   new G4PVPlacement(0, G4ThreeVector(), outerCladdingLogicalVolume, "outerCladding", experimentalHallLogicalVolume, false, 0);
 
-  G4LogicalVolume* pmtLogicalVolume = makePmt();
+  G4LogicalVolume* pmtLogicalVolume = makePmtLogicalVolume();
   G4double pmtZ = -fiberLength / 2.0 - pmtThickness / 2.0;
   new G4PVPlacement(0,
                     G4ThreeVector(0.0, 0.0, pmtZ),
@@ -289,7 +290,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructSingleWlsFiber()
   return experimentalHallPhysicalVolume;
 }
 
-G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
+G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
 {
   G4double experimentalHallX = getCellHeight() / 2.0  + 20.0*cm;
   G4double experimentalHallY = getCellHeight() / 2.0  + 20.0*cm;
@@ -306,7 +307,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                                                      "experimentalHallPhysicalVolume",
                                                      0, false, 0);
 
-  G4UnionSolid* pvcSolid = makeCellSolid(0.0, length);
+  G4UnionSolid* pvcSolid = makeCellSolid(0.0, detectorLength);
   G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSolid,
                                                           G4Material::GetMaterial("pvc"),
                                                           "pvcLogicalVolume",
@@ -319,7 +320,8 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                     experimentalHallLogicalVolume,
                     false, 0);
 
-  G4UnionSolid* liquidScintillatorSolid = makeCellSolid(pvcThickness, length - pvcThickness);
+  G4double liquidScintillatorLength = detectorLength - pvcThickness;
+  G4UnionSolid* liquidScintillatorSolid = makeCellSolid(pvcThickness, liquidScintillatorLength);
   G4LogicalVolume* liquidScintillatorLogicalVolume = new G4LogicalVolume(liquidScintillatorSolid,
                                                                          G4Material::GetMaterial("liquidScintillator"),
                                                                          "liquidScintillatorLogicalVolume",
@@ -333,6 +335,23 @@ G4VPhysicalVolume* NovaDetectorConstruction::constructNovaCell()
                     liquidScintillatorLogicalVolume,
                     "liquidScintillator",
                     pvcLogicalVolume,
+                    false, 0);
+
+  G4double fiberStraightLength = liquidScintillatorLength - 2 * fiberCurveRadius;
+  G4LogicalVolume* fiberLogicalVolume = makeWlsFiberLogicalVolume(fiberStraightLength);
+
+  G4VisAttributes* fiberVisAttributes = new G4VisAttributes();
+  fiberVisAttributes->SetVisibility(true);
+  fiberVisAttributes->SetForceSolid(true);
+  fiberLogicalVolume->SetVisAttributes(fiberVisAttributes);
+
+  G4RotationMatrix* rotationMatrix = new G4RotationMatrix();
+  rotationMatrix->rotateX(90.0 * deg);
+  new G4PVPlacement(rotationMatrix,
+                    G4ThreeVector(0, 0, -(fiberStraightLength - liquidScintillatorLength / 2.0)),
+                    fiberLogicalVolume,
+                    "fiber",
+                    liquidScintillatorLogicalVolume,
                     false, 0);
 
   return experimentalHallPhysicalVolume;
@@ -434,22 +453,24 @@ G4UnionSolid* NovaDetectorConstruction::makePvcCellSolid()
                                  0.0,
                                  0.5 * CLHEP::pi * rad);
 
-  G4RotationMatrix rotate90, rotate180, rotate270;
-  rotate90.rotateZ(90 * deg);
-  rotate180.rotateZ(180 * deg);
-  rotate270.rotateZ(270 * deg);
+  G4RotationMatrix* rotate90 = new G4RotationMatrix();
+  rotate90->rotateZ(90 * deg);
+  G4RotationMatrix* rotate180 = new G4RotationMatrix();
+  rotate180->rotateZ(180 * deg);
+  G4RotationMatrix* rotate270 = new G4RotationMatrix();
+  rotate270->rotateZ(270 * deg);
 
   G4UnionSolid* pvcPart1 = new G4UnionSolid("pvcPart1",
                                             pvcHorizontal,
                                             pvcCorner,
-                                            &rotate90,
+                                            rotate90,
                                             G4ThreeVector(straightWidth / 2.0,
                                                           innerCellCornerRadius + pvcThickness / 2.0));
 
   G4UnionSolid* pvcPart2 = new G4UnionSolid("pvcPart2",
                                             pvcPart1,
                                             pvcVertical,
-                                            &rotate90,
+                                            rotate90,
                                             G4ThreeVector(straightWidth / 2.0 + innerCellCornerRadius + pvcThickness / 2.0,
                                                           innerCellCornerRadius + pvcThickness / 2.0 + straightHeight / 2.0));
 
@@ -470,21 +491,21 @@ G4UnionSolid* NovaDetectorConstruction::makePvcCellSolid()
   G4UnionSolid* pvcPart5 = new G4UnionSolid("pvcPart5",
                                             pvcPart4,
                                             pvcCorner,
-                                            &rotate270,
+                                            rotate270,
                                             G4ThreeVector(-straightWidth / 2.0,
                                                           innerCellCornerRadius + pvcThickness / 2.0 + straightHeight));
 
   G4UnionSolid* pvcPart6 = new G4UnionSolid("pvcPart6",
                                             pvcPart5,
                                             pvcVertical,
-                                            &rotate90,
+                                            rotate90,
                                             G4ThreeVector(-(straightWidth / 2.0 + innerCellCornerRadius + pvcThickness / 2.0),
                                                           innerCellCornerRadius + pvcThickness / 2.0 + straightHeight / 2.0));
 
   G4UnionSolid* pvcPart7 = new G4UnionSolid("pvcPart7",
                                             pvcPart6,
                                             pvcCorner,
-                                            &rotate180,
+                                            rotate180,
                                             G4ThreeVector(-straightWidth / 2.0,
                                                           innerCellCornerRadius + pvcThickness / 2.0));
 
@@ -532,32 +553,32 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillatorSolid()
                                                               straightHeight / 2.,
                                                               0));
 
-  G4RotationMatrix rotate270;
-  rotate270.rotateZ(270 * deg);
+  G4RotationMatrix* rotate270 = new G4RotationMatrix();
+  rotate270->rotateZ(270 * deg);
   G4UnionSolid* unionCorner2 = new G4UnionSolid("unionCorner2",
                                                 unionCorner1,
                                                 innerCorner,
-                                                &rotate270,
+                                                rotate270,
                                                 G4ThreeVector(-straightWidth / 2.,
                                                               straightHeight / 2.,
                                                               0));
 
-  G4RotationMatrix rotate90;
-  rotate90.rotateZ(90 * deg);
+  G4RotationMatrix* rotate90 = new G4RotationMatrix();
+  rotate90->rotateZ(90 * deg);
   G4UnionSolid* unionCorner3 = new G4UnionSolid("unionCorner3",
                                                 unionCorner2,
                                                 innerCorner,
-                                                &rotate90,
+                                                rotate90,
                                                 G4ThreeVector(straightWidth / 2.,
                                                               -straightHeight / 2.,
                                                               0));
 
-  G4RotationMatrix rotate180;
-  rotate180.rotateZ(180 * deg);
+  G4RotationMatrix* rotate180 = new G4RotationMatrix();
+  rotate180->rotateZ(180 * deg);
   G4UnionSolid* unionCorner4 = new G4UnionSolid("unionCorner4",
                                                 unionCorner3,
                                                 innerCorner,
-                                                &rotate180,
+                                                rotate180,
                                                 G4ThreeVector(-straightWidth / 2.,
                                                               -straightHeight / 2.,
                                                               0));
@@ -565,23 +586,43 @@ G4UnionSolid* NovaDetectorConstruction::makeLiquidScintillatorSolid()
   return unionCorner4;
 }
 
-G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
+G4UnionSolid* NovaDetectorConstruction::makeFiberLoopSolid(G4double radius, G4double curveRadius, G4double straightLength)
 {
-  G4double coreFraction = 1.0 - 2.0 * fiberCladdingFraction;
-  G4double coreRadius  = fiberRadius * coreFraction;
-  G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
+  G4Tubs* straightSolid = new G4Tubs("straightSolid", 0, radius, straightLength / 2.0, 0.0, CLHEP::twopi * rad);
+  G4Torus* curveSolid = new G4Torus("curveSolid", 0.0, radius, curveRadius, 0.0, CLHEP::pi * rad);
 
-  G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, detectorLength / 2.0, 0.0, 360.0 * deg);
+  G4RotationMatrix* rotateX = new G4RotationMatrix();
+  rotateX->rotateX(CLHEP::pi / 2.0 * rad);
+  G4UnionSolid* fiberPart1 = new G4UnionSolid("fiberPart1",
+                                              curveSolid,
+                                              straightSolid,
+                                              rotateX,
+                                              G4ThreeVector(-curveRadius, -straightLength / 2.0, 0.0));
+
+  G4UnionSolid* fiberPart2 = new G4UnionSolid("fiberPart2",
+                                              fiberPart1,
+                                              straightSolid,
+                                              rotateX,
+                                              G4ThreeVector(curveRadius, -straightLength / 2.0, 0.0));
+  return fiberPart2;
+}
+
+G4LogicalVolume* NovaDetectorConstruction::makeWlsFiberLogicalVolume(G4double straightLength)
+{
+  G4double coreRadius = fiberRadius * (1.0 - 2.0 * fiberCladdingFraction);
+  G4double innerCladdingRadius = fiberRadius * (1.0 - fiberCladdingFraction);
+
+  G4UnionSolid* outerCladdingSolid = makeFiberLoopSolid(fiberRadius, fiberCurveRadius, straightLength);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
                                                                     G4Material::GetMaterial("fluorinatedPolymer"),
                                                                     "outerCladdingLogicalVolume");
 
-  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, detectorLength / 2.0, 0.0, 360.0 * deg);
+  G4UnionSolid* innerCladdingSolid = makeFiberLoopSolid(innerCladdingRadius, fiberCurveRadius, straightLength);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
                                                                     G4Material::GetMaterial("pmma"),
                                                                     "innerCladdingLogicalVolume");
 
-  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, detectorLength / 2.0, 0.0, 360.0 * deg);
+  G4UnionSolid* coreSolid = makeFiberLoopSolid(coreRadius, fiberCurveRadius, straightLength);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
                                                            G4Material::GetMaterial("fiberCore"),
                                                            "coreLogicalVolume");
@@ -592,7 +633,7 @@ G4LogicalVolume* NovaDetectorConstruction::makeWlsFiber()
   return outerCladdingLogicalVolume;
 }
 
-G4LogicalVolume* NovaDetectorConstruction::makePmt()
+G4LogicalVolume* NovaDetectorConstruction::makePmtLogicalVolume()
 {
   G4Tubs* pmtSolid = new G4Tubs("pmtSolid",
                                 0.0,
@@ -685,7 +726,7 @@ void NovaDetectorConstruction::updateDetector()
   G4SurfaceProperty::CleanSurfacePropertyTable();
 
   defineMaterials();
-  G4RunManager::GetRunManager()->DefineWorldVolume(constructDetector());
+  G4RunManager::GetRunManager()->DefineWorldVolume(makeDetectorPhysicalVolume());
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 
   isUpdated = false;
