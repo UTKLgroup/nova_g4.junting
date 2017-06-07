@@ -48,6 +48,11 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
   detectorLength->SetParameterName("detectorLength", false);
   detectorLength->SetDefaultUnit("cm");
 
+  snoutLength = new G4UIcmdWithADoubleAndUnit("/nova/detector/snoutLength", this);
+  snoutLength->SetGuidance("Set snout length. This is the length of the part of the fiber that is outside the liquid scintillator.");
+  snoutLength->SetParameterName("snoutLength", false);
+  snoutLength->SetDefaultUnit("mm");
+
   photodetectorType = new G4UIcmdWithAString("/nova/detector/photodetectorType", this);
   photodetectorType->SetGuidance("Photodetector type. Two options are available: pmt and apd.");
 
@@ -74,6 +79,7 @@ NovaDetectorMessenger::~NovaDetectorMessenger()
   delete straightWidth;
   delete straightHeight;
   delete detectorLength;
+  delete snoutLength;
   delete pvcThickness;
   delete innerCellCornerRadius;
   delete fiberRadius;
@@ -95,6 +101,9 @@ void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   }
   else if (command == detectorLength) {
     detectorConstruction->setDetectorLength(detectorLength->GetNewDoubleValue(newValue));
+  }
+  else if (command == snoutLength) {
+    detectorConstruction->setSnoutLength(snoutLength->GetNewDoubleValue(newValue));
   }
   else if (command == pvcThickness) {
     detectorConstruction->setPvcThickness(pvcThickness->GetNewDoubleValue(newValue));

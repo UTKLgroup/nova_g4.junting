@@ -293,9 +293,6 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
 
 G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
 {
-  G4double snoutLength = 15.0 * cm;
-  G4double fiberCurveToEndPlateDistance = 5.0 * cm;
-
   G4double experimentalHallX = getCellHeight() / 2.0 + 20.0 * cm;
   G4double experimentalHallY = getCellHeight() / 2.0 + 20.0 * cm;
   G4double experimentalHallZ = detectorLength / 2.0 + snoutLength + 20.0 * cm;
@@ -794,6 +791,8 @@ void NovaDetectorConstruction::setDefaults()
   fiberCladdingFraction = 0.03;
   fiberCurveRadius = 10.0 * mm;
   detectorLength = 120.0 * cm;
+  snoutLength = 635.0 * mm;
+  fiberCurveToEndPlateDistance = 2.0 * cm;
   pmtThickness = 1.0 * mm;
   photodetectorType = "apd";
   simulationMode = "cell";
