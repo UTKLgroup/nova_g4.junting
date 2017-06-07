@@ -17,3 +17,5 @@
 /vis/scene/endOfEventAction accumulate
 /vis/viewer/set/autoRefresh true
 /vis/verbose warnings
+
+/vis/scene/add/axes 0 0 0 50 mm
