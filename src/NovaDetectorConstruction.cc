@@ -314,7 +314,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                                                           0, 0, 0);
   setPvcSurfaceProperty(pvcLogicalVolume);
   new G4PVPlacement(0,
-                    G4ThreeVector(0, -getCellHeight() / 2.0 + pvcThickness / 2.0),
+                    G4ThreeVector(),
                     pvcLogicalVolume,
                     "pvc",
                     experimentalHallLogicalVolume,
@@ -353,6 +353,31 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     "fiber",
                     liquidScintillatorLogicalVolume,
                     false, 0);
+
+  G4LogicalVolume* pmtLogicalVolume = makePmtLogicalVolume();
+  G4double pmtZ = detectorLength / 2.0 + pmtThickness / 2.0;
+  new G4PVPlacement(0,
+                    G4ThreeVector(fiberCurveRadius, 0.0, pmtZ),
+                    pmtLogicalVolume,
+                    "pmt1",
+                    experimentalHallLogicalVolume,
+                    false,
+                    0);
+  new G4PVPlacement(0,
+                    G4ThreeVector(-fiberCurveRadius, 0.0, pmtZ),
+                    pmtLogicalVolume,
+                    "pmt2",
+                    experimentalHallLogicalVolume,
+                    false,
+                    0);
+
+  NovaPmtSd* pmtSd = new NovaPmtSd("/NovaDet/pmtSd");
+  sdManager->AddNewDetector(pmtSd);
+  pmtLogicalVolume->SetSensitiveDetector(pmtSd);
+
+  pmtSd->initPmts(2);
+  pmtSd->setPmtPosition(0, fiberCurveRadius, 0.0, pmtZ);
+  pmtSd->setPmtPosition(1, -fiberCurveRadius, 0.0, pmtZ);
 
   return experimentalHallPhysicalVolume;
 }
