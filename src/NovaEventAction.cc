@@ -112,7 +112,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
   runStat.energyDepositionX = eventInformation->getEnergyWeightedPosition().getX();
   runStat.energyDepositionY = eventInformation->getEnergyWeightedPosition().getY();
   runStat.energyDepositionZ = eventInformation->getEnergyWeightedPosition().getZ();
-  eventStat.eventId = anEvent->GetEventID();
+  hitStat.eventId = anEvent->GetEventID();
 
   for (G4int i = 0; i < nTrajectories; i++) {
     NovaTrajectory* trajectory = (NovaTrajectory*) (*trajectoryContainer)[i];
@@ -131,34 +131,34 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
 
     if(trajectory->GetStatus() == hitPmt){
       NovaTrajectoryPoint* lastTrajectoryPoint = (NovaTrajectoryPoint*)trajectory->GetPoint(trajectory->GetPointEntries() - 1);
-      eventStat.hitTime = lastTrajectoryPoint->GetTime();
-      eventStat.hitX = lastTrajectoryPoint->GetPosition().getX();
-      eventStat.hitY = lastTrajectoryPoint->GetPosition().getY();
-      eventStat.hitZ = lastTrajectoryPoint->GetPosition().getZ();
-      eventStat.hitE = lastTrajectoryPoint->GetMomentum().getR() / eV;
-      eventStat.hitPX = lastTrajectoryPoint->GetMomentum().getX() / eV;
-      eventStat.hitPY = lastTrajectoryPoint->GetMomentum().getY() / eV;
-      eventStat.hitPZ = lastTrajectoryPoint->GetMomentum().getZ() / eV;
-      eventStat.hitWavelength = 1239.84 / (lastTrajectoryPoint->GetMomentum().getR() / eV);
+      hitStat.hitTime = lastTrajectoryPoint->GetTime();
+      hitStat.hitX = lastTrajectoryPoint->GetPosition().getX();
+      hitStat.hitY = lastTrajectoryPoint->GetPosition().getY();
+      hitStat.hitZ = lastTrajectoryPoint->GetPosition().getZ();
+      hitStat.hitE = lastTrajectoryPoint->GetMomentum().getR() / eV;
+      hitStat.hitPX = lastTrajectoryPoint->GetMomentum().getX() / eV;
+      hitStat.hitPY = lastTrajectoryPoint->GetMomentum().getY() / eV;
+      hitStat.hitPZ = lastTrajectoryPoint->GetMomentum().getZ() / eV;
+      hitStat.hitWavelength = 1239.84 / (lastTrajectoryPoint->GetMomentum().getR() / eV);
 
-      eventStat.wlsCount = 0;
-      eventStat.trackLength = trajectory->getTrackLength();
-      eventStat.reflectionCount = trajectory->getReflectionCount();
-      eventStat.totalInternalReflectionCount = trajectory->getTotalInternalReflectionCount();
+      hitStat.wlsCount = 0;
+      hitStat.trackLength = trajectory->getTrackLength();
+      hitStat.reflectionCount = trajectory->getReflectionCount();
+      hitStat.totalInternalReflectionCount = trajectory->getTotalInternalReflectionCount();
       incrementWlsCount(trajectory);
 
       NovaTrajectory* parentTrajectory = trajectory->getParentTrajectory(trajectoryContainer);
       while (parentTrajectory != 0 && parentTrajectory->GetParticleDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
-        eventStat.trackLength += parentTrajectory->getTrackLength();
-        eventStat.reflectionCount += parentTrajectory->getReflectionCount();
-        eventStat.totalInternalReflectionCount += parentTrajectory->getTotalInternalReflectionCount();
+        hitStat.trackLength += parentTrajectory->getTrackLength();
+        hitStat.reflectionCount += parentTrajectory->getReflectionCount();
+        hitStat.totalInternalReflectionCount += parentTrajectory->getTotalInternalReflectionCount();
         if (parentTrajectory->GetProcessName() == "OpWLS") {
           incrementWlsCount(parentTrajectory);
         }
         parentTrajectory = parentTrajectory->getParentTrajectory(trajectoryContainer);
       }
 
-      runAction->UpdateEventStatistics(eventStat);
+      runAction->UpdateHitStatistics(hitStat);
     }
   }
 
@@ -189,5 +189,5 @@ void NovaEventAction::SetSaveThreshold(G4int save)
 void NovaEventAction::incrementWlsCount(NovaTrajectory* trajectory)
 {
   if (trajectory->GetProcessName() == "OpWLS")
-    eventStat.wlsCount++;
+    hitStat.wlsCount++;
 }

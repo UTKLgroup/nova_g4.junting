@@ -17,10 +17,10 @@ void NovaRunAction::BeginOfRunAction(const G4Run* aRun){
                   &runStat.scintillationPhotonCount,
                   "scintillationPhotonCount/I:cherenkovPhotonCount:hitCount:pmtAboveThresholdCount:absorptionCount:boundaryAbsorptionCount:photocathodeAbsorptionCount:outOfWorldCount:unacountedCount:primaryPdg:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:energyDeposition:energyDepositionX:energyDepositionY:energyDepositionZ");
 
-  eventTree = new TTree("eventTree","Event Statistics");
-  eventTree->Branch("eventStat",
-                    &eventStat.eventId,
-                    "eventId/I:wlsCount:reflectionCount:totalInternalReflectionCount:beginTime/D:beginX:beginY:beginZ:beginE:beginPX:beginPY:beginPZ:beginWavelength:enterTime:enterX:enterY:enterZ:enterE:enterPX:enterPY:enterPZ:enterWavelength:hitTime:hitX:hitY:hitZ:hitE:hitPX:hitPY:hitPZ:hitWavelength:trackLength");
+  hitTree = new TTree("hitTree", "Hit Statistics");
+  hitTree->Branch("hitStat",
+                  &hitStat.eventId,
+                  "eventId/I:wlsCount:reflectionCount:totalInternalReflectionCount:beginTime/D:beginX:beginY:beginZ:beginE:beginPX:beginPY:beginPZ:beginWavelength:enterTime:enterX:enterY:enterZ:enterE:enterPX:enterPY:enterPZ:enterWavelength:hitTime:hitX:hitY:hitZ:hitE:hitPX:hitPY:hitPZ:hitWavelength:trackLength");
 
 }
 
@@ -30,7 +30,7 @@ void NovaRunAction::EndOfRunAction(const G4Run* aRun)
     recorder->RecordEndOfRun(aRun);
 
   runTree->Write();
-  eventTree->Write();
+  hitTree->Write();
   outputFilename->Close();
 }
 
@@ -40,8 +40,8 @@ void NovaRunAction::UpdateRunStatistics(RunStat stat)
   runTree->Fill();
 }
 
-void NovaRunAction::UpdateEventStatistics(EventStat stat)
+void NovaRunAction::UpdateHitStatistics(HitStat stat)
 {
-  eventStat = stat;
-  eventTree->Fill();
+  hitStat = stat;
+  hitTree->Fill();
 }  

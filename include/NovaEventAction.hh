@@ -10,7 +10,7 @@
 class G4Event;
 class NovaRecorderBase;
 
-struct EventStat
+struct HitStat
 {
   G4int eventId;
   G4int wlsCount;
@@ -103,7 +103,7 @@ class NovaEventAction : public G4UserEventAction
     G4int pmtThreshold;
 
     RunStat runStat; 
-    EventStat eventStat;
+    HitStat hitStat;
 };
 
 #endif

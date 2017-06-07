@@ -20,7 +20,7 @@ class NovaRunAction : public G4UserRunAction
     virtual void EndOfRunAction(const G4Run*);
 
     virtual void UpdateRunStatistics(RunStat stat);
-    virtual void UpdateEventStatistics(EventStat stat);
+    virtual void UpdateHitStatistics(HitStat stat);
 
   private:
     NovaRecorderBase* recorder;
@@ -28,8 +28,8 @@ class NovaRunAction : public G4UserRunAction
     RunStat  runStat;
     TTree*   runTree;
 
-    EventStat  eventStat;
-    TTree*   eventTree;
+    HitStat  hitStat;
+    TTree*   hitTree;
 };
 
 #endif
