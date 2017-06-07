@@ -38,6 +38,11 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
   fiberRadius->SetParameterName("fiberRadius", false);
   fiberRadius->SetDefaultUnit("mm");
 
+  fiberCurveRadius = new G4UIcmdWithADoubleAndUnit("/nova/detector/fiberCurveRadius", this);
+  fiberCurveRadius->SetGuidance("Set the curve radius for the fiber loop.");
+  fiberCurveRadius->SetParameterName("fiberCurveRadius", false);
+  fiberCurveRadius->SetDefaultUnit("mm");
+
   length = new G4UIcmdWithADoubleAndUnit("/nova/detector/length", this);
   length->SetGuidance("Set detector length.");
   length->SetParameterName("length", false);
@@ -99,6 +104,9 @@ void NovaDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   }
   else if (command == fiberRadius) {
     detectorConstruction->setFiberRadius(fiberRadius->GetNewDoubleValue(newValue));
+  }
+  else if (command == fiberCurveRadius) {
+    detectorConstruction->setFiberCurveRadius(fiberCurveRadius->GetNewDoubleValue(newValue));
   }
   else if (command == photodetectorType) {
     detectorConstruction->setPhotodetectorType(newValue);

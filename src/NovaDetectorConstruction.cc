@@ -666,6 +666,7 @@ void NovaDetectorConstruction::setDefaults()
   pvcThickness = 3.3 * mm;
   fiberRadius = 0.35 * mm;
   fiberCladdingFraction = 0.03;
+  fiberCurveRadius = 10.0 * mm;
   length = 120.0 * cm;
   pmtThickness = 1.0 * mm;
   photodetectorType = "apd";
