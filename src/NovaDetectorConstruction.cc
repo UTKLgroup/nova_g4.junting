@@ -1,5 +1,6 @@
 #include <TString.h>
 #include <G4PVPlacement.hh>
+#include <G4SubtractionSolid.hh>
 #include "NovaDetectorConstruction.hh"
 #include "NovaPmtSd.hh"
 #include "NovaLiquidScintillatorSd.hh"
@@ -379,12 +380,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
   pmtSd->setPmtPosition(0, fiberCurveRadius, 0.0, pmtZ);
   pmtSd->setPmtPosition(1, -fiberCurveRadius, 0.0, pmtZ);
 
-  G4Box* endPlateSolid = new G4Box("endPlateSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, pvcThickness);
-  G4LogicalVolume* endPlateLogicalVolume = new G4LogicalVolume(endPlateSolid,
-                                                               G4Material::GetMaterial("pvc"),
-                                                               "endPlateLogicalVolume",
-                                                               0, 0, 0);
-  setPvcSurfaceProperty(endPlateLogicalVolume, true);
+  G4LogicalVolume* endPlateLogicalVolume = makeEndPlateLogicalVolume();
   new G4PVPlacement(0,
                     G4ThreeVector(0.0, 0.0, detectorLength / 2.0 + pvcThickness / 2.0),
                     endPlateLogicalVolume,
@@ -393,6 +389,29 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     false, 0);
 
   return experimentalHallPhysicalVolume;
+}
+
+G4LogicalVolume* NovaDetectorConstruction::makeEndPlateLogicalVolume()
+{
+  G4Box* endPlateSolid = new G4Box("endPlateSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, pvcThickness);
+  G4Tubs* fiberHole = new G4Tubs("fiberHole1", 0, fiberRadius, pvcThickness, 0.0, CLHEP::twopi * rad);
+  G4SubtractionSolid* subtractionSolid1 = new G4SubtractionSolid("endPlatePart1",
+                                                                 endPlateSolid,
+                                                                 fiberHole,
+                                                                 0,
+                                                                 G4ThreeVector(-fiberCurveRadius, 0, 0));
+  G4SubtractionSolid* subtractionSolid2 = new G4SubtractionSolid("endPlatePart1",
+                                                                 subtractionSolid1,
+                                                                 fiberHole,
+                                                                 0,
+                                                                 G4ThreeVector(fiberCurveRadius, 0, 0));
+
+  G4LogicalVolume* endPlateLogicalVolume = new G4LogicalVolume(subtractionSolid2,
+                                                               G4Material::GetMaterial("pvc"),
+                                                               "endPlateLogicalVolume",
+                                                               0, 0, 0);
+  setPvcSurfaceProperty(endPlateLogicalVolume, true);
+  return endPlateLogicalVolume;
 }
 
 void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume, G4bool turnOffReflectivity)
