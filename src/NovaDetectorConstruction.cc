@@ -309,7 +309,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                                                      0, false, 0);
 
   // fiber
-  G4double fiberStraightLength = detectorLength + snoutLength;
+  G4double fiberStraightLength = detectorLength - fiberCurveToEndPlateDistance + snoutLength;
   G4LogicalVolume* fiberLogicalVolume = makeWlsFiberLogicalVolume(fiberStraightLength);
   G4RotationMatrix* fiberRotationMatrix = new G4RotationMatrix();
   fiberRotationMatrix->rotateX(CLHEP::pi / 2.0 * rad);
