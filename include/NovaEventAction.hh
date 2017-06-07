@@ -92,6 +92,7 @@ class NovaEventAction : public G4UserEventAction
     void SetEventVerbose(G4int v){verbose=v;}
     void SetPMTThreshold(G4int t){pmtThreshold=t;}
     void incrementWlsCount(NovaTrajectory* trajectory);
+    void printEventInfo();
 
   private:
     NovaRecorderBase* recorder;

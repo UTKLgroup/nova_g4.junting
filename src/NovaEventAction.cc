@@ -114,9 +114,6 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
   runStat.energyDepositionZ = eventInformation->getEnergyWeightedPosition().getZ();
   eventStat.eventId = anEvent->GetEventID();
 
-  G4cout << "runStat.scintillationPhotonCount = " << runStat.scintillationPhotonCount << G4endl;
-  G4cout << "runStat.cherenkovPhotonCount = " << runStat.cherenkovPhotonCount << G4endl;
-
   for (G4int i = 0; i < nTrajectories; i++) {
     NovaTrajectory* trajectory = (NovaTrajectory*) (*trajectoryContainer)[i];
 
@@ -165,12 +162,21 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
     }
   }
 
+  printEventInfo();
+
   runAction->UpdateRunStatistics(runStat);
   if (saveThreshold && eventInformation->getPhotonCount() <= saveThreshold)
     G4RunManager::GetRunManager()->rndmSaveThisEvent();
 
   if(recorder)
     recorder->RecordEndOfEvent(anEvent);
+}
+
+void NovaEventAction::printEventInfo()
+{
+  G4cout << "runStat.scintillationPhotonCount = " << runStat.scintillationPhotonCount << G4endl;
+  G4cout << "runStat.cherenkovPhotonCount = " << runStat.cherenkovPhotonCount << G4endl;
+  G4cout << "runStat.hitCount = " << runStat.hitCount << G4endl;
 }
 
 void NovaEventAction::SetSaveThreshold(G4int save)
