@@ -83,7 +83,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void defineFluorinatedPolymer(G4String materialName);
     void definePvc(G4String materialName);
     void defineGalactic();
-    void setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume);
+    void setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume, G4bool turnOffReflectivity = false);
 
     G4UnionSolid* makeCellSolid(G4double deltaSize, G4double length);
     G4UnionSolid* makePvcCellSolid();

@@ -292,9 +292,9 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
 
 G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
 {
-  G4double experimentalHallX = getCellHeight() / 2.0  + 20.0*cm;
-  G4double experimentalHallY = getCellHeight() / 2.0  + 20.0*cm;
-  G4double experimentalHallZ = detectorLength / 2.0 + 20.0*cm;
+  G4double experimentalHallX = getCellHeight() / 2.0 + 20.0 * cm;
+  G4double experimentalHallY = getCellHeight() / 2.0 + 20.0 * cm;
+  G4double experimentalHallZ = detectorLength / 2.0 + 20.0 * cm;
 
   experimentalHallSolid = new G4Box("experimentalHallSolid",experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
@@ -382,12 +382,15 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
   return experimentalHallPhysicalVolume;
 }
 
-void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume)
+void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume, G4bool turnOffReflectivity)
 {
   std::vector<G4double> reflectivityEnergies;
   std::vector<G4double> reflectivities;
   readCsvFile(PVC_REFLECTIVITY_FILENAME, reflectivityEnergies, reflectivities, 1.0);
   std::vector<G4double> zeroConstants(reflectivityEnergies.size(), 0.0);
+  if (turnOffReflectivity) {
+    reflectivities = zeroConstants;
+  }
 
   G4MaterialPropertiesTable* pvcOpticalSurfaceMpt = new G4MaterialPropertiesTable();
   pvcOpticalSurfaceMpt->AddProperty("REFLECTIVITY", &reflectivityEnergies[0], &reflectivityEnergies[0], (G4int) reflectivityEnergies.size());
