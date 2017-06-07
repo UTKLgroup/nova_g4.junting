@@ -50,7 +50,7 @@ struct HitStat
   G4double trackLength;
 };
 
-struct RunStat
+struct EventStat
 {
   G4int scintillationPhotonCount;
   G4int cherenkovPhotonCount;
@@ -102,7 +102,7 @@ class NovaEventAction : public G4UserEventAction
     G4int verbose;
     G4int pmtThreshold;
 
-    RunStat runStat; 
+    EventStat eventStat;
     HitStat hitStat;
 };
 

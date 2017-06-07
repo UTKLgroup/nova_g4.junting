@@ -12,9 +12,9 @@ void NovaRunAction::BeginOfRunAction(const G4Run* aRun){
 
   outputFilename = new TFile("nova.root", "recreate");
 
-  runTree = new TTree("runTree", "Run Statistics");
-  runTree->Branch("runStat",
-                  &runStat.scintillationPhotonCount,
+  eventTree = new TTree("eventTree", "Event Statistics");
+  eventTree->Branch("eventStat",
+                  &eventStat.scintillationPhotonCount,
                   "scintillationPhotonCount/I:cherenkovPhotonCount:hitCount:pmtAboveThresholdCount:absorptionCount:boundaryAbsorptionCount:photocathodeAbsorptionCount:outOfWorldCount:unacountedCount:primaryPdg:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:energyDeposition:energyDepositionX:energyDepositionY:energyDepositionZ");
 
   hitTree = new TTree("hitTree", "Hit Statistics");
@@ -29,15 +29,15 @@ void NovaRunAction::EndOfRunAction(const G4Run* aRun)
   if(recorder)
     recorder->RecordEndOfRun(aRun);
 
-  runTree->Write();
+  eventTree->Write();
   hitTree->Write();
   outputFilename->Close();
 }
 
-void NovaRunAction::UpdateRunStatistics(RunStat stat)
+void NovaRunAction::UpdateEventStatistics(EventStat stat)
 {
-  runStat = stat;
-  runTree->Fill();
+  eventStat = stat;
+  eventTree->Fill();
 }
 
 void NovaRunAction::UpdateHitStatistics(HitStat stat)
