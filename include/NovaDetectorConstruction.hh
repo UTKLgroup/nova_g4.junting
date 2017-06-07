@@ -91,7 +91,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4UnionSolid* makeFiberLoopSolid(G4double radius, G4double curveRadius, G4double straightLength);
     G4LogicalVolume* makeWlsFiberLogicalVolume(G4double straightLength);
     G4LogicalVolume* makePmtLogicalVolume();
-    G4LogicalVolume* makeEndPlateLogicalVolume(G4bool hasFiberHoles = false);
     G4VPhysicalVolume* makeDetectorPhysicalVolume();
     G4VPhysicalVolume* makeNovaCellPhysicalVolume();
     G4VPhysicalVolume* makeSingleWlsFiberPhysicalVolume();
