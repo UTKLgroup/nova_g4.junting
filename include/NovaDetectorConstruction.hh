@@ -35,8 +35,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void setFiberRadius(G4double a) {fiberRadius = a; isUpdated = true;}
     void setFiberCurveRadius(G4double a) {fiberCurveRadius = a; isUpdated = true;}
     void setSimulationMode(G4String a) {simulationMode = a; isUpdated = true;}
-    void setPhotodetectorType(G4String a) {photodetectorType = a;}
-    void setLiquidScintillatorLightYield(G4double y);
+    void setPhotodetectorType(G4String a) {photodetectorType = a; isUpdated = true;}
+    void setLiquidScintillatorLightYield(G4double a) {liquidScintillatorLightYield = a; isUpdated = true;};
     void setDefaults();
 
     G4double getOuterCellCornerRadius() {return innerCellCornerRadius + pvcThickness;}
