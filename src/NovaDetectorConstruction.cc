@@ -293,9 +293,12 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
 
 G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
 {
+  G4double snoutLength = 15.0 * cm;
+  G4double fiberCurveToEndPlateDistance = 5.0 * cm;
+
   G4double experimentalHallX = getCellHeight() / 2.0 + 20.0 * cm;
   G4double experimentalHallY = getCellHeight() / 2.0 + 20.0 * cm;
-  G4double experimentalHallZ = detectorLength / 2.0 + 20.0 * cm;
+  G4double experimentalHallZ = detectorLength / 2.0 + snoutLength + 20.0 * cm;
 
   experimentalHallSolid = new G4Box("experimentalHallSolid", experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
@@ -308,8 +311,54 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                                                      "experimentalHallPhysicalVolume",
                                                      0, false, 0);
 
+  G4double fiberStraightLength = detectorLength + snoutLength;
+  G4LogicalVolume* fiberLogicalVolume = makeWlsFiberLogicalVolume(fiberStraightLength);
+  G4RotationMatrix* fiberRotationMatrix = new G4RotationMatrix();
+  fiberRotationMatrix->rotateX(CLHEP::pi / 2.0 * rad);
+  G4ThreeVector fiberThreeVector = G4ThreeVector(0, 0, -detectorLength / 2.0 + fiberCurveRadius + fiberCurveToEndPlateDistance);
+  new G4PVPlacement(fiberRotationMatrix,
+                    fiberThreeVector,
+                    fiberLogicalVolume,
+                    "fiber",
+                    experimentalHallLogicalVolume,
+                    false, 0);
+  G4VisAttributes* fiberVisAttributes = new G4VisAttributes();
+  fiberVisAttributes->SetVisibility(true);
+  fiberVisAttributes->SetForceSolid(true);
+  fiberLogicalVolume->SetVisAttributes(fiberVisAttributes);
+
+  G4Box* liquidScintillatorSolid = new G4Box("liquidScintillatorSolid",
+                                             getCellWidth() / 2.0,
+                                             getCellHeight() / 2.0,
+                                             detectorLength / 2.0);
+  G4SubtractionSolid* liquidScintillatorSubtractionSolid =
+      new G4SubtractionSolid("liquidScintillatorSubtractionSolid",
+                             liquidScintillatorSolid,
+                             makeFiberLoopSolid(fiberRadius, fiberCurveRadius, fiberStraightLength),
+                             fiberRotationMatrix,
+                             fiberThreeVector);
+  G4LogicalVolume* liquidScintillatorLogicalVolume =
+      new G4LogicalVolume(liquidScintillatorSubtractionSolid,
+                          G4Material::GetMaterial("liquidScintillator"),
+                          "liquidScintillatorLogicalVolume",
+                          0, 0, 0);
+  new G4PVPlacement(0,
+                    G4ThreeVector(),
+                    liquidScintillatorLogicalVolume,
+                    "liquidScintillator",
+                    experimentalHallLogicalVolume,
+                    false, 0);
+  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
+  NovaLiquidScintillatorSd* liquidScintillatorSd = new NovaLiquidScintillatorSd("/NovaDet/liquidScintillatorSd");
+  sdManager->AddNewDetector(liquidScintillatorSd);
+  liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
+
+
   G4Box* pvcSolid = new G4Box("pvcSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, detectorLength / 2.0);
-  G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSolid,
+  G4SubtractionSolid* pvcSubtractionSolid = new G4SubtractionSolid("endPlatePart1",
+                                                                   pvcSolid,
+                                                                   makeCellSolid(pvcThickness, detectorLength * 1.2));
+  G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSubtractionSolid,
                                                           G4Material::GetMaterial("pvc"),
                                                           "pvcLogicalVolume",
                                                           0, 0, 0);
@@ -318,45 +367,11 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     G4ThreeVector(),
                     pvcLogicalVolume,
                     "pvc",
-                    experimentalHallLogicalVolume,
-                    false, 0);
-
-  G4double liquidScintillatorLength = detectorLength - pvcThickness;
-  G4UnionSolid* liquidScintillatorSolid = makeCellSolid(pvcThickness, liquidScintillatorLength);
-  G4LogicalVolume* liquidScintillatorLogicalVolume = new G4LogicalVolume(liquidScintillatorSolid,
-                                                                         G4Material::GetMaterial("liquidScintillator"),
-                                                                         "liquidScintillatorLogicalVolume",
-                                                                         0, 0, 0);
-  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-  NovaLiquidScintillatorSd* liquidScintillatorSd = new NovaLiquidScintillatorSd("/NovaDet/liquidScintillatorSd");
-  sdManager->AddNewDetector(liquidScintillatorSd);
-  liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
-  new G4PVPlacement(0,
-                    G4ThreeVector(0, 0, pvcThickness / 2.0),
-                    liquidScintillatorLogicalVolume,
-                    "liquidScintillator",
-                    pvcLogicalVolume,
-                    false, 0);
-
-  G4double fiberStraightLength = liquidScintillatorLength - 2 * fiberCurveRadius;
-  G4LogicalVolume* fiberLogicalVolume = makeWlsFiberLogicalVolume(fiberStraightLength);
-
-  G4VisAttributes* fiberVisAttributes = new G4VisAttributes();
-  fiberVisAttributes->SetVisibility(true);
-  fiberVisAttributes->SetForceSolid(true);
-  fiberLogicalVolume->SetVisAttributes(fiberVisAttributes);
-
-  G4RotationMatrix* rotationMatrix = new G4RotationMatrix();
-  rotationMatrix->rotateX(90.0 * deg);
-  new G4PVPlacement(rotationMatrix,
-                    G4ThreeVector(0, 0, -(fiberStraightLength - liquidScintillatorLength / 2.0)),
-                    fiberLogicalVolume,
-                    "fiber",
                     liquidScintillatorLogicalVolume,
                     false, 0);
 
   G4LogicalVolume* pmtLogicalVolume = makePmtLogicalVolume();
-  G4double pmtZ = detectorLength / 2.0 + pmtThickness / 2.0;
+  G4double pmtZ = fiberThreeVector.getZ() + fiberStraightLength + pmtThickness / 2.0;
   new G4PVPlacement(0,
                     G4ThreeVector(fiberCurveRadius, 0.0, pmtZ),
                     pmtLogicalVolume,
@@ -371,29 +386,39 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     experimentalHallLogicalVolume,
                     false,
                     0);
-
   NovaPmtSd* pmtSd = new NovaPmtSd("/NovaDet/pmtSd");
   sdManager->AddNewDetector(pmtSd);
   pmtLogicalVolume->SetSensitiveDetector(pmtSd);
-
   pmtSd->initPmts(2);
   pmtSd->setPmtPosition(0, fiberCurveRadius, 0.0, pmtZ);
   pmtSd->setPmtPosition(1, -fiberCurveRadius, 0.0, pmtZ);
 
-  G4LogicalVolume* endPlateLogicalVolume = makeEndPlateLogicalVolume();
+  G4LogicalVolume* frontEndPlateLogicalVolume = makeEndPlateLogicalVolume(true);
+  setPvcSurfaceProperty(frontEndPlateLogicalVolume, true);
   new G4PVPlacement(0,
                     G4ThreeVector(0.0, 0.0, detectorLength / 2.0 + pvcThickness / 2.0),
-                    endPlateLogicalVolume,
-                    "endPlate",
+                    frontEndPlateLogicalVolume,
+                    "frontEndPlate",
+                    experimentalHallLogicalVolume,
+                    false, 0);
+  G4LogicalVolume* backEndPlateLogicalVolume = makeEndPlateLogicalVolume();
+  setPvcSurfaceProperty(backEndPlateLogicalVolume, true);
+  new G4PVPlacement(0,
+                    G4ThreeVector(0.0, 0.0, -detectorLength / 2.0 - pvcThickness / 2.0),
+                    backEndPlateLogicalVolume,
+                    "backEndPlate",
                     experimentalHallLogicalVolume,
                     false, 0);
 
   return experimentalHallPhysicalVolume;
 }
 
-G4LogicalVolume* NovaDetectorConstruction::makeEndPlateLogicalVolume()
+G4LogicalVolume* NovaDetectorConstruction::makeEndPlateLogicalVolume(G4bool hasFiberHoles)
 {
-  G4Box* endPlateSolid = new G4Box("endPlateSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, pvcThickness);
+  G4Box* endPlateSolid = new G4Box("endPlateSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, pvcThickness / 2.0);
+  if (!hasFiberHoles)
+    return new G4LogicalVolume(endPlateSolid, G4Material::GetMaterial("pvc"), "endPlateLogicalVolume", 0, 0, 0);
+
   G4Tubs* fiberHole = new G4Tubs("fiberHole1", 0, fiberRadius, pvcThickness, 0.0, CLHEP::twopi * rad);
   G4SubtractionSolid* subtractionSolid1 = new G4SubtractionSolid("endPlatePart1",
                                                                  endPlateSolid,
@@ -406,12 +431,7 @@ G4LogicalVolume* NovaDetectorConstruction::makeEndPlateLogicalVolume()
                                                                  0,
                                                                  G4ThreeVector(fiberCurveRadius, 0, 0));
 
-  G4LogicalVolume* endPlateLogicalVolume = new G4LogicalVolume(subtractionSolid2,
-                                                               G4Material::GetMaterial("pvc"),
-                                                               "endPlateLogicalVolume",
-                                                               0, 0, 0);
-  setPvcSurfaceProperty(endPlateLogicalVolume, true);
-  return endPlateLogicalVolume;
+  return new G4LogicalVolume(subtractionSolid2, G4Material::GetMaterial("pvc"), "endPlateLogicalVolume", 0, 0, 0);
 }
 
 void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume, G4bool turnOffReflectivity)
