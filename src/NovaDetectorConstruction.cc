@@ -446,7 +446,7 @@ void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogical
   }
 
   G4MaterialPropertiesTable* pvcOpticalSurfaceMpt = new G4MaterialPropertiesTable();
-  pvcOpticalSurfaceMpt->AddProperty("REFLECTIVITY", &reflectivityEnergies[0], &reflectivityEnergies[0], (G4int) reflectivityEnergies.size());
+  pvcOpticalSurfaceMpt->AddProperty("REFLECTIVITY", &reflectivityEnergies[0], &reflectivities[0], (G4int) reflectivityEnergies.size());
   pvcOpticalSurfaceMpt->AddProperty("SPECULARLOBECONSTANT", &reflectivityEnergies[0], &zeroConstants[0], (G4int) reflectivityEnergies.size());
   pvcOpticalSurfaceMpt->AddProperty("SPECULARSPIKECONSTANT", &reflectivityEnergies[0], &zeroConstants[0], (G4int) reflectivityEnergies.size());
   pvcOpticalSurfaceMpt->AddProperty("BACKSCATTERCONSTANT", &reflectivityEnergies[0], &zeroConstants[0], (G4int) reflectivityEnergies.size());
