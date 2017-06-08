@@ -71,9 +71,13 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
           if(prePhysicalVolume->GetName() == "core")
             trackInformation->incrementTotalInternalReflectionCount();
           break;
-        case BackScattering :
+        case LambertianReflection :
           trackInformation->incrementReflectionCount();
           break;
+        case BackScattering :
+        case FresnelReflection :
+        case LobeReflection :
+        case SpikeReflection :
         default :
           break;
       }
