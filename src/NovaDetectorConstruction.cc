@@ -454,7 +454,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeBenchtopNovaCellPhysicalVolume(
 
   // fiber
   G4double fiberStraightLength = detectorLength - fiberCurveToEndPlateDistance + snoutLength;
-  G4LogicalVolume* fiberLogicalVolume = makeWlsFiberLoopLogicalVolume(fiberStraightLength);
+  G4LogicalVolume* fiberLogicalVolume = makeWlsFiberStraightLogicalVolume(fiberStraightLength);
   G4RotationMatrix* fiberRotationMatrix = new G4RotationMatrix();
   fiberRotationMatrix->rotateX(CLHEP::pi / 2.0 * rad);
   G4ThreeVector fiberThreeVector = G4ThreeVector(0, 0, -detectorLength / 2.0 + fiberCurveRadius + fiberCurveToEndPlateDistance);
@@ -861,17 +861,17 @@ G4LogicalVolume* NovaDetectorConstruction::makeWlsFiberStraightLogicalVolume(G4d
   G4double coreRadius = fiberRadius * (1.0 - 2.0 * fiberCladdingFraction);
   G4double innerCladdingRadius = fiberRadius * (1.0 - fiberCladdingFraction);
 
-  G4UnionSolid* outerCladdingSolid = makeFiberLoopSolid(fiberRadius, fiberCurveRadius, straightLength);
+  G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, straightLength / 2.0, 0.0, CLHEP::twopi * rad);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
                                                                     fluorinatedPolymer,
                                                                     "outerCladdingLogicalVolume");
 
-  G4UnionSolid* innerCladdingSolid = makeFiberLoopSolid(innerCladdingRadius, fiberCurveRadius, straightLength);
+  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, straightLength / 2.0, 0.0, CLHEP::twopi * rad);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
                                                                     pmma,
                                                                     "innerCladdingLogicalVolume");
 
-  G4UnionSolid* coreSolid = makeFiberLoopSolid(coreRadius, fiberCurveRadius, straightLength);
+  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, straightLength / 2.0, 0.0, CLHEP::twopi * rad);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
                                                            fiberCore,
                                                            "coreLogicalVolume");
