@@ -446,7 +446,7 @@ void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogical
   pvcOpticalSurface->SetModel(unified);
   pvcOpticalSurface->SetPolish(0);
   pvcOpticalSurface->SetFinish(groundfrontpainted);
-  pvcOpticalSurface->SetType(dielectric_metal);
+  pvcOpticalSurface->SetType(dielectric_dielectric);
   pvcOpticalSurface->SetMaterialPropertiesTable(pvcOpticalSurfaceMpt);
 
   new G4LogicalSkinSurface("pvcLogicalSkinSurface", pvcLogicalVolume, pvcOpticalSurface);

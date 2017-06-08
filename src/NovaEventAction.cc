@@ -176,7 +176,7 @@ void NovaEventAction::printEventInfo()
 {
   G4cout << "eventStat.scintillationPhotonCount = " << eventStat.scintillationPhotonCount << G4endl;
   G4cout << "eventStat.cherenkovPhotonCount = " << eventStat.cherenkovPhotonCount << G4endl;
-  G4cout << "eventStat.hitCount = " << eventStat.hitCount << G4endl;
+  G4cout << "eventStat.hitCount = " << eventStat.hitCount << G4endl << G4endl;
 }
 
 void NovaEventAction::SetSaveThreshold(G4int save)
