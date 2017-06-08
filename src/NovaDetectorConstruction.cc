@@ -74,8 +74,6 @@ void NovaDetectorConstruction::setLiquidScintillatorProperty()
 
 void NovaDetectorConstruction::setGlassProperty()
 {
-  G4Material* glass = nistManager->FindOrBuildMaterial("G4_GLASS_PLATE");
-
   const G4int energyCount = 2;
   G4double energies[energyCount] = {convertWavelengthToEnergy(200.0), convertWavelengthToEnergy(700.0)};
   G4double refractionIndices[energyCount] = {1.49, 1.49};
@@ -152,7 +150,6 @@ void NovaDetectorConstruction::setFluorinatedPolymerProperty()
 
 void NovaDetectorConstruction::setGalacticProperty()
 {
-  nistManager->FindOrBuildMaterial("G4_Galactic");
   const G4int energyCount = 2;
   G4double energies[energyCount] = {convertWavelengthToEnergy(200.0), convertWavelengthToEnergy(700.0)};
   G4double refractionIndices[energyCount] = {1.0, 1.0};
@@ -161,7 +158,7 @@ void NovaDetectorConstruction::setGalacticProperty()
                            energies,
                            refractionIndices,
                            energyCount);
-  G4Material::GetMaterial("G4_Galactic")->SetMaterialPropertiesTable(galacticMpt);
+  galactic->SetMaterialPropertiesTable(galacticMpt);
 }
 
 void NovaDetectorConstruction::defineMaterials()
@@ -171,9 +168,9 @@ void NovaDetectorConstruction::defineMaterials()
   O = nistManager->FindOrBuildElement("O");
   Ti = nistManager->FindOrBuildElement("Ti");
 
-  nistManager->FindOrBuildMaterial("G4_Al");
-  nistManager->FindOrBuildMaterial("G4_Galactic");
-  nistManager->FindOrBuildMaterial("G4_GLASS_PLATE");
+  aluminum = nistManager->FindOrBuildMaterial("G4_Al");
+  galactic = nistManager->FindOrBuildMaterial("G4_Galactic");
+  glass = nistManager->FindOrBuildMaterial("G4_GLASS_PLATE");
 
   liquidScintillator = new G4Material("liquidScintillator", 1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
   liquidScintillator->AddElement(H, 0.666);

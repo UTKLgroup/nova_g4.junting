@@ -115,6 +115,9 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4Material* fiberCore;
     G4Material* pmma;
     G4Material* fluorinatedPolymer;
+    G4Material* glass;
+    G4Material* aluminum;
+    G4Material* galactic;
 
     G4MaterialPropertiesTable* liquidScintillatorMpt;
     G4MaterialPropertiesTable* fiberCoreMpt;
