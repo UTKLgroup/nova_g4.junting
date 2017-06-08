@@ -439,7 +439,7 @@ void NovaDetectorConstruction::setPvcSurfaceProperty(G4LogicalVolume* pvcLogical
 {
   std::vector<G4double> reflectivityEnergies;
   std::vector<G4double> reflectivities;
-  readCsvFile(PVC_REFLECTIVITY_FILENAME, reflectivityEnergies, reflectivities, 1.0);
+  readCsvFile(PVC_REFLECTIVITY_FILENAME, reflectivityEnergies, reflectivities, 0.01);
   std::vector<G4double> zeroConstants(reflectivityEnergies.size(), 0.0);
   if (turnOffReflectivity) {
     reflectivities = zeroConstants;

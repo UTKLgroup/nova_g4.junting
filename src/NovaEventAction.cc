@@ -152,9 +152,7 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
         hitStat.trackLength += parentTrajectory->getTrackLength();
         hitStat.reflectionCount += parentTrajectory->getReflectionCount();
         hitStat.totalInternalReflectionCount += parentTrajectory->getTotalInternalReflectionCount();
-        if (parentTrajectory->GetProcessName() == "OpWLS") {
-          incrementWlsCount(parentTrajectory);
-        }
+        incrementWlsCount(parentTrajectory);
         parentTrajectory = parentTrajectory->getParentTrajectory(trajectoryContainer);
       }
 
