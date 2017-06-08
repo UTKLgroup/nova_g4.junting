@@ -71,7 +71,7 @@ NovaDetectorMessenger::NovaDetectorMessenger(NovaDetectorConstruction* detector)
 
   simulationMode = new G4UIcmdWithAString("/nova/simulationMode", this);
   simulationMode->SetParameterName("simulationMode", false);
-  simulationMode->SetGuidance("Simulation mode. Use \"fiber\" to simulate a single fiber. Use \"cell\" to simulate a NOvA cell.");
+  simulationMode->SetGuidance("Simulation mode. Use \"fiber\" to simulate a single fiber. Use \"cell\" to simulate a NOvA cell. Use \"benchtop\" to simulate a benchtop NOvA cell measurement.");
 }
 
 NovaDetectorMessenger::~NovaDetectorMessenger()

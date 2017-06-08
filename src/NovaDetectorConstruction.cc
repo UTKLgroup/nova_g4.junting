@@ -225,6 +225,8 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeDetectorPhysicalVolume()
     return makeSingleWlsFiberPhysicalVolume();
   else if (simulationMode == "cell")
     return makeNovaCellPhysicalVolume();
+  else if (simulationMode == "benchtop")
+    return makeBenchtopNovaCellPhysicalVolume();
   else
     throw "The selected simulation mode does not exist.";
 }
