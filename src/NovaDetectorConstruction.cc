@@ -298,7 +298,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
   G4double experimentalHallZ = detectorLength / 2.0 + snoutLength + 20.0 * cm;
 
   experimentalHallSolid = new G4Box("experimentalHallSolid", experimentalHallX, experimentalHallY, experimentalHallZ);
-  experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
+  experimentalHallLogicalVolume = new G4LogicalVolume(experimentalHallSolid,
                                                        G4Material::GetMaterial("G4_Galactic"),
                                                        "experimentalHallLogicalVolume",
                                                        0, 0, 0);
@@ -349,8 +349,11 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     experimentalHallLogicalVolume,
                     false, 0);
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-  NovaLiquidScintillatorSd* liquidScintillatorSd = new NovaLiquidScintillatorSd("/NovaDet/liquidScintillatorSd");
-  sdManager->AddNewDetector(liquidScintillatorSd);
+  G4VSensitiveDetector* liquidScintillatorSd = (NovaLiquidScintillatorSd*) sdManager->FindSensitiveDetector(LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME);
+  if (!liquidScintillatorSd) {
+    liquidScintillatorSd = new NovaLiquidScintillatorSd(LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME);
+    sdManager->AddNewDetector(liquidScintillatorSd);
+  }
   liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
 
   // pvc
@@ -387,12 +390,16 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     experimentalHallLogicalVolume,
                     false,
                     0);
-  NovaPmtSd* pmtSd = new NovaPmtSd("/NovaDet/pmtSd");
-  sdManager->AddNewDetector(pmtSd);
+
+  NovaPmtSd* pmtSd = (NovaPmtSd*) sdManager->FindSensitiveDetector(PMT_SENSITIVE_DETECTOR_NAME);
+  if (!pmtSd) {
+    pmtSd = new NovaPmtSd("/NovaDet/pmtSd");
+    pmtSd->initPmts(2);
+    pmtSd->setPmtPosition(0, fiberCurveRadius, 0.0, pmtZ);
+    pmtSd->setPmtPosition(1, -fiberCurveRadius, 0.0, pmtZ);
+    sdManager->AddNewDetector(pmtSd);
+  }
   pmtLogicalVolume->SetSensitiveDetector(pmtSd);
-  pmtSd->initPmts(2);
-  pmtSd->setPmtPosition(0, fiberCurveRadius, 0.0, pmtZ);
-  pmtSd->setPmtPosition(1, -fiberCurveRadius, 0.0, pmtZ);
 
   // front end-plate
   G4Box* endPlateSolid = new G4Box("endPlateSolid", getCellWidth() / 2.0, getCellHeight() / 2.0, pvcThickness / 2.0);

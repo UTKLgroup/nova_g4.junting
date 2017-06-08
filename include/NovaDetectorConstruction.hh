@@ -74,6 +74,8 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4String FIBER_SECOND_CLADDING_REFRACTION_INDEX_FILENAME = "refraction_index_fluorinated_polymer.csv";
     G4String APD_QUANTUM_EFFICIENCY_FILENAME = "apd_qe_1.dat";
     G4String PMT_QUANTUM_EFFICIENCY_FILENAME = "qe_file_2.dat";
+    G4String LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME = "/NovaDet/liquidScintillatorSd";
+    G4String PMT_SENSITIVE_DETECTOR_NAME = "/NovaDet/pmtSd";
 
     G4String getFilePath(G4String filename) {return INPUT_DIR + "/" + filename;}
     void defineMaterials();
