@@ -281,11 +281,14 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
                     0);
 
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-  NovaPmtSd* pmtSd = new NovaPmtSd("/NovaDet/pmtSd");
-  sdManager->AddNewDetector(pmtSd);
+  NovaPmtSd* pmtSd = (NovaPmtSd*) sdManager->FindSensitiveDetector(PMT_SENSITIVE_DETECTOR_NAME, false);
+  if (!pmtSd) {
+    pmtSd = new NovaPmtSd(PMT_SENSITIVE_DETECTOR_NAME);
+    pmtSd->initPmts(1);
+    pmtSd->setPmtPosition(0, 0.0, 0.0, pmtZ);
+    sdManager->AddNewDetector(pmtSd);
+  }
   pmtLogicalVolume->SetSensitiveDetector(pmtSd);
-  pmtSd->initPmts(1);
-  pmtSd->setPmtPosition(0, 0.0, 0.0, pmtZ);
 
   return experimentalHallPhysicalVolume;
 }
@@ -348,7 +351,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     experimentalHallLogicalVolume,
                     false, 0);
   G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-  G4VSensitiveDetector* liquidScintillatorSd = (NovaLiquidScintillatorSd*) sdManager->FindSensitiveDetector(LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME);
+  G4VSensitiveDetector* liquidScintillatorSd = (NovaLiquidScintillatorSd*) sdManager->FindSensitiveDetector(LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME, false);
   if (!liquidScintillatorSd) {
     liquidScintillatorSd = new NovaLiquidScintillatorSd(LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME);
     sdManager->AddNewDetector(liquidScintillatorSd);
@@ -372,7 +375,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     liquidScintillatorLogicalVolume,
                     false, 0);
 
-  // photodetector
+  // pmt
   G4LogicalVolume* pmtLogicalVolume = makePmtLogicalVolume();
   G4double pmtZ = fiberThreeVector.getZ() + fiberStraightLength + pmtThickness / 2.0;
   new G4PVPlacement(0,
@@ -390,9 +393,9 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                     false,
                     0);
 
-  NovaPmtSd* pmtSd = (NovaPmtSd*) sdManager->FindSensitiveDetector(PMT_SENSITIVE_DETECTOR_NAME);
+  NovaPmtSd* pmtSd = (NovaPmtSd*) sdManager->FindSensitiveDetector(PMT_SENSITIVE_DETECTOR_NAME, false);
   if (!pmtSd) {
-    pmtSd = new NovaPmtSd("/NovaDet/pmtSd");
+    pmtSd = new NovaPmtSd(PMT_SENSITIVE_DETECTOR_NAME);
     pmtSd->initPmts(2);
     pmtSd->setPmtPosition(0, fiberCurveRadius, 0.0, pmtZ);
     pmtSd->setPmtPosition(1, -fiberCurveRadius, 0.0, pmtZ);
