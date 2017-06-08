@@ -238,7 +238,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
 
   experimentalHallSolid = new G4Box("experimentalHallSolid", experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume  = new G4LogicalVolume(experimentalHallSolid,
-                                                       G4Material::GetMaterial("G4_Galactic"),
+                                                       galactic,
                                                        "experimentalHallLogicalVolume",
                                                        0, 0, 0);
   experimentalHallPhysicalVolume = new G4PVPlacement(0,
@@ -253,17 +253,17 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
 
   G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
-                                                                    G4Material::GetMaterial("fluorinatedPolymer"),
+                                                                    fluorinatedPolymer,
                                                                     "outerCladdingLogicalVolume");
 
   G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
-                                                                    G4Material::GetMaterial("pmma"),
+                                                                    pmma,
                                                                     "innerCladdingLogicalVolume");
 
   G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
-                                                           G4Material::GetMaterial("fiberCore"),
+                                                           fiberCore,
                                                            "coreLogicalVolume");
 
   new G4PVPlacement(0, G4ThreeVector(), coreLogicalVolume, "core", innerCladdingLogicalVolume, false, 0);
@@ -298,7 +298,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
 
   experimentalHallSolid = new G4Box("experimentalHallSolid", experimentalHallX, experimentalHallY, experimentalHallZ);
   experimentalHallLogicalVolume = new G4LogicalVolume(experimentalHallSolid,
-                                                       G4Material::GetMaterial("G4_Galactic"),
+                                                       galactic,
                                                        "experimentalHallLogicalVolume",
                                                        0, 0, 0);
   experimentalHallPhysicalVolume = new G4PVPlacement(0,
@@ -338,7 +338,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                              fiberThreeVector);
   G4LogicalVolume* liquidScintillatorLogicalVolume =
       new G4LogicalVolume(liquidScintillatorSubtractionSolid,
-                          G4Material::GetMaterial("liquidScintillator"),
+                          liquidScintillator,
                           "liquidScintillatorLogicalVolume",
                           0, 0, 0);
   new G4PVPlacement(0,
@@ -361,7 +361,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                                                                    pvcSolid,
                                                                    makeCellSolid(pvcThickness, detectorLength * 1.2));
   G4LogicalVolume* pvcLogicalVolume = new G4LogicalVolume(pvcSubtractionSolid,
-                                                          G4Material::GetMaterial("pvc"),
+                                                          pvc,
                                                           "pvcLogicalVolume",
                                                           0, 0, 0);
   setPvcSurfaceProperty(pvcLogicalVolume);
@@ -409,7 +409,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
                              fiberRotationMatrix,
                              G4ThreeVector(0, 0, -fiberCurveRadius));
   G4LogicalVolume* frontEndPlateLogicalVolume =
-      new G4LogicalVolume(endPlateSubtractionSolid, G4Material::GetMaterial("pvc"), "frontEndPlateLogicalVolume", 0, 0, 0);
+      new G4LogicalVolume(endPlateSubtractionSolid, pvc, "frontEndPlateLogicalVolume", 0, 0, 0);
   setPvcSurfaceProperty(frontEndPlateLogicalVolume, true);
   new G4PVPlacement(0,
                     G4ThreeVector(0.0, 0.0, detectorLength / 2.0 + pvcThickness / 2.0),
@@ -420,7 +420,7 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeNovaCellPhysicalVolume()
 
   // back end-plate
   G4LogicalVolume* backEndPlateLogicalVolume =
-      new G4LogicalVolume(endPlateSolid, G4Material::GetMaterial("pvc"), "backEndPlateLogicalVolume", 0, 0, 0);
+      new G4LogicalVolume(endPlateSolid, pvc, "backEndPlateLogicalVolume", 0, 0, 0);
   setPvcSurfaceProperty(backEndPlateLogicalVolume);
   new G4PVPlacement(0,
                     G4ThreeVector(0.0, 0.0, -detectorLength / 2.0 - pvcThickness / 2.0),
@@ -692,17 +692,17 @@ G4LogicalVolume* NovaDetectorConstruction::makeWlsFiberLogicalVolume(G4double st
 
   G4UnionSolid* outerCladdingSolid = makeFiberLoopSolid(fiberRadius, fiberCurveRadius, straightLength);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
-                                                                    G4Material::GetMaterial("fluorinatedPolymer"),
+                                                                    fluorinatedPolymer,
                                                                     "outerCladdingLogicalVolume");
 
   G4UnionSolid* innerCladdingSolid = makeFiberLoopSolid(innerCladdingRadius, fiberCurveRadius, straightLength);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
-                                                                    G4Material::GetMaterial("pmma"),
+                                                                    pmma,
                                                                     "innerCladdingLogicalVolume");
 
   G4UnionSolid* coreSolid = makeFiberLoopSolid(coreRadius, fiberCurveRadius, straightLength);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
-                                                           G4Material::GetMaterial("fiberCore"),
+                                                           fiberCore,
                                                            "coreLogicalVolume");
 
   new G4PVPlacement(0, G4ThreeVector(), coreLogicalVolume, "core", innerCladdingLogicalVolume, false, 0);
@@ -720,7 +720,7 @@ G4LogicalVolume* NovaDetectorConstruction::makePmtLogicalVolume()
                                 0.0,
                                 CLHEP::twopi);
   G4LogicalVolume* pmtLogicalVolume = new G4LogicalVolume(pmtSolid,
-                                                          G4Material::GetMaterial("G4_GLASS_PLATE"),
+                                                          glass,
                                                           "pmtLogicalVolume");
 
   G4Tubs* photocathodeSolid = new G4Tubs("photocathodeSolid",
@@ -730,7 +730,7 @@ G4LogicalVolume* NovaDetectorConstruction::makePmtLogicalVolume()
                                          0.0,
                                          CLHEP::twopi);
   G4LogicalVolume* photocathodeLogicalVolume = new G4LogicalVolume(photocathodeSolid,
-                                                                   G4Material::GetMaterial("G4_Al"),
+                                                                   aluminum,
                                                                    "photocathodeLogicalVolume");
 
   G4String quantumEfficiencyFilename;
