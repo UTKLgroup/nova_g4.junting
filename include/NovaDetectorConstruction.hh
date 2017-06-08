@@ -79,6 +79,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
 
     G4String getFilePath(G4String filename) {return INPUT_DIR + "/" + filename;}
     void defineMaterials();
+    void setMaterialProperties();
     void setGlassProperty();
     void setLiquidScintillatorProperty(G4String materialName);
     void setFiberCoreProperty(G4String materialName);

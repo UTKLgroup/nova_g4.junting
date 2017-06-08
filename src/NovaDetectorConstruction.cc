@@ -202,7 +202,10 @@ void NovaDetectorConstruction::defineMaterials()
   Ti = nistManager->FindOrBuildElement("Ti");
 
   nistManager->FindOrBuildMaterial("G4_Al");
+}
 
+void NovaDetectorConstruction::setMaterialProperties()
+{
   setLiquidScintillatorProperty("liquidScintillator");
   setFiberCoreProperty("fiberCore");
   setPmmaProperty("pmma");
@@ -215,6 +218,7 @@ void NovaDetectorConstruction::defineMaterials()
 G4VPhysicalVolume* NovaDetectorConstruction::Construct()
 {
   defineMaterials();
+  setMaterialProperties();
   return makeDetectorPhysicalVolume();
 }
 
@@ -819,7 +823,7 @@ void NovaDetectorConstruction::updateDetector()
   G4LogicalBorderSurface::CleanSurfaceTable();
   G4SurfaceProperty::CleanSurfacePropertyTable();
 
-  defineMaterials();
+  setMaterialProperties();
   G4RunManager::GetRunManager()->DefineWorldVolume(makeDetectorPhysicalVolume());
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 
