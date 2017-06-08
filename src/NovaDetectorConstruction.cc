@@ -21,6 +21,8 @@
 NovaDetectorConstruction::NovaDetectorConstruction()
 {
   nistManager = G4NistManager::Instance();
+  defineMaterials();
+
   isUpdated = false;
   setDefaults();
   new NovaDetectorMessenger(this);
@@ -216,19 +218,16 @@ void NovaDetectorConstruction::setMaterialProperties()
 
 G4VPhysicalVolume* NovaDetectorConstruction::Construct()
 {
-  defineMaterials();
   setMaterialProperties();
   return makeDetectorPhysicalVolume();
 }
 
 G4VPhysicalVolume* NovaDetectorConstruction::makeDetectorPhysicalVolume()
 {
-  if (simulationMode == "fiber") {
+  if (simulationMode == "fiber")
     return makeSingleWlsFiberPhysicalVolume();
-  }
-  else if (simulationMode == "cell") {
+  else if (simulationMode == "cell")
     return makeNovaCellPhysicalVolume();
-  }
   else
     throw "The selected simulation mode does not exist.";
 }
