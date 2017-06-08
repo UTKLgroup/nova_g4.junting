@@ -81,11 +81,10 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     void defineMaterials();
     void setMaterialProperties();
     void setGlassProperty();
-    void setLiquidScintillatorProperty(G4String materialName);
-    void setFiberCoreProperty(G4String materialName);
-    void setPmmaProperty(G4String materialName);
-    void setFluorinatedPolymerProperty(G4String materialName);
-    void setPvcProperty(G4String materialName);
+    void setLiquidScintillatorProperty();
+    void setFiberCoreProperty();
+    void setPmmaProperty();
+    void setFluorinatedPolymerProperty();
     void setGalacticProperty();
     void setPvcSurfaceProperty(G4LogicalVolume* pvcLogicalVolume, G4bool turnOffReflectivity = false);
 

@@ -29,11 +29,8 @@ NovaDetectorConstruction::NovaDetectorConstruction()
 NovaDetectorConstruction::~NovaDetectorConstruction()
 {}
 
-void NovaDetectorConstruction::setLiquidScintillatorProperty(G4String materialName)
+void NovaDetectorConstruction::setLiquidScintillatorProperty()
 {
-  liquidScintillator = new G4Material(materialName,  1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  liquidScintillator->AddElement(H, 0.666);
-  liquidScintillator->AddElement(C, 0.334);
   liquidScintillatorMpt = new G4MaterialPropertiesTable();
 
   std::vector<G4double> emissionEnergies;
@@ -87,12 +84,8 @@ void NovaDetectorConstruction::setGlassProperty()
   glass->SetMaterialPropertiesTable(glassMpt);
 }
 
-void NovaDetectorConstruction::setFiberCoreProperty(G4String materialName)
+void NovaDetectorConstruction::setFiberCoreProperty()
 {
-  fiberCore = new G4Material(materialName,  1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  fiberCore->AddElement(H, 0.498);
-  fiberCore->AddElement(C, 0.502);
-
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
   readCsvFile(FIBER_CORE_ABSORPTION_LENGTH_FILENAME, absorptionEnergies, absorptions, m);
@@ -119,13 +112,8 @@ void NovaDetectorConstruction::setFiberCoreProperty(G4String materialName)
   fiberCore->SetMaterialPropertiesTable(fiberCoreMpt);
 }
 
-void NovaDetectorConstruction::setPmmaProperty(G4String materialName)
+void NovaDetectorConstruction::setPmmaProperty()
 {
-  pmma = new G4Material(materialName, 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  pmma->AddElement(H, 0.532);
-  pmma->AddElement(C, 0.336);
-  pmma->AddElement(O, 0.132);
-
   std::vector<G4double> absorptionEnergies;
   std::vector<G4double> absorptions;
   readCsvFile(FIBER_CLADDING_ABSORPTION_LENGTH_FILENAME, absorptionEnergies, absorptions, m);
@@ -140,13 +128,8 @@ void NovaDetectorConstruction::setPmmaProperty(G4String materialName)
   pmma->SetMaterialPropertiesTable(pmmaMpt);
 }
 
-void NovaDetectorConstruction::setFluorinatedPolymerProperty(G4String materialName)
+void NovaDetectorConstruction::setFluorinatedPolymerProperty()
 {
-  fluorinatedPolymer = new G4Material(materialName, 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  fluorinatedPolymer->AddElement(H, 0.532);
-  fluorinatedPolymer->AddElement(C, 0.336);
-  fluorinatedPolymer->AddElement(O, 0.132);
-
   G4MaterialPropertyVector* pmmaAbslengthMaterialPropertyVector = pmma->GetMaterialPropertiesTable()->GetProperty("ABSLENGTH");
 
   std::vector<G4double> absorptionEnergies;
@@ -163,21 +146,6 @@ void NovaDetectorConstruction::setFluorinatedPolymerProperty(G4String materialNa
   fluorinatedPolymerMpt->AddProperty("RINDEX", &refractionIndexEnergies[0], &refractionIndices[0], (G4int) refractionIndexEnergies.size());
   fluorinatedPolymerMpt->AddProperty("ABSLENGTH", pmmaAbslengthMaterialPropertyVector);
   fluorinatedPolymer->SetMaterialPropertiesTable(fluorinatedPolymerMpt);
-}
-
-void NovaDetectorConstruction::setPvcProperty(G4String materialName)
-{
-  tiO2 = new G4Material("tiO2", 4.23*g/cm3, 2, kStateSolid);
-  tiO2->AddElement(O, 2);
-  tiO2->AddElement(Ti, 1);
-
-  polystyrene = new G4Material("polystyrene", 1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  polystyrene->AddElement(H, 0.498);
-  polystyrene->AddElement(C, 0.502);
-
-  pvc = new G4Material(materialName, 1.4316*g/cm3, 2, kStateSolid);
-  pvc->AddMaterial(tiO2, 0.15);
-  pvc->AddMaterial(polystyrene, 0.85);
 }
 
 void NovaDetectorConstruction::setGalacticProperty()
@@ -202,15 +170,46 @@ void NovaDetectorConstruction::defineMaterials()
   Ti = nistManager->FindOrBuildElement("Ti");
 
   nistManager->FindOrBuildMaterial("G4_Al");
+  nistManager->FindOrBuildMaterial("G4_Galactic");
+  nistManager->FindOrBuildMaterial("G4_GLASS_PLATE");
+
+  liquidScintillator = new G4Material("liquidScintillator", 1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  liquidScintillator->AddElement(H, 0.666);
+  liquidScintillator->AddElement(C, 0.334);
+
+  fiberCore = new G4Material("fiberCore", 1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  fiberCore->AddElement(H, 0.498);
+  fiberCore->AddElement(C, 0.502);
+
+  pmma = new G4Material("pmma", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  pmma->AddElement(H, 0.532);
+  pmma->AddElement(C, 0.336);
+  pmma->AddElement(O, 0.132);
+
+  fluorinatedPolymer = new G4Material("fluorinatedPolymer", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  fluorinatedPolymer->AddElement(H, 0.532);
+  fluorinatedPolymer->AddElement(C, 0.336);
+  fluorinatedPolymer->AddElement(O, 0.132);
+
+  tiO2 = new G4Material("tiO2", 4.23*g/cm3, 2, kStateSolid);
+  tiO2->AddElement(O, 2);
+  tiO2->AddElement(Ti, 1);
+
+  polystyrene = new G4Material("polystyrene", 1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  polystyrene->AddElement(H, 0.498);
+  polystyrene->AddElement(C, 0.502);
+
+  pvc = new G4Material("pvc", 1.4316*g/cm3, 2, kStateSolid);
+  pvc->AddMaterial(tiO2, 0.15);
+  pvc->AddMaterial(polystyrene, 0.85);
 }
 
 void NovaDetectorConstruction::setMaterialProperties()
 {
-  setLiquidScintillatorProperty("liquidScintillator");
-  setFiberCoreProperty("fiberCore");
-  setPmmaProperty("pmma");
-  setFluorinatedPolymerProperty("fluorinatedPolymer");
-  setPvcProperty("pvc");
+  setLiquidScintillatorProperty();
+  setFiberCoreProperty();
+  setPmmaProperty();
+  setFluorinatedPolymerProperty();
   setGlassProperty();
   setGalacticProperty();
 }
