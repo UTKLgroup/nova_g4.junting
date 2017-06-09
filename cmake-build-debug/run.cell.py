@@ -37,7 +37,7 @@ def run():
     mac_filename = 'run.cell.mac'
     random_seed = 1
 
-    for distance_to_front in np.arange(0.25, 4.0, 0.25):
+    for distance_to_front in [1.0, 2.0, 3.0]:
         print distance_to_front
 
         write_mac(detector_length=detector_length,
@@ -47,7 +47,6 @@ def run():
                   liquid_scintillator_light_yield=liquid_scintillator_light_yield)
         call('./nova {} {}'.format(mac_filename, random_seed), shell=True)
         call('mv nova.root run_cell.{}m.{}m.root'.format(detector_length, distance_to_front), shell=True)
-        break
 
 if __name__ == '__main__':
     run()
