@@ -42,6 +42,9 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4double getOuterCellCornerRadius() {return innerCellCornerRadius + pvcThickness;}
     G4double getCellHeight() {return straightHeight + 2.0 * getOuterCellCornerRadius();}
     G4double getCellWidth() { return straightWidth + 2.0 * getOuterCellCornerRadius();}
+    G4double getFiberCoreRadius() {return fiberRadius * (1.0 - 2.0 * fiberCladdingFraction);};
+    G4double getFiberInnerCladdingRadius() {return fiberRadius * (1.0 - fiberCladdingFraction);};
+
     void updateDetector();
     void printSetting();
 

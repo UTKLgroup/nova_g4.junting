@@ -249,21 +249,17 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeSingleWlsFiberPhysicalVolume()
                                                      "experimentalHall",
                                                      0, false, 0);
 
-  G4double coreFraction = 1.0 - 2.0 * fiberCladdingFraction;
-  G4double coreRadius = fiberRadius * coreFraction;
-  G4double innerCladdingRadius = coreRadius + fiberRadius * fiberCladdingFraction;
-
   G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
                                                                     fluorinatedPolymer,
                                                                     "outerCladdingLogicalVolume");
 
-  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
+  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, getFiberInnerCladdingRadius(), fiberLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
                                                                     pmma,
                                                                     "innerCladdingLogicalVolume");
 
-  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, fiberLength / 2.0, 0.0, 360.0 * deg);
+  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, getFiberCoreRadius(), fiberLength / 2.0, 0.0, 360.0 * deg);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
                                                            fiberCore,
                                                            "coreLogicalVolume");
@@ -848,20 +844,17 @@ G4UnionSolid* NovaDetectorConstruction::makeFiberLoopSolid(G4double radius, G4do
 
 G4LogicalVolume* NovaDetectorConstruction::makeWlsFiberLoopLogicalVolume(G4double straightLength)
 {
-  G4double coreRadius = fiberRadius * (1.0 - 2.0 * fiberCladdingFraction);
-  G4double innerCladdingRadius = fiberRadius * (1.0 - fiberCladdingFraction);
-
   G4UnionSolid* outerCladdingSolid = makeFiberLoopSolid(fiberRadius, fiberCurveRadius, straightLength);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
                                                                     fluorinatedPolymer,
                                                                     "outerCladdingLogicalVolume");
 
-  G4UnionSolid* innerCladdingSolid = makeFiberLoopSolid(innerCladdingRadius, fiberCurveRadius, straightLength);
+  G4UnionSolid* innerCladdingSolid = makeFiberLoopSolid(getFiberInnerCladdingRadius(), fiberCurveRadius, straightLength);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
                                                                     pmma,
                                                                     "innerCladdingLogicalVolume");
 
-  G4UnionSolid* coreSolid = makeFiberLoopSolid(coreRadius, fiberCurveRadius, straightLength);
+  G4UnionSolid* coreSolid = makeFiberLoopSolid(getFiberCoreRadius(), fiberCurveRadius, straightLength);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
                                                            fiberCore,
                                                            "coreLogicalVolume");
@@ -874,20 +867,17 @@ G4LogicalVolume* NovaDetectorConstruction::makeWlsFiberLoopLogicalVolume(G4doubl
 
 G4LogicalVolume* NovaDetectorConstruction::makeWlsFiberStraightLogicalVolume(G4double straightLength)
 {
-  G4double coreRadius = fiberRadius * (1.0 - 2.0 * fiberCladdingFraction);
-  G4double innerCladdingRadius = fiberRadius * (1.0 - fiberCladdingFraction);
-
   G4Tubs* outerCladdingSolid = new G4Tubs("outerCladdingSolid", 0, fiberRadius, straightLength / 2.0, 0.0, CLHEP::twopi * rad);
   G4LogicalVolume* outerCladdingLogicalVolume = new G4LogicalVolume(outerCladdingSolid,
                                                                     fluorinatedPolymer,
                                                                     "outerCladdingLogicalVolume");
 
-  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, innerCladdingRadius, straightLength / 2.0, 0.0, CLHEP::twopi * rad);
+  G4Tubs* innerCladdingSolid = new G4Tubs("innerCladdingSolid", 0, getFiberInnerCladdingRadius(), straightLength / 2.0, 0.0, CLHEP::twopi * rad);
   G4LogicalVolume* innerCladdingLogicalVolume = new G4LogicalVolume(innerCladdingSolid,
                                                                     pmma,
                                                                     "innerCladdingLogicalVolume");
 
-  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, coreRadius, straightLength / 2.0, 0.0, CLHEP::twopi * rad);
+  G4Tubs* coreSolid = new G4Tubs("coreSolid", 0, getFiberCoreRadius(), straightLength / 2.0, 0.0, CLHEP::twopi * rad);
   G4LogicalVolume* coreLogicalVolume = new G4LogicalVolume(coreSolid,
                                                            fiberCore,
                                                            "coreLogicalVolume");
