@@ -98,7 +98,7 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume* makeDetectorPhysicalVolume();
     G4VPhysicalVolume* makeNovaCellPhysicalVolume();
     G4VPhysicalVolume* makeSingleWlsFiberPhysicalVolume();
-    G4VPhysicalVolume* makeBenchtopNovaCellPhysicalVolume()
+    G4VPhysicalVolume* makeBenchtopNovaCellPhysicalVolume();
     G4bool isUpdated;
     G4Box* experimentalHallSolid;
     G4LogicalVolume* experimentalHallLogicalVolume;
