@@ -963,6 +963,9 @@ void NovaDetectorConstruction::printSetting()
   G4cout << std::setw(50) << "fiberCurveToEndPlateDistance = " << std::setw(10) << fiberCurveToEndPlateDistance / cm << std::setw(10) << " cm" << G4endl;
   G4cout << std::setw(50) << "photodetectorType = " << std::setw(10) << photodetectorType << G4endl;
   G4cout << std::setw(50) << "simulationMode = " << std::setw(10) << simulationMode << G4endl;
+  G4cout << std::setw(50) << "cellWidth = " << std::setw(10) << getCellWidth() / mm << std::setw(10) << " mm" << G4endl;
+  G4cout << std::setw(50) << "cellHeight = " << std::setw(10) << getCellHeight() / mm << std::setw(10) << " mm" << G4endl;
+
   G4cout << G4endl;
 }
 
