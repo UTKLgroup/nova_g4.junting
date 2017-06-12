@@ -33,11 +33,11 @@ def write_mac(**kwargs):
 def run():
     liquid_scintillator_light_yield = 3000
     detector_length = 4.0
-    event_count = 50
+    event_count = 40
     mac_filename = 'run.cell.mac'
     random_seed = 1
 
-    for distance_to_front in [1.0, 2.0, 3.0]:
+    for distance_to_front in [2.0]:
         print distance_to_front
 
         write_mac(detector_length=detector_length,
