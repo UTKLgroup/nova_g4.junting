@@ -86,8 +86,7 @@ def plot_quadrant(h_mcs, h_datas):
     gStyle.SetOptStat('nmr')
     c1 = TCanvas('c1', 'c1', 1200, 800)
     c1.Divide(2, 2)
-    hist_indices = [1, 4, 2, 3]
-
+    hist_indices = [4, 1, 3, 2]
     for i in [1, 2, 3, 4]:
         c1.cd(i)
         hist_index = hist_indices[i - 1]
@@ -229,10 +228,82 @@ def plot_slice_count():
     c4.Update()
 
 def draw_nd():
-    pass
+    half_width = 199.64
+    half_height = 199.64
+    xy_range_ratio = 1.5
+    h_axis = TH2D('h_axis', 'h_axis',
+                  1, -half_width * xy_range_ratio, half_width * xy_range_ratio,
+                  1, -half_height * xy_range_ratio, half_height * xy_range_ratio)
+    line1 = TLine(-half_width, half_height, half_width, half_height)
+    line2 = TLine(-half_width, -half_height, half_width, -half_height)
+    line3 = TLine(-half_width, -half_height, -half_width, half_height)
+    line4 = TLine(half_width, -half_height, half_width, half_height)
+    line_x_axis = TLine(-half_width, 0, half_width, 0)
+    line_y_axis = TLine(0, -half_height, 0, half_height)
+
+    lines = [line1, line2, line3, line4, line_x_axis, line_y_axis]
+
+    gStyle.SetOptStat(0)
+    c2 = TCanvas('c2', 'c2', 600, 600)
+    gPad.SetBottomMargin(0.15)
+    gPad.SetLeftMargin(0.15)
+
+    set_h2_style(h_axis)
+    h_axis.GetYaxis().SetNdivisions(506, 1)
+    h_axis.GetXaxis().SetNdivisions(506, 1)
+    h_axis.GetXaxis().SetTitle('X (cm)')
+    h_axis.GetYaxis().SetTitle('Y (cm)')
+    h_axis.GetXaxis().SetTitleOffset(1.2)
+    h_axis.GetYaxis().SetTitleOffset(1.5)
+    h_axis.Draw()
+
+    for line in lines:
+        line.SetLineWidth(2)
+        line.Draw()
+
+    readout_right = TLatex(210, 0, "read out")
+    readout_right.SetTextAngle(90)
+    readout_right.SetTextFont(43)
+    readout_right.SetTextSize(25)
+    readout_right.SetTextAlign(23)
+    readout_right.Draw();
+
+    readout_top = TLatex(0, 210, "read out")
+    readout_top.SetTextFont(43)
+    readout_top.SetTextSize(25)
+    readout_top.SetTextAlign(21)
+    readout_top.Draw();
+
+    q1 = TLatex(100, 100, "Q1")
+    q1.SetTextFont(43)
+    q1.SetTextSize(25)
+    q1.SetTextAlign(22)
+    q1.Draw();
+
+    q2 = TLatex(100, -100, "Q2")
+    q2.SetTextFont(43)
+    q2.SetTextSize(25)
+    q2.SetTextAlign(22)
+    q2.Draw();
+
+    q3 = TLatex(-100, -100, "Q3")
+    q3.SetTextFont(43)
+    q3.SetTextSize(25)
+    q3.SetTextAlign(22)
+    q3.Draw();
+
+    q4 = TLatex(-100, 100, "Q4")
+    q4.SetTextFont(43)
+    q4.SetTextSize(25)
+    q4.SetTextAlign(22)
+    q4.Draw();
+
+    c2.Update()
+    c2.SaveAs('figures/draw_nd.pdf')
+    raw_input('Press anykey to continue.\n')
 
 # plot_cell_count(h_data_ncell, h_mc_ncell)
-# plot_quadrant(h_mcs, h_datas)
+plot_quadrant(h_mcs, h_datas)
 # plot_hit_cut(h_mcs, h_datas)
-draw_nd()
+# draw_nd()
 raw_input('Press anykey to continue.\n')
