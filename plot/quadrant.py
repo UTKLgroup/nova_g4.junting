@@ -10,7 +10,7 @@ def convert_th1i_to_th1d(th1i):
         th1d.SetBinContent(i, th1i.GetBinContent(i))
     return th1d
 
-f_mc = TFile('photon_timing_mc.root')
+f_mc = TFile('neardet_genie_nonswap_genierw_fhc_v08_1272_r00012011_s12_c006_development_v1_20170322_204739_sim.nd_spill_mc.root')
 f_data = TFile('photon_timing.root')
 
 h_mc_slice_duration = f_mc.Get('photontimingana/fSliceDuration')
@@ -303,7 +303,7 @@ def draw_nd():
     raw_input('Press anykey to continue.\n')
 
 # plot_cell_count(h_data_ncell, h_mc_ncell)
-plot_quadrant(h_mcs, h_datas)
-# plot_hit_cut(h_mcs, h_datas)
+# plot_quadrant(h_mcs, h_datas)
+plot_hit_cut(h_mcs, h_datas)
 # draw_nd()
 raw_input('Press anykey to continue.\n')
