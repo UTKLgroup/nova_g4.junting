@@ -1,7 +1,7 @@
 from rootalias import *
 
-f_data = TFile('photon_timing_mc.costheta.root')
-f_mc = TFile('photon_timing_data.costheta.root')
+f_data = TFile('photon_timing_cosmic.data.root')
+f_mc = TFile('photon_timing_cosmic.mc.root')
 
 def plot_slice_duration(width):
     h_data = f_data.Get('photontimingana/fSliceDuration{}'.format(width))
@@ -74,9 +74,15 @@ def plot_cell_count():
     c1.SaveAs('figures/cosmic/plot_cell_count.pdf')
     raw_input('Press any key to continue.')
 
+def plot_cell_hits():
+    for cell_hit in f_data.photontimingcosmicana.fCellHitTree:
+        print cell_hit
+        break
+
 # plot_slice_duration('60')
 # plot_slice_duration('70')
 # plot_slice_duration('80')
 # plot_slice_duration('90')
 # plot_slice_duration('')
 # plot_cell_count()
+plot_cell_hits()
