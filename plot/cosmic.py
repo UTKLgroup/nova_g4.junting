@@ -1,7 +1,8 @@
 from rootalias import *
+import numpy as np
 
-f_data = TFile('photon_timing_cosmic.data.root')
-f_mc = TFile('photon_timing_cosmic.mc.root')
+f_data = TFile('data/photon_timing_cosmic.data.root')
+f_mc = TFile('data/photon_timing_cosmic.mc.root')
 
 def plot_slice_duration(width):
     h_data = f_data.Get('photontimingana/fSliceDuration{}'.format(width))
@@ -74,10 +75,56 @@ def plot_cell_count():
     c1.SaveAs('figures/cosmic/plot_cell_count.pdf')
     raw_input('Press any key to continue.')
 
-def plot_cell_hits():
-    for cell_hit in f_data.photontimingcosmicana.fCellHitTree:
-        print cell_hit
-        break
+def plot_cell_hits(view):
+    cells = []
+    planes = []
+    selected_cells = []
+    selected_planes = []
+
+    for cell_hit in f_data.Get('photontimingcosmicana/fCellHitTree'):
+        if (cell_hit.cellHitView == view):
+            cells.append(float(cell_hit.cellHitCell))
+            planes.append(float(cell_hit.cellHitPlane))
+            if cell_hit.cellHitSelected == 1:
+                selected_cells.append(float(cell_hit.cellHitCell))
+                selected_planes.append(float(cell_hit.cellHitPlane))
+
+    gr_cell_plane = TGraph(len(cells), np.asarray(planes), np.asarray(cells))
+    gr_selected_cell_plane = TGraph(len(selected_cells), np.array(selected_planes), np.array(selected_cells))
+
+    gStyle.SetOptStat(0)
+    c1 = TCanvas('c1', 'c1', 800, 800)
+    set_margin()
+
+    set_graph_style(gr_cell_plane)
+    gr_cell_plane.SetMarkerStyle(20)
+    gr_cell_plane.SetMarkerSize(0.25)
+    gr_cell_plane.Draw('AP')
+    gr_cell_plane.GetXaxis().SetTitle('Plane Number')
+    gr_cell_plane.GetYaxis().SetTitle('Cell Number')
+    gr_cell_plane.GetYaxis().SetRangeUser(0, 480)
+    gr_cell_plane.GetXaxis().SetTitleOffset(1.4)
+    gr_cell_plane.GetYaxis().SetTitleOffset(2)
+
+    set_graph_style(gr_selected_cell_plane)
+    gr_selected_cell_plane.SetMarkerStyle(20)
+    gr_selected_cell_plane.SetMarkerSize(0.3)
+    gr_selected_cell_plane.SetMarkerColor(kRed)
+    gr_selected_cell_plane.Draw('P')
+
+    lg1 = TLegend(0.4, 0.8, 0.88, 0.88)
+    set_legend_style(lg1)
+    lg1.SetFillStyle(1001)
+    lg1.SetBorderSize(1)
+    lg1.SetMargin(0.15)
+    lg1.AddEntry(gr_cell_plane, 'cell hits', 'p')
+    lg1.AddEntry(gr_selected_cell_plane, 'cell hits in range', 'p')
+    lg1.SetNColumns(2)
+    lg1.Draw()
+
+    c1.Update()
+    c1.SaveAs('figures/plot_cell_hits_{}.pdf'.format('x_view' if view == 0 else 'y_view'))
+    raw_input('Press any key to continue.')
 
 # plot_slice_duration('60')
 # plot_slice_duration('70')
@@ -85,4 +132,4 @@ def plot_cell_hits():
 # plot_slice_duration('90')
 # plot_slice_duration('')
 # plot_cell_count()
-plot_cell_hits()
+plot_cell_hits(0)
