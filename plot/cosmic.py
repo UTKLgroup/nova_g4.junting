@@ -1,8 +1,8 @@
 from rootalias import *
 import numpy as np
 
-f_data = TFile('data/photon_timing_cosmic.data.root')
-f_mc = TFile('data/photon_timing_cosmic.mc.root')
+f_data = TFile('photon_timing_data.costheta.root')
+f_mc = TFile('photon_timing_mc.costheta.root')
 
 def plot_slice_duration(width):
     h_data = f_data.Get('photontimingana/fSliceDuration{}'.format(width))
@@ -55,24 +55,67 @@ def plot_slice_duration(width):
     p_mc.Draw()
 
     c1.Update()
-    c1.SaveAs('figures/cosmic/plot_slice_duration.pdf')
-    c1.SaveAs('figures/cosmic/plot_slice_duration.width_{}.png'.format(width))
+    c1.SaveAs('figures/plot_slice_duration.width_{}.pdf'.format(width))
     raw_input('Press any key to continue.')
 
 def plot_cell_count():
-    h_data = f_data.Get('photontimingana/fCellCountPerSlice')
-    h_mc = f_mc.Get('photontimingana/fCellCountPerSlice')
-    h_data.Scale(1.0 / h_data.Integral())
-    h_mc.Scale(1.0 / h_mc.Integral())
+    h_data_ncell = f_data.Get('photontimingana/fCellCountPerSlice')
+    h_mc_ncell = f_mc.Get('photontimingana/fCellCountPerSlice')
+    h_data_ncell.Scale(1.0 / h_data_ncell.Integral())
+    h_mc_ncell.Scale(1.0 / h_mc_ncell.Integral())
 
-    c1 = TCanvas('c1', 'c1', 800, 600)
-    h_data.GetXaxis().SetRangeUser(0, 50)
-    h_data.Draw()
+    gStyle.SetOptStat(0)
+    c3 = TCanvas('c3', 'c3', 800, 600)
+    gPad.SetBottomMargin(0.15)
+    gPad.SetLeftMargin(0.15)
 
-    h_mc.SetLineColor(kRed)
-    h_mc.Draw('sames')
-    c1.Update()
-    c1.SaveAs('figures/cosmic/plot_cell_count.pdf')
+    pad1 = TPad("pad1", "pad1", 0, 0.4, 1, 1)
+    pad1.SetTopMargin(0.15)
+    pad1.SetBottomMargin(0)
+    pad1.SetLeftMargin(0.15)
+    pad1.Draw()
+    pad1.cd()
+    set_h1_style(h_data_ncell)
+    h_data_ncell.SetLineColor(kRed)
+    h_data_ncell.SetMarkerColor(kRed)
+    h_data_ncell.GetYaxis().SetTitle('Track Count')
+    h_data_ncell.GetYaxis().SetRangeUser(-0.02, max(h_data_ncell.GetMaximum(), h_mc_ncell.GetMaximum()) * 1.2)
+    h_data_ncell.GetXaxis().SetRangeUser(0.0, 30)
+    h_data_ncell.GetYaxis().SetTitleOffset(1.5)
+    h_data_ncell.Draw("E")
+
+    set_h1_style(h_mc_ncell)
+    h_mc_ncell.Draw("sames, E")
+
+    lg1 = TLegend(0.7, 0.5, 0.9, 0.8)
+    set_legend_style(lg1)
+    lg1.AddEntry(h_data_ncell, 'data', 'le')
+    lg1.AddEntry(h_mc_ncell, 'mc', 'le')
+    lg1.Draw()
+
+    c3.cd()
+    pad2 = TPad('pad2', 'pad2', 0, 0, 1, 0.4)
+    pad2.SetTopMargin(0)
+    pad2.SetLeftMargin(0.15)
+    pad2.SetBottomMargin(0.4)
+    pad2.Draw()
+    pad2.cd()
+    gPad.SetGrid()
+
+    h_ratio = h_data_ncell.Clone()
+    h_ratio.Sumw2()
+    h_ratio.Divide(h_mc_ncell)
+    h_ratio.GetYaxis().SetRangeUser(0., 2.2)
+    h_ratio.SetLineColor(kBlack)
+    h_ratio.SetTitle('')
+    h_ratio.GetYaxis().SetNdivisions(205, 1)
+    h_ratio.GetXaxis().SetTitle('Selected Cell Hit Count per Track')
+    h_ratio.GetYaxis().SetTitle('data / MC')
+    h_ratio.GetXaxis().SetTitleOffset(3)
+    h_ratio.Draw('ep')
+
+    c3.Update()
+    c3.SaveAs('figures/plot_cell_count.cosmic.pdf')
     raw_input('Press any key to continue.')
 
 def plot_cell_hits(view):
@@ -131,5 +174,5 @@ def plot_cell_hits(view):
 # plot_slice_duration('80')
 # plot_slice_duration('90')
 # plot_slice_duration('')
-# plot_cell_count()
-plot_cell_hits(0)
+plot_cell_count()
+# plot_cell_hits(0)
