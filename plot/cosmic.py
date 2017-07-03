@@ -15,12 +15,14 @@ def plot_slice_duration(width, max_x):
     c1 = TCanvas('c1', 'c1', 800, 600)
     set_margin()
 
+    x_title = 'Timing Width of Center {}% Hits (ns)'.format(width)
     if width == '':
         width = '100'
+        x_title = 'Timing Width from All Hits (ns)'
 
     set_h1_style(h_data)
     h_data.SetName('FD Cosmic Data')
-    h_data.GetXaxis().SetTitle('Track Segment {}% Timing Width (ns)'.format(width))
+    h_data.GetXaxis().SetTitle(x_title)
     h_data.GetYaxis().SetTitle('Track Count (area norm.)')
     h_data.GetYaxis().SetTitleOffset(1.6)
     h_data.SetLineColor(kRed)
@@ -275,11 +277,11 @@ def plot_tns_distribution_ratio():
 # plot_slice_duration('70', 400)
 # plot_slice_duration('80', 500)
 # plot_slice_duration('90', 600)
-# plot_slice_duration('', 700)
+plot_slice_duration('', 700)
 # plot_cell_count()
 # plot_cell_hits(0, TFile('fardet_r00022336_s61_t02_development_v1_data.fd_cosmic_data.root'), 'data')
 # plot_cell_hits(1, TFile('fardet_r00022336_s61_t02_development_v1_data.fd_cosmic_data.root'), 'data')
 # plot_cell_hits(0, TFile('fardet_cry_all_r00022747_s17_c000_development_v2_20170413_152427_sim.fd_cosmic_mc.root'), 'mc')
 # plot_cell_hits(1, TFile('fardet_cry_all_r00022747_s17_c000_development_v2_20170413_152427_sim.fd_cosmic_mc.root'), 'mc')
 # plot_tns_distribution()
-plot_tns_distribution_ratio()
+# plot_tns_distribution_ratio()
