@@ -156,9 +156,9 @@ def plot_vertex_time(tfile, x1, x2, suffix):
     c1.SaveAs('{}/spill_plot_vertex_time.{}.pdf'.format(figure_dir, suffix))
     raw_input('Press any key to continue.')
 
-def plot_slice_duration(hist_name, max_x):
-    h_data = f_data.Get('photontimingspillana/{}'.format(hist_name))
-    h_mc = f_mc.Get('photontimingspillana/{}'.format(hist_name))
+def plot_slice_duration(percent, max_x):
+    h_data = f_data.Get('photontimingspillana/fSliceDuration{}'.format(percent))
+    h_mc = f_mc.Get('photontimingspillana/fSliceDuration{}'.format(percent))
     h_data.Scale(1.0 / h_data.Integral())
     h_mc.Scale(1.0 / h_mc.Integral())
 
@@ -167,17 +167,21 @@ def plot_slice_duration(hist_name, max_x):
     set_margin()
     set_h1_style(h_data)
     h_data.SetLineColor(kRed)
-    h_data.GetXaxis().SetRangeUser(0, 300)
-    h_data.GetYaxis().SetRangeUser(0, max(h_data.GetMaximum(), h_mc.GetMaximum()) * 1.2)
-    h_data.SetName('data')
-    h_data.GetXaxis().SetTitle('Timing Width of All Hits (ns)')
+    x_title = 'Timing Width of Center {}% Hits (ns)'.format(percent)
+    if percent == '':
+        x_title = 'Timing Width of All Hits (ns)'
+
+    h_data.Draw('hist')
+    h_data.SetName('ND Spill Data')
+    h_data.GetXaxis().SetTitle(x_title)
     h_data.GetYaxis().SetTitle('Slice Count')
     h_data.GetYaxis().SetTitleOffset(1.6)
     h_data.GetXaxis().SetRangeUser(0, max_x)
-    h_data.Draw('hist')
+    h_data.GetYaxis().SetRangeUser(0, max(h_data.GetMaximum(), h_mc.GetMaximum()) * 1.2)
 
     set_h1_style(h_mc)
-    h_mc.SetName('MC')
+    h_mc.SetName('ND Spill MC')
+    h_mc.GetXaxis().SetRangeUser(0, max_x)
     h_mc.Draw('sames, hist')
 
     c1.Update()
@@ -200,7 +204,7 @@ def plot_slice_duration(hist_name, max_x):
     p_mc.Draw()
 
     c1.Update()
-    c1.SaveAs('{}/spill_plot_slice_duration.{}.pdf'.format(figure_dir, hist_name))
+    c1.SaveAs('{}/spill_plot_slice_duration.fSliceDuration{}.pdf'.format(figure_dir, percent))
     raw_input('Press any key to continue.')
 
 
@@ -328,12 +332,12 @@ def plot_gev_slice_vs_track(tfile, suffix):
 # plot_gev_distribution('fSliceRecoHitGeV')
 # plot_gev_distribution('fSliceTrackRecoHitGeV')
 # plot_vertex_time(f_data, 218.7e3, 226.5e3, 'data')
-plot_vertex_time(f_mc, 219.5e3, 227.3e3, 'mc')
+# plot_vertex_time(f_mc, 219.5e3, 227.3e3, 'mc')
 # plot_gev_slice_vs_track(f_data, 'data')
 # plot_gev_slice_vs_track(f_mc, 'mc')
 
 # plot_slice_duration('fSliceDuration')
-# plot_slice_duration('fSliceDuration80')
+plot_slice_duration('80', 80)
 # plot_slice_duration('fSliceDuration60')
 # plot_slice_duration('fSliceDurationSmallTimeWindow', 200)
 # plot_slice_duration_together()
