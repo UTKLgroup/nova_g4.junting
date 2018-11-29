@@ -227,6 +227,8 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeDetectorPhysicalVolume()
     return makeNovaCellPhysicalVolume();
   else if (simulationMode == "benchtop")
     return makeBenchtopNovaCellPhysicalVolume();
+  else if (simulationMode == "electron_gun")
+    return makeElectronGunPhysicalVolume();
   else
     throw "The selected simulation mode does not exist.";
 }
@@ -585,6 +587,63 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeBenchtopNovaCellPhysicalVolume(
                     "backEndPlate",
                     experimentalHallLogicalVolume,
                     false, 0);
+
+  return experimentalHallPhysicalVolume;
+}
+
+G4VPhysicalVolume* NovaDetectorConstruction::makeElectronGunPhysicalVolume()
+{
+  G4double scintillatorRadius = 2. * cm;
+  G4double scintillatorHeight = 4. * cm;
+
+
+  G4double experimentalHallX = scintillatorRadius + 1. * cm;
+  G4double experimentalHallY = scintillatorHeight / 2. + 1. * cm;
+  G4double experimentalHallZ = scintillatorRadius + 1. * cm;
+
+  experimentalHallSolid = new G4Box("experimentalHallSolid", experimentalHallX, experimentalHallY, experimentalHallZ);
+  experimentalHallLogicalVolume = new G4LogicalVolume(experimentalHallSolid,
+                                                      galactic,
+                                                      "experimentalHallLogicalVolume",
+                                                      0, 0, 0);
+  experimentalHallPhysicalVolume = new G4PVPlacement(0,
+                                                     G4ThreeVector(),
+                                                     experimentalHallLogicalVolume,
+                                                     "experimentalHallPhysicalVolume",
+                                                     0, false, 0);
+
+  // liquid scintillator
+  G4Tubs* liquidScintillatorSolid =
+      new G4Tubs("liquidScintillatorSolid",
+                 0.,
+                 scintillatorRadius,
+                 scintillatorHeight / 2.,
+                 0.,
+                 CLHEP::twopi * rad);
+
+  G4LogicalVolume* liquidScintillatorLogicalVolume =
+      new G4LogicalVolume(liquidScintillatorSolid,
+                          liquidScintillator,
+                          "liquidScintillatorLogicalVolume",
+                          0, 0, 0);
+
+  G4RotationMatrix* rotate90 = new G4RotationMatrix();
+  rotate90->rotateX(90 * deg);
+  new G4PVPlacement(rotate90,
+                    G4ThreeVector(),
+                    liquidScintillatorLogicalVolume,
+                    "liquidScintillator",
+                    experimentalHallLogicalVolume,
+                    false, 0);
+
+  G4SDManager* sdManager = G4SDManager::GetSDMpointer();
+  G4VSensitiveDetector* liquidScintillatorSd = (NovaLiquidScintillatorSd*) sdManager->FindSensitiveDetector(LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME, false);
+  if (!liquidScintillatorSd) {
+    liquidScintillatorSd = new NovaLiquidScintillatorSd(LIQUID_SCINTILLATOR_SENSITIVE_DETECTOR_NAME);
+    sdManager->AddNewDetector(liquidScintillatorSd);
+  }
+  liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
+
 
   return experimentalHallPhysicalVolume;
 }
@@ -984,7 +1043,7 @@ void NovaDetectorConstruction::setDefaults()
   fiberCurveToEndPlateDistance = 2.0 * cm;
   pmtThickness = 1.0 * mm;
   photodetectorType = "apd";
-  simulationMode = "benchtop";
+  simulationMode = "electron_gun";
   isUpdated = true;
 }
 
