@@ -647,6 +647,27 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeElectronGunPhysicalVolume()
   }
   liquidScintillatorLogicalVolume->SetSensitiveDetector(liquidScintillatorSd);
 
+  // pmt
+  fiberRadius = scintillatorRadius;
+  G4double pmtY = - scintillatorHeight / 2. - pmtThickness / 2.;
+
+  G4LogicalVolume* pmtLogicalVolume = makePmtLogicalVolume();
+  new G4PVPlacement(rotate90,
+                    G4ThreeVector(0., pmtY, 0.),
+                    pmtLogicalVolume,
+                    "pmt",
+                    experimentalHallLogicalVolume,
+                    false,
+                    0);
+
+  NovaPmtSd* pmtSd = (NovaPmtSd*) sdManager->FindSensitiveDetector(PMT_SENSITIVE_DETECTOR_NAME, false);
+  if (!pmtSd) {
+    pmtSd = new NovaPmtSd(PMT_SENSITIVE_DETECTOR_NAME);
+    pmtSd->initPmts(1);
+    pmtSd->setPmtPosition(0, 0., pmtY, 0.);
+    sdManager->AddNewDetector(pmtSd);
+  }
+  pmtLogicalVolume->SetSensitiveDetector(pmtSd);
 
   return experimentalHallPhysicalVolume;
 }
