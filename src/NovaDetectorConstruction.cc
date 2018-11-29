@@ -62,7 +62,7 @@ void NovaDetectorConstruction::setLiquidScintillatorProperty()
   liquidScintillatorMpt->AddProperty("WLSABSLENGTH", &wlsAbsorptionEnergies[0], &wlsAbsorptions[0], (G4int) wlsAbsorptionEnergies.size());
   liquidScintillatorMpt->AddProperty("WLSCOMPONENT", &wlsEmissionEnergies[0], &wlsEmissions[0], (G4int) wlsEmissionEnergies.size());
   liquidScintillatorMpt->AddConstProperty("SCINTILLATIONYIELD", liquidScintillatorLightYield);
-  liquidScintillatorMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.9);
+//  liquidScintillatorMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.9);
   liquidScintillatorMpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
   liquidScintillatorMpt->AddConstProperty("FASTTIMECONSTANT", 2.1 * ns);
   liquidScintillatorMpt->AddConstProperty("SLOWTIMECONSTANT", 10.0 * ns);
@@ -108,7 +108,7 @@ void NovaDetectorConstruction::setFiberCoreProperty()
   fiberCoreMpt->AddProperty("WLSCOMPONENT", &wlsEmissionEnergies[0], &wlsEmissions[0], (G4int) wlsEmissionEnergies.size());
   fiberCoreMpt->AddConstProperty("WLSTIMECONSTANT", 11.8 * ns);
   fiberCoreMpt->AddProperty("RINDEX", &refractionIndexEnergies[0], &refractionIndices[0], (G4int) refractionIndexEnergies.size());
-  fiberCoreMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.7);
+//  fiberCoreMpt->AddConstProperty("CONSTANTQUANTUMYIELD", 0.7);
   fiberCore->SetMaterialPropertiesTable(fiberCoreMpt);
 }
 
