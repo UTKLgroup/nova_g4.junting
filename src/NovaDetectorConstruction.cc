@@ -69,6 +69,8 @@ void NovaDetectorConstruction::setLiquidScintillatorProperty()
   liquidScintillatorMpt->AddConstProperty("WLSTIMECONSTANT", 1.0 * ns);
   liquidScintillatorMpt->AddConstProperty("YIELDRATIO", 1.0);
   liquidScintillator->SetMaterialPropertiesTable(liquidScintillatorMpt);
+  // set Birks constant to the value measured by Dubna
+  // https://nova-docdb.fnal.gov/cgi-bin/private/ShowDocument?docid=34223
   liquidScintillator->GetIonisation()->SetBirksConstant(0.134 * mm / MeV);
 }
 
@@ -172,31 +174,35 @@ void NovaDetectorConstruction::defineMaterials()
   galactic = nistManager->FindOrBuildMaterial("G4_Galactic");
   glass = nistManager->FindOrBuildMaterial("G4_GLASS_PLATE");
 
+  // density of the liquid scintillator is based on the average value from https://arxiv.org/pdf/1504.04035.pdf
   liquidScintillator = new G4Material("liquidScintillator", 0.862*g/cm3, 2, kStateLiquid, 273.15*kelvin, 1.0*atmosphere);
-  liquidScintillator->AddElement(H, 0.666);
-  liquidScintillator->AddElement(C, 0.334);
+  // assume [CH2]n structure
+  liquidScintillator->AddElement(H, 2);
+  liquidScintillator->AddElement(C, 1);
 
   fiberCore = new G4Material("fiberCore", 1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  fiberCore->AddElement(H, 0.498);
-  fiberCore->AddElement(C, 0.502);
+  fiberCore->AddElement(H, 8);
+  fiberCore->AddElement(C, 8);
 
   pmma = new G4Material("pmma", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  pmma->AddElement(H, 0.532);
-  pmma->AddElement(C, 0.336);
-  pmma->AddElement(O, 0.132);
+  pmma->AddElement(H, 8);
+  pmma->AddElement(C, 5);
+  pmma->AddElement(O, 2);
 
+  // no information from Kuraray: http://kuraraypsf.jp/psf/
+  // assume it is fluorinated pmma, e.g. ones studied in https://onlinelibrary.wiley.com/doi/pdf/10.1002/app.22315
   fluorinatedPolymer = new G4Material("fluorinatedPolymer", 1.19*g/cm3, 3, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  fluorinatedPolymer->AddElement(H, 0.532);
-  fluorinatedPolymer->AddElement(C, 0.336);
-  fluorinatedPolymer->AddElement(O, 0.132);
+  fluorinatedPolymer->AddElement(H, 8);
+  fluorinatedPolymer->AddElement(C, 5);
+  fluorinatedPolymer->AddElement(O, 2);
 
   tiO2 = new G4Material("tiO2", 4.23*g/cm3, 2, kStateSolid);
   tiO2->AddElement(O, 2);
   tiO2->AddElement(Ti, 1);
 
   polystyrene = new G4Material("polystyrene", 1.05*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
-  polystyrene->AddElement(H, 0.498);
-  polystyrene->AddElement(C, 0.502);
+  polystyrene->AddElement(H, 8);
+  polystyrene->AddElement(C, 8);
 
   pvc = new G4Material("pvc", 1.4316*g/cm3, 2, kStateSolid);
   pvc->AddMaterial(tiO2, 0.15);
