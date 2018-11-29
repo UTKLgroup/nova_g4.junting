@@ -151,7 +151,7 @@ std::vector<G4AttValue>* NovaTrajectory::CreateAttValues() const
 
 NovaTrajectory* NovaTrajectory::getParentTrajectory(G4TrajectoryContainer* trajectoryContainer)
 {
-  for (G4int i = 0; i < trajectoryContainer->size(); i++) {
+  for (size_t i = 0; i < trajectoryContainer->size(); i++) {
     NovaTrajectory* trajectory = (NovaTrajectory*) (*trajectoryContainer)[i];
     if (trajectory->GetTrackID() == this->GetParentID()) {
       return trajectory;

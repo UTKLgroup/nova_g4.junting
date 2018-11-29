@@ -53,9 +53,9 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4int photocathodeAbsorptionCount;
     G4int outOfWorldCount;
 
-    G4double energyDeposition;
-    G4double trackLengthPrimary;
     G4double energyDepositionPrimary;
+    G4double trackLengthPrimary;
+    G4double energyDeposition;
     G4ThreeVector energyWeightedPosition;
     G4ThreeVector reconstructionPosition;
     G4ThreeVector positionMax;

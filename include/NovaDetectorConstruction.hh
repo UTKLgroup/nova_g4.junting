@@ -130,10 +130,6 @@ class NovaDetectorConstruction : public G4VUserDetectorConstruction
     G4MaterialPropertiesTable* pmmaMpt;
     G4MaterialPropertiesTable* fluorinatedPolymerMpt;
 
-    G4double inputWavelength;
-    G4double inputVariable;
-    G4String filler;
-
     G4double liquidScintillatorLightYield;
     G4double straightWidth;
     G4double straightHeight;
