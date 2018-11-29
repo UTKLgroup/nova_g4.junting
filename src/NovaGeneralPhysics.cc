@@ -20,10 +20,11 @@ void NovaGeneralPhysics::ConstructParticle()
 void NovaGeneralPhysics::ConstructProcess()
 {
   fDecayProcess = new G4Decay();
-  aParticleIterator->reset();
 
-  while( (*aParticleIterator)() ){
-    G4ParticleDefinition* particle = aParticleIterator->value();
+  auto particleIterator = GetParticleIterator();
+  particleIterator->reset();
+  while( (*particleIterator)() ){
+    G4ParticleDefinition* particle = particleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
     if (fDecayProcess->IsApplicable(*particle)) {
       pmanager ->AddProcess(fDecayProcess);
