@@ -69,7 +69,7 @@ void NovaDetectorConstruction::setLiquidScintillatorProperty()
   liquidScintillatorMpt->AddConstProperty("WLSTIMECONSTANT", 1.0 * ns);
   liquidScintillatorMpt->AddConstProperty("YIELDRATIO", 1.0);
   liquidScintillator->SetMaterialPropertiesTable(liquidScintillatorMpt);
-  liquidScintillator->GetIonisation()->SetBirksConstant(0.126 * mm / MeV);
+  liquidScintillator->GetIonisation()->SetBirksConstant(0.134 * mm / MeV);
 }
 
 void NovaDetectorConstruction::setGlassProperty()
@@ -172,7 +172,7 @@ void NovaDetectorConstruction::defineMaterials()
   galactic = nistManager->FindOrBuildMaterial("G4_Galactic");
   glass = nistManager->FindOrBuildMaterial("G4_GLASS_PLATE");
 
-  liquidScintillator = new G4Material("liquidScintillator", 1.032*g/cm3, 2, kStateSolid, 273.15*kelvin, 1.0*atmosphere);
+  liquidScintillator = new G4Material("liquidScintillator", 0.862*g/cm3, 2, kStateLiquid, 273.15*kelvin, 1.0*atmosphere);
   liquidScintillator->AddElement(H, 0.666);
   liquidScintillator->AddElement(C, 0.334);
 
