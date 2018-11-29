@@ -599,9 +599,8 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeBenchtopNovaCellPhysicalVolume(
 
 G4VPhysicalVolume* NovaDetectorConstruction::makeElectronGunPhysicalVolume()
 {
-  G4double scintillatorRadius = 2. * cm;
-  G4double scintillatorHeight = 4. * cm;
-
+  G4double scintillatorRadius = 1.6 * cm;
+  G4double scintillatorHeight = 1.326 * cm;
 
   G4double experimentalHallX = scintillatorRadius + 1. * cm;
   G4double experimentalHallY = scintillatorHeight / 2. + 1. * cm;
@@ -621,11 +620,9 @@ G4VPhysicalVolume* NovaDetectorConstruction::makeElectronGunPhysicalVolume()
   // liquid scintillator
   G4Tubs* liquidScintillatorSolid =
       new G4Tubs("liquidScintillatorSolid",
-                 0.,
-                 scintillatorRadius,
+                 0., scintillatorRadius,
                  scintillatorHeight / 2.,
-                 0.,
-                 CLHEP::twopi * rad);
+                 0., CLHEP::twopi * rad);
 
   G4LogicalVolume* liquidScintillatorLogicalVolume =
       new G4LogicalVolume(liquidScintillatorSolid,
