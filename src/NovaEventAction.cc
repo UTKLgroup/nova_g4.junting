@@ -161,7 +161,10 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
     }
   }
 
-  printEventInfo();
+  if (anEvent->GetEventID() % 100 == 0) {
+    std::cout << "anEvent->GetEventID() = " << anEvent->GetEventID() << std::endl;
+  }
+  // printEventInfo();
 
   runAction->UpdateEventStatistics(eventStat);
   if (saveThreshold && eventInformation->getPhotonCount() <= saveThreshold)
