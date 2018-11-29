@@ -55,11 +55,10 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
   if (scintHitsCollection) {
     int nHit = scintHitsCollection->entries();
     G4ThreeVector energyWeightedPosition(0.0);
-    G4double energyDeposition;
     G4double energyDepositionMax = 0.0;
 
     for(int i = 0; i < nHit; i++) {
-      energyDeposition = (*scintHitsCollection)[i]->GetEdep();
+      G4double energyDeposition = (*scintHitsCollection)[i]->GetEdep();
       eventInformation->addEnergyDeposition(energyDeposition);
       energyWeightedPosition += (*scintHitsCollection)[i]->GetPos() * energyDeposition;
       if (energyDeposition > energyDepositionMax) {
@@ -109,6 +108,8 @@ void NovaEventAction::EndOfEventAction(const G4Event* anEvent)
                             - eventInformation->getBoundaryAbsorptionCount()
                             - eventInformation->getOutOfWorldCount();
   eventStat.energyDeposition  = eventInformation->getEnergyDeposition() / MeV;
+  eventStat.trackLengthPrimary = eventInformation->getTrackLengthPrimary() / cm;
+  eventStat.energyDepositionPrimary = eventInformation->getEnergyDepositionPrimary() / MeV;
   eventStat.energyDepositionX = eventInformation->getEnergyWeightedPosition().getX();
   eventStat.energyDepositionY = eventInformation->getEnergyWeightedPosition().getY();
   eventStat.energyDepositionZ = eventInformation->getEnergyWeightedPosition().getZ();

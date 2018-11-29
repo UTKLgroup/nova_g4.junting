@@ -15,7 +15,9 @@ class NovaUserEventInformation : public G4VUserEventInformation
 
     void incrementPhotonCountScintillation(){photonCountScintillation++;}
     void incrementPhotonCountCherenkov(){photonCountCherenkov++;}
-    void addEnergyDeposition(G4double energyDeposition){totalEnergyDeposition += energyDeposition;}
+    void addEnergyDeposition(G4double energyDepositionHit){energyDeposition += energyDepositionHit;}
+    void addTrackLengthPrimary(G4double stepLength) {trackLengthPrimary += stepLength;}
+    void addEnergyDepositionPrimary(G4double energyDepositionStep) {energyDepositionPrimary += energyDepositionStep;}
     void incrementAbsorption(){absorptionCount++;}
     void incrementBoundaryAbsorption(){boundaryAbsorptionCount++;}
     void incrementPhotocathodeAbsorptionCount(){photocathodeAbsorptionCount++;}
@@ -28,7 +30,9 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4int getCherenkovPhotonCount()const {return photonCountCherenkov;}
     G4int getHitCount()const {return hitCount;}
 
-    G4double getEnergyDeposition()const {return totalEnergyDeposition;}
+    G4double getEnergyDeposition()const {return energyDeposition;}
+    G4double getTrackLengthPrimary()const {return trackLengthPrimary;}
+    G4double getEnergyDepositionPrimary()const {return energyDepositionPrimary;}
     G4int getAbsorptionCount()const {return absorptionCount;}
     G4int getBoundaryAbsorptionCount()const {return boundaryAbsorptionCount;}
     G4int getPhotocathodeAbsorptionCount()const {return photocathodeAbsorptionCount;}
@@ -49,7 +53,9 @@ class NovaUserEventInformation : public G4VUserEventInformation
     G4int photocathodeAbsorptionCount;
     G4int outOfWorldCount;
 
-    G4double totalEnergyDeposition;
+    G4double energyDeposition;
+    G4double trackLengthPrimary;
+    G4double energyDepositionPrimary;
     G4ThreeVector energyWeightedPosition;
     G4ThreeVector reconstructionPosition;
     G4ThreeVector positionMax;

@@ -15,7 +15,7 @@ void NovaRunAction::BeginOfRunAction(const G4Run* aRun){
   eventTree = new TTree("eventTree", "Event Statistics");
   eventTree->Branch("eventStat",
                   &eventStat.scintillationPhotonCount,
-                  "scintillationPhotonCount/I:cherenkovPhotonCount:hitCount:pmtAboveThresholdCount:absorptionCount:boundaryAbsorptionCount:photocathodeAbsorptionCount:outOfWorldCount:unacountedCount:primaryPdg:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:energyDeposition:energyDepositionX:energyDepositionY:energyDepositionZ");
+                  "scintillationPhotonCount/I:cherenkovPhotonCount:hitCount:pmtAboveThresholdCount:absorptionCount:boundaryAbsorptionCount:photocathodeAbsorptionCount:outOfWorldCount:unacountedCount:primaryPdg:primaryX/D:primaryY:primaryZ:primaryPX:primaryPY:primaryPZ:energyDepositionPrimary:trackLengthPrimary:energyDeposition:energyDepositionX:energyDepositionY:energyDepositionZ");
 
   hitTree = new TTree("hitTree", "Hit Statistics");
   hitTree->Branch("hitStat",

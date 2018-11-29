@@ -71,6 +71,8 @@ struct EventStat
   G4double primaryPY;
   G4double primaryPZ;
 
+  G4double energyDepositionPrimary;
+  G4double trackLengthPrimary;
   G4double energyDeposition;
   G4double energyDepositionX;
   G4double energyDepositionY;

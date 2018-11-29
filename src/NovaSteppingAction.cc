@@ -27,6 +27,11 @@ void NovaSteppingAction::UserSteppingAction(const G4Step* theStep)
   G4StepPoint* postStepPoint = theStep->GetPostStepPoint();
   G4VPhysicalVolume* prePhysicalVolume = preStepPoint->GetPhysicalVolume();
 
+  if (prePhysicalVolume->GetName() == "liquidScintillator" && theTrack->GetParentID() == 0) {
+    eventInformation->addEnergyDepositionPrimary(theStep->GetTotalEnergyDeposit());
+    eventInformation->addTrackLengthPrimary(theStep->GetStepLength());
+  }
+
   static G4OpBoundaryProcess* boundary = 0;
   if (!boundary) {
     G4ProcessManager* processManager = theStep->GetTrack()->GetDefinition()->GetProcessManager();
