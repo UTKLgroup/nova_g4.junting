@@ -24,17 +24,18 @@ def write_mac(**kwargs):
 
 def run():
     mac_filename = 'run.electron_gun.mac'
-    event_count = 1000
+    event_count = 10000
     liquid_scintillator_light_yield = 3000
     random_seed = 1
 
-    for electron_kinetic_energy in np.arange(0.1, 3, 0.1):
+    for electron_kinetic_energy in np.arange(0.1, 2.4, 0.1):
+        # print('electron_kinetic_energy = {}'.format(electron_kinetic_energy))
         write_mac(mac_filename=mac_filename,
                   event_count=event_count,
                   liquid_scintillator_light_yield=liquid_scintillator_light_yield,
                   electron_kinetic_energy=electron_kinetic_energy)
         call('./nova {} {}'.format(mac_filename, random_seed), shell=True)
-        call('mv nova.root run.electron_gun.event_count_{}.electron_kinetic_energy_{}mev.root'.format(event_count, electron_kinetic_energy), shell=True)
+        call('mv -f nova.root run.electron_gun.event_count_{}.electron_kinetic_energy_{:.1f}mev.root'.format(event_count, electron_kinetic_energy), shell=True)
 
 if __name__ == '__main__':
     run()
